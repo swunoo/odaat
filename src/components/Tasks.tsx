@@ -2,6 +2,9 @@ import Navbar from "./Navbar";
 
 import menuIcon from '../assets/images/menu.svg'
 import calendarIcon from '../assets/images/calendar.svg'
+import plusIcon from '../assets/images/plus.svg'
+import { useState } from "react";
+import { numberInputKeyDown } from "../utils";
 
 export default function Tasks(){
     return (
@@ -28,7 +31,7 @@ function TaskContainer(){
             project: 'Build Scala',
             task: 'Build the backend',
             duration: '10',
-            status: 'onhold'
+            status: 'inprog'
         }, {
             id: '0023',
             project: 'Build React',
@@ -37,9 +40,10 @@ function TaskContainer(){
             status: 'inprog'
         },
     ]
+    const projects = data.map(d => d.project);
 
     return (
-        <div className="my-10 px-20">
+        <div className="my-10 mx-20 shadow">
             <nav className="
                 flex justify-between px-5 py-3 bg-accent2
             ">
@@ -58,7 +62,7 @@ function TaskContainer(){
             <main className="
                 bg-white min-h-96
             ">
-                {data.map(d => <TaskBlock data={d} />)}
+                {data.map(d => <TaskBlock data={d} projects={projects} />)}
             </main>
         </div>
     )
@@ -71,7 +75,16 @@ type TaskData = {
     duration: string, 
     status: string
 }
-function TaskBlock({data}: {data: TaskData}){
+function TaskBlock({data, projects}: {data: TaskData, projects: string[]}){
+
+    const menuBtnStyle = (option?: string) => {
+
+        let hover = 'hover:bg-accent2';
+        if(option === 'delete') hover = 'hover:bg-red-500 hover:text-white'
+        else if(option === 'cancel') hover = 'hover:bg-gray hover:text-white'
+
+        return 'cursor-pointer border-b border-white px-5 py-1 ' + hover;
+    } 
 
     const checkBox = (isDone: boolean) => (
         isDone
@@ -79,29 +92,101 @@ function TaskBlock({data}: {data: TaskData}){
         : <input className="w-5" type="checkbox"/>
     )
 
+    
+    const [showMenu, setShowMenu] = useState(false)
+    const [edit, setEdit] = useState(false)
+    const [isComplete, setIsComplete] = useState(data.status === 'done')
+
+    const changeCompletion = () => {
+        setIsComplete(!isComplete)
+    }
+
     return (
-        <div className="
-            border-b border-light px-5 py-3
-            grid grid-cols-12
-        ">
+        <div className={
+            "border-b border-light px-5 py-3 grid grid-cols-12" + (isComplete ? ' bg-light opacity-50' : '')
+        }>
             <p className="text-gray">
                 {data.id}
             </p>
-            <p className="col-span-2">
-                <span className="border border-gray px-3 py-1 text-sm font-medium">
-                    {data.project}
+            {
+                edit
+                ? (
+                <>
+                <div className="col-span-2 flex flex-col gap-2">
+                    <select className="
+                        h-fit mr-5 px-3 py-1 border-r-4 border-light
+                    ">
+                        {projects.map((proj) => (
+                                proj === data.project
+                                ? <option value={proj} selected>{proj}</option>
+                                : <option value={proj}>{proj}</option>
+                            ))}
+                    </select>
+                    <button className="flex gap-2 items-center w-fit hover:underline text-xs uppercase">
+                        <img src={plusIcon} alt="New Project" />
+                        <span>New Project</span>
+                    </button>
+                </div>
+                <textarea className="
+                    col-span-6 border-light border px-3 py-1
+                ">{data.task}</textarea>
+                <div className="flex items-center h-fit">
+                    <input className="
+                        text-right px-3 py-1 w-20 h-fit
+                    " type="number" onKeyDown={numberInputKeyDown} placeholder={data.duration}/>
+                    <span>h</span>
+                </div>
+                <div className="flex flex-col w-fit ml-auto h-fit col-span-2 gap-2 text-sm">
+                    <button className="
+                        px-5 py-1 rounded bg-accent2 hover:bg-primary
+                    ">Confirm</button>
+                    <button
+                    onClick={()=>setEdit(false)}
+                    className="
+                        px-5 py-1 rounded bg-gray text-white hover:bg-dark
+                    ">Cancel</button>
+                </div>
+                </>
+                ) 
+                : (
+                <>
+                <span className="col-span-2">
+                    <span className="border border-gray px-3 py-1 text-sm font-medium">
+                        {data.project}
+                    </span>
                 </span>
-            </p>
-            <p className="col-span-6">
-                {data.task}
-            </p>
-            <p className="text-right">
-                {data.duration + ' h'}
-            </p>
-            <div className="flex gap-8 col-span-2 justify-end">
-                {checkBox(data.status === 'done')}
-                <img src={menuIcon} alt="Menu" />
-            </div>
+                <span className="col-span-6"> {data.task} </span>
+                <span className="text-right"> {data.duration + ' h'} </span>
+                <div className="flex gap-8 col-span-2 justify-end relative">
+                    <input
+                    onChange={changeCompletion} 
+                    className="w-5 cursor-pointer"
+                    type="checkbox"
+                    checked={isComplete}/>
+                    {!isComplete && 
+                    <>
+                    <img 
+                        onClick={() => setShowMenu(!showMenu)} 
+                        className="cursor-pointer" 
+                        src={menuIcon} alt="Menu" />
+                    { showMenu &&
+                    <div className="
+                        absolute top-8 right-0 flex flex-col
+                        z-10 bg-primary shadow rounded-lg overflow-hidden
+                    ">
+                        <button className={menuBtnStyle()}>Postpone 1 day</button>
+                        <button className={menuBtnStyle()}>Put on Hold</button>
+                        <button onClick={()=>{setEdit(true); setShowMenu(false)}} className={menuBtnStyle()}>Edit</button>
+                        <button className={menuBtnStyle('delete')}>Delete</button>
+                        <button onClick={()=>setShowMenu(false)} className={menuBtnStyle('cancel')}>Cancel</button>
+                    </div>
+                    }
+                    </>}
+                    
+                </div>
+                </>
+                )
+            }
 
         </div>
     )
