@@ -5,6 +5,7 @@ import calendarIcon from '../assets/images/calendar.svg'
 import plusIcon from '../assets/images/plus.svg'
 import { useState } from "react";
 import { numberInputKeyDown } from "../utils";
+import { AddButton } from "./common";
 
 export default function Tasks(){
     return (
@@ -72,13 +73,7 @@ function TaskContainer(){
                         text-dark text-xl font-medium
                     ">{date}</h3>
                 </div>
-                <button
-                onClick={addTask}
-                className="
-                    bg-white px-5 py-1 rounded text-sm shadow-lg hover:bg-secondary hover:text-white
-                ">
-                    Add Task
-                </button>
+                <AddButton label="New Task" clickHandler={addTask} />
             </nav>
             <main className="
                 bg-white min-h-96
