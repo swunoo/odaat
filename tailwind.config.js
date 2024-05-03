@@ -16,7 +16,11 @@ export default {
       },
       fontFamily: {
       'jomhuria': ['Jomhuria']
-    }},
+     },
+     spacing: {
+      '100': '28rem',
+    }
+  },
   },
   plugins: [],
 }
