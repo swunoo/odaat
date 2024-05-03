@@ -4,9 +4,11 @@ import Projects from "./components/Projects"
 
 function App() {
 
+  const appStyle = 'bg-primary min-h-screen'
+
   return (
     <BrowserRouter>
-      <div className="font-serif">
+      <div className={appStyle}>
           <Routes>
             <Route path="/tasks" element={<Tasks />} />
             <Route path="/projects" element={<Projects />} />

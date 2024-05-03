@@ -6,11 +6,13 @@ export default {
   theme: {
     extend: {      
       colors: {
-        gray1: '#101010',
-        gray2: '#151515',
-        gray3: '#333',
-        gray4: '#555',
-        gray5: '#dedede'
+        dark: '#101010',
+        light: '#EEEEEE',
+        gray: '#888',
+        accent: '#FB8500',
+        accent2: '#8ECAE6',
+        primary: '#D6E6ED',
+        secondary: '#023047'
       },
       fontFamily: {
       'jomhuria': ['Jomhuria']
