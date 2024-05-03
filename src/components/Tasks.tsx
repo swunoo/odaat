@@ -40,7 +40,26 @@ function TaskContainer(){
             status: 'inprog'
         },
     ]
-    const projects = data.map(d => d.project);
+    const projects = data.map(d => d.project)
+
+    const initTask = {
+        id: '',
+        project: projects[0],
+        task: 'Task Name',
+        duration: '1',
+        status: 'inprog'
+    }
+
+    const [tasks, setTasks] = useState(data)
+
+    const addTask = () => {
+        setTasks([...tasks, initTask])
+    }
+
+    const removeTask = (idx: number) => {
+        // Remove task from database if not new.
+        setTasks(tasks.filter((_, i) => i !== idx))
+    }
 
     return (
         <div className="my-10 mx-20 shadow">
@@ -53,8 +72,10 @@ function TaskContainer(){
                         text-dark text-xl font-medium
                     ">{date}</h3>
                 </div>
-                <button className="
-                    bg-white px-5 py-1 rounded text-sm shadow-lg
+                <button
+                onClick={addTask}
+                className="
+                    bg-white px-5 py-1 rounded text-sm shadow-lg hover:bg-secondary hover:text-white
                 ">
                     Add Task
                 </button>
@@ -62,7 +83,7 @@ function TaskContainer(){
             <main className="
                 bg-white min-h-96
             ">
-                {data.map(d => <TaskBlock data={d} projects={projects} />)}
+                {tasks.map((t, idx) => <TaskBlock data={t} projects={projects} remover={()=>removeTask(idx)} />)}
             </main>
         </div>
     )
@@ -75,7 +96,7 @@ type TaskData = {
     duration: string, 
     status: string
 }
-function TaskBlock({data, projects}: {data: TaskData, projects: string[]}){
+function TaskBlock({data, projects, remover}: {data: TaskData, projects: string[], remover: ()=>void}){
 
     const menuBtnStyle = (option?: string) => {
 
@@ -92,13 +113,18 @@ function TaskBlock({data, projects}: {data: TaskData, projects: string[]}){
         : <input className="w-5" type="checkbox"/>
     )
 
-    
+    const isNew = data.id.length === 0
     const [showMenu, setShowMenu] = useState(false)
-    const [edit, setEdit] = useState(false)
+    const [edit, setEdit] = useState(isNew)
     const [isComplete, setIsComplete] = useState(data.status === 'done')
 
     const changeCompletion = () => {
         setIsComplete(!isComplete)
+    }
+
+    const cancelEdit = () => {
+        if(isNew) remover();
+        else setEdit(false);
     }
 
     return (
@@ -140,11 +166,11 @@ function TaskBlock({data, projects}: {data: TaskData, projects: string[]}){
                     <button className="
                         px-5 py-1 rounded bg-accent2 hover:bg-primary
                     ">Confirm</button>
-                    <button
-                    onClick={()=>setEdit(false)}
+                    {<button
+                    onClick={cancelEdit}
                     className="
                         px-5 py-1 rounded bg-gray text-white hover:bg-dark
-                    ">Cancel</button>
+                    ">Cancel</button>}
                 </div>
                 </>
                 ) 
@@ -176,8 +202,8 @@ function TaskBlock({data, projects}: {data: TaskData, projects: string[]}){
                     ">
                         <button className={menuBtnStyle()}>Postpone 1 day</button>
                         <button className={menuBtnStyle()}>Put on Hold</button>
-                        <button onClick={()=>{setEdit(true); setShowMenu(false)}} className={menuBtnStyle()}>Edit</button>
-                        <button className={menuBtnStyle('delete')}>Delete</button>
+                        <button onClick={()=>{setShowMenu(false); setEdit(true);}} className={menuBtnStyle()}>Edit</button>
+                        <button onClick={()=>{setShowMenu(false); remover();}} className={menuBtnStyle('delete')}>Delete</button>
                         <button onClick={()=>setShowMenu(false)} className={menuBtnStyle('cancel')}>Cancel</button>
                     </div>
                     }
