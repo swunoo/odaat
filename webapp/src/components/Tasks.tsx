@@ -3,9 +3,10 @@ import Navbar from "./Navbar";
 import menuIcon from '../assets/images/menu.svg'
 import calendarIcon from '../assets/images/calendar.svg'
 
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { menuBtnStyle, numberInputKeyDown } from "../utils";
 import { AddButton, NewButton, SvgChevronLeft, SvgChevronRight } from "./common";
+import { NewProjectModal } from "./Projects";
 
 export default function Tasks(){
     return (
@@ -44,20 +45,21 @@ function TaskContainer(){
             date: date
         },
     ]
-    const projects = data.map(d => d.project)
-
-    const initTask = {
-        id: '',
-        project: projects[0],
-        task: 'Task Name',
-        duration: '1',
-        status: 'inprog',
-        date: date
-    }
+    const mockProj = data.map(d => d.project)
 
     const [tasks, setTasks] = useState(data)
+    const [projects, setProjects] = useState(mockProj)
+    const [showNewProj, setShowNewProj] = useState(false)
 
     const addTask = () => {
+        const initTask = {
+            id: '',
+            project: projects[0],
+            task: 'Task Name',
+            duration: '1',
+            status: 'inprog',
+            date: date
+        }
         setTasks([...tasks, initTask])
     }
 
@@ -67,11 +69,48 @@ function TaskContainer(){
     }
 
     const addProject = () => {
+        setShowNewProj(true)
+    }
 
+    const confirmAddingProject = (e: FormEvent) => {
+        e.preventDefault();
+        const form = e.target as HTMLFormElement;
+        const formData = new FormData(form);
+        const confirmedProj: any = {}
+        formData.forEach((val, key) => {
+            confirmedProj[key] = val;
+        })
+
+        // PH: Add projects to database
+        setProjects([...projects, confirmedProj.title])
+        setShowNewProj(false)
+    }
+
+    const confirmAddingTask = (e: FormEvent) => {
+        const form = e.target as HTMLFormElement;
+        const formData = new FormData(form);
+        const confirmedTask: any = {}
+        formData.forEach((val, key) => {
+            confirmedTask[key] = val;
+        })
+
+        // PH: Add tasks to database
+        if(confirmedTask.id) { /* Update */ }
+        else confirmedTask.id = '0010' /* Create */
+
+        setTasks([...tasks, confirmedTask])
     }
 
     return (
         <div className="my-10 mx-20 shadow">
+            {showNewProj && 
+                <NewProjectModal
+                    data={null}
+                    cancelHandler={() => setShowNewProj(false)}
+                    confirmHandler={confirmAddingProject}
+                />
+            }
+
             <nav className="
                 flex justify-between px-5 py-3 bg-accent2
             ">
@@ -91,7 +130,14 @@ function TaskContainer(){
                 bg-white min-h-96 px-5 
             ">
                 {tasks.map((t, idx) => (
-                    <TaskBlock data={t} projects={projects} addProject={addProject} remover={()=>removeTask(idx)} displayProjs={true}/>
+                    <TaskBlock
+                        data={t} 
+                        projects={projects} 
+                        addProject={addProject}
+                        remover={()=>removeTask(idx)} 
+                        taskAdder={confirmAddingTask}
+                        displayProjs={true}
+                    />
                 ))}
             </main>
         </div>
@@ -107,8 +153,8 @@ type TaskData = {
     date: string
 }
 export function TaskBlock(
-    {data, projects, addProject, remover, displayProjs}: 
-    {data: TaskData, projects?: string[], addProject?: ()=>void, remover: ()=>void, displayProjs: boolean}){
+    {data, projects, addProject, remover, taskAdder, displayProjs}: 
+    {data: TaskData, projects?: string[], addProject?: ()=>void, remover: ()=>void, taskAdder: (e: FormEvent)=>void, displayProjs: boolean}){
 
     const checkBox = (isDone: boolean) => (
         isDone
@@ -130,16 +176,21 @@ export function TaskBlock(
         else setEdit(false);
     }
 
+    const confirmEdit = (e: FormEvent) => {
+        e.preventDefault()
+        taskAdder(e)
+    }
+
     return (
         <div className={
             "border-b border-light py-3 grid grid-cols-12" + (isComplete ? ' bg-light opacity-50 -mx-5 px-5' : '')
         }>
-            {displayProjs
-            && <p className="text-gray">{data.id}</p>}
+            {   displayProjs
+                && <p className="text-gray">{data.id}</p>}
             {
                 edit
                 ? (
-                <>
+                <form className="col-span-11 grid grid-cols-11" onSubmit={confirmEdit}>
                 {
                 displayProjs
                 ? <div className="col-span-2 flex flex-col gap-2">
@@ -166,18 +217,21 @@ export function TaskBlock(
                     <span>h</span>
                 </div>
                 <div className={"flex flex-col w-fit ml-auto h-fit gap-2 " + (displayProjs ? 'col-span-2' : 'col-span-3')}>
-                    <button className={
+                    <button 
+                    type="submit"
+                    className={
                         "py-1 rounded bg-accent2 hover:bg-primary "
                         + (displayProjs ? 'px-5 text-sm' : 'px-1 text-xs')
                     }>Confirm</button>
                     {<button
                     onClick={cancelEdit}
+                    type="button"
                     className={
                         "py-1 rounded bg-gray text-white hover:bg-dark "
                         + (displayProjs ? 'px-5 text-sm' : 'px-1 text-xs')
                     }>Cancel</button>}
                 </div>
-                </>
+                </form>
                 ) 
                 : (
                 <>
