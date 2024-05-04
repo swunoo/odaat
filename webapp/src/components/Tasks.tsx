@@ -2,10 +2,10 @@ import Navbar from "./Navbar";
 
 import menuIcon from '../assets/images/menu.svg'
 import calendarIcon from '../assets/images/calendar.svg'
-import plusIcon from '../assets/images/plus.svg'
+
 import { useState } from "react";
 import { numberInputKeyDown } from "../utils";
-import { AddButton } from "./common";
+import { AddButton, NewButton, SvgChevronLeft, SvgChevronRight } from "./common";
 
 export default function Tasks(){
     return (
@@ -19,7 +19,7 @@ export default function Tasks(){
 function TaskContainer(){
 
     // PH
-    const date = new Date().toISOString().split('T')[0];
+    const date = new Date().toISOString().split('T')[0].replace(/-/g, ' ');
     const data = [
         {
             id: '0015',
@@ -66,16 +66,24 @@ function TaskContainer(){
         setTasks(tasks.filter((_, i) => i !== idx))
     }
 
+    const addProject = () => {
+
+    }
+
     return (
         <div className="my-10 mx-20 shadow">
             <nav className="
                 flex justify-between px-5 py-3 bg-accent2
             ">
-                <div className="flex gap-3 items-center">
+                <div className="flex gap-8 items-center">
                     <img src={calendarIcon} alt="Move to Dates" />
                     <h3 className="
-                        text-dark text-xl font-medium
+                        text-dark text-lg font-medium
                     ">{date}</h3>
+                    <div className="flex gap-3">
+                        <SvgChevronLeft />
+                        <SvgChevronRight />
+                    </div>
                 </div>
                 <AddButton label="New Task" clickHandler={addTask} />
             </nav>
@@ -83,7 +91,7 @@ function TaskContainer(){
                 bg-white min-h-96 px-5 
             ">
                 {tasks.map((t, idx) => (
-                    <TaskBlock data={t} projects={projects} remover={()=>removeTask(idx)} displayProjs={true}/>
+                    <TaskBlock data={t} projects={projects} addProject={addProject} remover={()=>removeTask(idx)} displayProjs={true}/>
                 ))}
             </main>
         </div>
@@ -99,8 +107,8 @@ type TaskData = {
     date: string
 }
 export function TaskBlock(
-    {data, projects, remover, displayProjs}: 
-    {data: TaskData, projects?: string[], remover: ()=>void, displayProjs: boolean}){
+    {data, projects, addProject, remover, displayProjs}: 
+    {data: TaskData, projects?: string[], addProject?: ()=>void, remover: ()=>void, displayProjs: boolean}){
 
     const menuBtnStyle = (option?: string) => {
 
@@ -153,10 +161,7 @@ export function TaskBlock(
                                 : <option value={proj}>{proj}</option>
                             ))}
                     </select>
-                    <button className="flex gap-2 items-center w-fit hover:underline text-xs uppercase">
-                        <img src={plusIcon} alt="New Project" />
-                        <span>New Project</span>
-                    </button>
+                    {addProject && <NewButton label="New Project" clickHandler={addProject} />}
                 </div>
                 : <input className="col-span-3 h-fit text-xs bg-transparent pr-3 mt-3" type="date" placeholder={data.date}/>
                 }

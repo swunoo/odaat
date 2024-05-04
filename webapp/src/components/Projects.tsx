@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Navbar from "./Navbar";
-import { AddButton } from "./common";
+import { AddButton, NewButton } from "./common";
 
 import arrowIcon from '../assets/images/arrow.svg'
 import { TaskBlock } from "./Tasks";
@@ -179,7 +179,7 @@ function ProjectBlock({data}: {data: ProjectData}){
                 </div>
 
                 <div className="flex justify-end py-10">
-                    <AddButton label="New Project" clickHandler={addTask} />
+                    <AddButton label="New Task" clickHandler={addTask} />
                 </div>
                 </>}
 
