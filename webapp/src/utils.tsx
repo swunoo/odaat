@@ -9,3 +9,13 @@ export const numberInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>)
         event.preventDefault();
     }
 };
+
+export const menuBtnStyle = (option?: string) => {
+
+    let hover = 'hover:bg-accent2';
+    if(option === 'delete') hover = 'hover:bg-red-500 hover:text-white'
+    else if(option === 'cancel') hover = 'hover:bg-gray hover:text-white'
+
+    return 'cursor-pointer border-b border-white px-5 py-1 ' + hover;
+} 
+

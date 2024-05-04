@@ -4,7 +4,7 @@ import menuIcon from '../assets/images/menu.svg'
 import calendarIcon from '../assets/images/calendar.svg'
 
 import { useState } from "react";
-import { numberInputKeyDown } from "../utils";
+import { menuBtnStyle, numberInputKeyDown } from "../utils";
 import { AddButton, NewButton, SvgChevronLeft, SvgChevronRight } from "./common";
 
 export default function Tasks(){
@@ -62,7 +62,7 @@ function TaskContainer(){
     }
 
     const removeTask = (idx: number) => {
-        // Remove task from database if not new.
+        // PH: Remove task from database if not new.
         setTasks(tasks.filter((_, i) => i !== idx))
     }
 
@@ -109,15 +109,6 @@ type TaskData = {
 export function TaskBlock(
     {data, projects, addProject, remover, displayProjs}: 
     {data: TaskData, projects?: string[], addProject?: ()=>void, remover: ()=>void, displayProjs: boolean}){
-
-    const menuBtnStyle = (option?: string) => {
-
-        let hover = 'hover:bg-accent2';
-        if(option === 'delete') hover = 'hover:bg-red-500 hover:text-white'
-        else if(option === 'cancel') hover = 'hover:bg-gray hover:text-white'
-
-        return 'cursor-pointer border-b border-white px-5 py-1 ' + hover;
-    } 
 
     const checkBox = (isDone: boolean) => (
         isDone
