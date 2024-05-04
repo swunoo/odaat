@@ -15,6 +15,3 @@
 | /task/update/:id | PUT | Task | 200 Task <br/> 400 Error <br/> 500 Error | Update an existing task |
 | /task/delete/:id | DELETE | | 200 <br/> 400 Error <br/> 500 Error | Delete an existing task |
 | /task/updateStatus/:id?status=:status | PUT | | 200 Task <br/> 400 Error <br/> 500 Error | Update the status of an existing task |
-
-
-
