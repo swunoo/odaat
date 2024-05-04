@@ -44,3 +44,8 @@ export function SvgChevronRight(){
         </div>
     )
 }
+
+export function getValue(id: string){
+    const ele = document.getElementById(id) as (HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement)
+    return ele.value
+}

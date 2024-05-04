@@ -253,7 +253,7 @@ function ProjectBlock(
                 <div className="">
                     {
                         tasks.map((t, idx) => (
-                            <TaskBlock data={t} remover={()=>removeTask(idx)} displayProjs={false}/>
+                            <TaskBlock initData={t} remover={()=>removeTask(idx)} isTaskPage={false}/>
                         ))
                     }
                 </div>
@@ -291,12 +291,14 @@ export function NewProjectModal(
                 {
                     data
                     ? <input className={input + ' border-none'} type="text" name="title" value={data.title} disabled/>
-                    : <input className={input} type="text" name="title" />
+                    : <input
+                        className={input} type="text" name="title" 
+                    />
                 }
                 <label className={label}>Time Est.</label>
-                <input className={input} onKeyDown={numberInputKeyDown}  type="number" step={0.1} name="duration" placeholder={data?data.duration:''}/>
+                <input className={input} onKeyDown={numberInputKeyDown}  type="number" step={0.1} name="duration" defaultValue={data?data.duration:''}/>
                 <label className={label}>Deadline</label>
-                <input className={input} type="date" name="deadline"  placeholder={data?data.deadline:''}/>
+                <input className={input} type="date" name="deadline"  defaultValue={data?data.deadline:''}/>
                 <label className={label}>Priority</label>
                 <select className={input + " capitalize"} name="priority">
                     {
@@ -306,7 +308,7 @@ export function NewProjectModal(
                     }
                 </select>
                 <label className={label}>Description</label>
-                <textarea rows={6} name="description" className={input + ' col-span-4'} >{data?data.description:''}</textarea>
+                <textarea rows={6} name="description" className={input + ' col-span-4'} defaultValue={data?data.description:''}></textarea>
 
                 <div className="col-span-4 flex justify-end gap-3 mt-10">
                     <button type="submit" className={button + " bg-secondary"}>Confirm</button>

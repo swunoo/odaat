@@ -8,6 +8,8 @@ export const numberInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>)
     ) {
         event.preventDefault();
     }
+
+    (event.target as HTMLInputElement).value += event.key
 };
 
 export const menuBtnStyle = (option?: string) => {
