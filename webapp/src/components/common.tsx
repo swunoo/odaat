@@ -1,5 +1,7 @@
 import plusIcon from '../assets/images/plus.svg'
 
+/** Components */
+
 export function AddButton(
     {label, clickHandler}:
     {label: string, clickHandler: ()=>void}
@@ -29,23 +31,22 @@ export function NewButton(
 
 const svgBtnStyle = "bg-secondary fill-primary hover:bg-primary hover:fill-secondary rounded cursor-pointer"
 
-export function SvgChevronLeft(){
+export function SvgChevronLeft(
+    {clickHandler}: {clickHandler: ()=>void}
+){
     return (
-        <div className={svgBtnStyle}>
+        <div onClick={clickHandler} className={svgBtnStyle}>
             <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z"/></svg>
         </div>
     )
 }
 
-export function SvgChevronRight(){
+export function SvgChevronRight(
+    {clickHandler}: {clickHandler: ()=>void}
+){
     return (
-        <div className={svgBtnStyle}>
+        <div onClick={clickHandler} className={svgBtnStyle}>
             <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/></svg>
         </div>
     )
-}
-
-export function getValue(id: string){
-    const ele = document.getElementById(id) as (HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement)
-    return ele.value
 }

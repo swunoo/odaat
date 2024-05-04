@@ -1,12 +1,12 @@
-import { FormEvent, FormEventHandler, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import Navbar from "./Navbar";
-import { AddButton, NewButton } from "./common";
+import { AddButton } from "./common";
 
-import arrowIcon from '../assets/images/arrow.svg'
-import menuIcon from '../assets/images/menu.svg'
+import arrowIcon from '../assets/images/arrow.svg';
+import menuIcon from '../assets/images/menu.svg';
 
-import { TaskBlock } from "./Tasks";
-import { menuBtnStyle, numberInputKeyDown } from "../utils";
+import { dateToString, menuBtnStyle, numberInputKeyDown } from "../utils";
+import { TaskBlock, TaskData } from "./Tasks";
 
 
 type ProjectData = {
@@ -19,9 +19,9 @@ type ProjectData = {
     description: string
 }
 
+/* Projects Page */
 export default function Projects(){
 
-    // PH
     const mockData: ProjectData[] = [
         {
             id: '001',
@@ -50,60 +50,71 @@ export default function Projects(){
         }
     ]
 
-    const [projects, setProjects] = useState(mockData)
-    const [status, setStatus] = useState('ongoing')
+    // Data of all projects
+    const [projects, setProjects] = useState<ProjectData[]>([])
+    // Whether to show the NewProject modal
     const [showNewProj, setShowNewProj] = useState(false)
+    // Index of the currently-being-edited project
     const [editedProject, setEditedProject] = useState<number | null>(null)
 
+    // Fetch all projects
+    useEffect(() => {
+        // API: QUERY ALL PROJECTS
+        setProjects(mockData)
+    }, [])
 
-    const statusBtn = (s: string) => (
-        (s === status)
-        ? <button className="uppercase text-sm underline cursor-default">{s}</button>
-        : <button
-        onClick={() => setStatus(s)}
-        className="uppercase text-sm">
-            {s}
-        </button>
-    )
-
+    // When "Add Project" button is clicked, show NewProject modal
     const addProject = () => {
         setShowNewProj(true)
     }
 
+    // When "Delete" button is clicked, delete the project
     const removeProject = (idx: number) => {
-        // PH: Remove task from database if not new.
+        // API: DELETE PROJECT OF A GIVEN TITLE
         setProjects(projects.filter((_, i) => i !== idx))
     }
 
+    // When "Edit" button is clicked, NewProject modal is open with that project's data
     const editProject = (idx: number) => {
-        console.log(idx);
-        
         setEditedProject(idx)
-        
         setShowNewProj(true)
     }
 
+    // When "Confirm" button from NewProject modal is clicked, data is saved
     const confirmAddingProject = (e: FormEvent) => {
         e.preventDefault();
+
+        // 1. Build a Project with data from NewProject modal's form
+        const confirmedProj: any = {}
         const form = e.target as HTMLFormElement;
         const formData = new FormData(form);
-        const confirmedProj: any = {}
         formData.forEach((val, key) => {
             confirmedProj[key] = val;
         })
 
-        // PH: Add projects to database
+        // 2A. Send a PUT request for project updates
         if(editedProject !== null){
-            confirmedProj.title = projects[editedProject]['title']
+            // API: UPDATE PROJECT OF A GIVEN TITLE
+            confirmedProj.title = projects[editedProject]['title'] // title is immutable
             projects[editedProject] = confirmedProj
-            setEditedProject(null)
+
+            // 3. Update the UI
             setProjects(projects)
+            setEditedProject(null)
+
+        // 2B. Send a POST request for project creations
         } else {
+            // API: CREATE A PROJECT
+
+            // 3. Update the UI
             setProjects([...projects, confirmedProj])
         }
+
+        // 4. Close the modal
         setShowNewProj(false)
     }
 
+    // When "Cancel" button from NewProject modal is clicked, modal is reset
     const closeNewProjectModal = () => {
         if(editedProject) setEditedProject(null)
         setShowNewProj(false)
@@ -122,27 +133,25 @@ export default function Projects(){
 
             <Navbar active="projects"/>
             <header
-            className="flex justify-between mt-10 px-5 py-3 bg-accent2"
+                className="flex justify-between mt-10 px-5 py-3 bg-accent2"
             >
-                <h2 className="text-lg capitalize">{status} Projects</h2>
-                <div className="flex gap-20">
-                    <div className="flex gap-5">
-                        {statusBtn('ongoing')}
-                        |
-                        {statusBtn('completed')}
-                    </div>
-                    <AddButton label="New Project" clickHandler={addProject} />
-                </div>
+                <h2 className="text-lg capitalize">Projects</h2>
+                <AddButton label="New Project" clickHandler={addProject} />
             </header>
             <main className="grid grid-cols-2 gap-10 py-5 h-100 overflow-scroll">
                 {projects.map((proj, i) => (
-                    <ProjectBlock data={proj} editor={()=>editProject(i)} remover={()=>removeProject(i)} />
+                    <ProjectBlock
+                        data={proj}
+                        editor={()=>editProject(i)}
+                        remover={()=>removeProject(i)} 
+                    />
                 ))}
             </main>
         </div>
     )
 }
 
+/* Container of Each Project */
 function ProjectBlock(
     {data, editor, remover}:
     {data: ProjectData, editor: ()=>void, remover: ()=>void}
@@ -174,9 +183,17 @@ function ProjectBlock(
         },
     ]
 
+    // All Tasks belonging to this Project
+    const [tasks, setTasks] = useState<TaskData[]>([])
+    // Expand or collapse Tasks data
     const [showTasks, setShowTasks] = useState(false)
-    const [tasks, setTasks] = useState(mockTasks)
+    // Whether to show the Project menu
     const [showMenu, setShowMenu] = useState(false)
+
+    useEffect(() => {
+        // API: QUERY ALL TASKS OF A GIVEN PROJECT
+        setTasks(mockTasks)
+    }, [])
 
     const initTask = {
         id: '',
@@ -184,23 +201,23 @@ function ProjectBlock(
         task: 'Task Name',
         duration: '1',
         status: 'inprog',
-        date: '2024-05-03'
+        date: dateToString(new Date())
     }
 
+    // When "Add Task" button is clicked, init a new Task
     const addTask = () => {
         setTasks([...tasks, initTask])
     }
 
+    // When "Delete" button from a Task is clicked, delete it
     const removeTask = (idx: number) => {
-        // PH: Remove task from database if not new.
+        // API: DELETE A TASK
         setTasks(tasks.filter((_, i) => i !== idx))
     }
 
     return (
         <div>
             <div className="bg-white px-10 py-5 relative">
-
-
                     <img 
                     onClick={() => setShowMenu(!showMenu)} 
                     className="cursor-pointer ml-auto" 
@@ -211,9 +228,18 @@ function ProjectBlock(
                         absolute top-14 right-5 px-3 py-1 flex flex-col
                         z-10 bg-primary shadow rounded-lg overflow-hidden
                     ">
-                        <button onClick={()=>{setShowMenu(false); editor();}} className={menuBtnStyle()}>Edit</button>
-                        <button onClick={()=>{setShowMenu(false); remover();}} className={menuBtnStyle('delete')}>Delete</button>
-                        <button onClick={()=>setShowMenu(false)} className={menuBtnStyle('cancel')}>Cancel</button>
+                        <button 
+                            onClick={()=>{setShowMenu(false); editor();}}
+                            className={menuBtnStyle()}
+                        >Edit</button>
+                        <button 
+                            onClick={()=>{setShowMenu(false); remover();}} 
+                            className={menuBtnStyle('delete')}
+                        >Delete</button>
+                        <button 
+                            onClick={()=>setShowMenu(false)} 
+                            className={menuBtnStyle('cancel')}
+                        >Cancel</button>
                     </div>
                     }
 
@@ -240,7 +266,6 @@ function ProjectBlock(
                 onClick={() => setShowTasks(!showTasks)}
                 className="flex gap-5 py-5">
                     <img
-                    
                     className={
                         showTasks ? 'rotate-90' : ''
                     } src={arrowIcon} alt="More Tasks" />
@@ -253,7 +278,11 @@ function ProjectBlock(
                 <div className="">
                     {
                         tasks.map((t, idx) => (
-                            <TaskBlock initData={t} remover={()=>removeTask(idx)} isTaskPage={false}/>
+                            <TaskBlock 
+                                initData={t} 
+                                remover={()=>removeTask(idx)} 
+                                isTaskPage={false}
+                            />
                         ))
                     }
                 </div>
@@ -268,11 +297,13 @@ function ProjectBlock(
     )
 }
 
+/* Modal to CREATE/UPDATE Projects */
 export function NewProjectModal(
     {data, confirmHandler, cancelHandler}:
     {data: ProjectData | null,confirmHandler: (e: FormEvent)=>void, cancelHandler: ()=>void}
 ){
 
+    // Styles
     const input = "col-span-3 px-2 py-1 border border-light"
     const label = "font-medium uppercase text-sm"
     const button = "rounded-lg text-white px-5 py-2 text-sm uppercase font-medium"
@@ -287,6 +318,7 @@ export function NewProjectModal(
                 w-fit m-auto my-5 2xl:my-10
                 bg-white p-10 rounded-lg 
             ">
+
                 <label className={label}>Title</label>
                 {
                     data
@@ -295,25 +327,54 @@ export function NewProjectModal(
                         className={input} type="text" name="title" 
                     />
                 }
+
                 <label className={label}>Time Est.</label>
-                <input className={input} onKeyDown={numberInputKeyDown}  type="number" step={0.1} name="duration" defaultValue={data?data.duration:''}/>
+                <input 
+                    className={input} 
+                    onKeyDown={numberInputKeyDown}  
+                    type="number" step={0.1} 
+                    name="duration" 
+                    defaultValue={data?data.duration:''}
+                />
+
                 <label className={label}>Deadline</label>
-                <input className={input} type="date" name="deadline"  defaultValue={data?data.deadline:''}/>
+                <input 
+                    className={input} 
+                    type="date" 
+                    name="deadline"  
+                    defaultValue={data?data.deadline:''}
+                />
+
                 <label className={label}>Priority</label>
-                <select className={input + " capitalize"} name="priority">
-                    {
+                <select 
+                    className={input + " capitalize"} 
+                    name="priority"
+                >   {
                         ['low', 'medium', 'high'].map(p => (
                             <option value={p}>{p}</option>
                         ))
                     }
                 </select>
+
                 <label className={label}>Description</label>
-                <textarea rows={6} name="description" className={input + ' col-span-4'} defaultValue={data?data.description:''}></textarea>
+                <textarea 
+                    rows={6} 
+                    name="description" 
+                    className={input + ' col-span-4'} 
+                    defaultValue={data?data.description:''}></textarea>
 
                 <div className="col-span-4 flex justify-end gap-3 mt-10">
-                    <button type="submit" className={button + " bg-secondary"}>Confirm</button>
-                    <button type="button" onClick={cancelHandler} className={button + " bg-gray"}>Cancel</button>
+                    <button 
+                        type="submit" 
+                        className={button + " bg-secondary"}
+                    >Confirm</button>
+                    <button 
+                        type="button" 
+                        onClick={cancelHandler} 
+                        className={button + " bg-gray"}
+                    >Cancel</button>
                 </div>
+
             </form>
         </div>
     )
