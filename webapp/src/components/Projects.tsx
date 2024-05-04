@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { FormEvent, FormEventHandler, useState } from "react";
 import Navbar from "./Navbar";
 import { AddButton, NewButton } from "./common";
 
 import arrowIcon from '../assets/images/arrow.svg'
 import { TaskBlock } from "./Tasks";
+import { numberInputKeyDown } from "../utils";
 
 
 type ProjectData = {
@@ -49,6 +50,7 @@ export default function Projects(){
 
     const [projects, setProjects] = useState(mockData)
     const [status, setStatus] = useState('ongoing')
+    const [showNewProj, setShowNewProj] = useState(true)
 
 
     const statusBtn = (s: string) => (
@@ -62,11 +64,33 @@ export default function Projects(){
     )
 
     const addProject = () => {
+        setShowNewProj(true)
+    }
 
+    const confirmAddingProject = (e: FormEvent) => {
+        e.preventDefault();
+        const form = e.target as HTMLFormElement;
+        const formData = new FormData(form);
+        const data: any = {}
+        formData.forEach((val, key) => {
+            data[key] = val;
+        })
+
+        // PH: Add projects to database
+        setProjects([...projects, data])
+        setShowNewProj(false)
     }
 
     return (
         <div className="md:max-h-screen py-10 px-20">
+            
+            {showNewProj && 
+            <NewProjectModal
+                cancelHandler={()=>setShowNewProj(false)}
+                confirmHandler={confirmAddingProject}
+            />
+            }
+
             <Navbar active="projects"/>
             <header
             className="flex justify-between mt-10 px-5 py-3 bg-accent2"
@@ -139,19 +163,22 @@ function ProjectBlock({data}: {data: ProjectData}){
 
     return (
         <div>
-            <div className="bg-white px-10 py-5 flex justify-between items-center">
+            <div className="bg-white px-10 py-5 ">
                 <h3 className="font-bold text-xl ">
                     {data.title}
                 </h3>
-                {
-                data.completedAt
-                ? <p className="text-gray text-xs">
-                    {data.completedAt}
-                </p> 
-                : <p className="text-red-500 text-xs">
-                    {data.deadline}
-                </p>
-                }
+                <div className="flex justify-between text-xs">
+                    <p>{data.duration} h</p>
+                    {
+                    data.completedAt
+                    ? <p className="text-gray">
+                        {data.completedAt}
+                    </p> 
+                    : <p className="text-red-500">
+                        {data.deadline}
+                    </p>
+                    }
+                </div>
             </div>
             <div className="bg-light px-10">
                 <p className="py-5">{data.description}</p>
@@ -184,6 +211,51 @@ function ProjectBlock({data}: {data: ProjectData}){
                 </>}
 
             </div>
+        </div>
+    )
+}
+
+export function NewProjectModal(
+    {confirmHandler, cancelHandler}:
+    {confirmHandler: (e: FormEvent)=>void, cancelHandler: ()=>void}
+){
+
+    const input = "col-span-3 px-2 py-3 border border-light"
+    const label = "font-medium uppercase text-sm"
+    const button = "rounded-lg text-white px-5 py-2 text-sm uppercase font-medium"
+
+    return (
+        <div className="
+            absolute top-0 left-0 w-screen h-screen
+            bg-[#000a] backdrop-blur z-20
+        ">
+            <form onSubmit={confirmHandler} className="
+                grid grid-cols-4 items-center gap-x-8 gap-y-3
+                w-fit m-auto my-16
+                bg-white p-10 rounded-lg 
+            ">
+                <label className={label}>Title</label>
+                <input className={input} type="text" name="title" />
+                <label className={label}>Time Est.</label>
+                <input className={input} onKeyDown={numberInputKeyDown}  type="number" step={0.1} name="duration" />
+                <label className={label}>Deadline</label>
+                <input className={input} type="date" name="deadline" />
+                <label className={label}>Priority</label>
+                <select className={input + " capitalize"} name="priority">
+                    {
+                        ['low', 'medium', 'high'].map(p => (
+                            <option value={p}>{p}</option>
+                        ))
+                    }
+                </select>
+                <label className={label}>Description</label>
+                <textarea name="description" className={input} ></textarea>
+
+                <div className="col-span-4 flex justify-end gap-3 mt-10">
+                    <button type="submit" className={button + " bg-secondary"}>Confirm</button>
+                    <button type="button" onClick={cancelHandler} className={button + " bg-gray"}>Cancel</button>
+                </div>
+            </form>
         </div>
     )
 }
