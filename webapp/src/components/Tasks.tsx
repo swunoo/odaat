@@ -86,21 +86,6 @@ function TaskContainer(){
         setShowNewProj(false)
     }
 
-    const confirmAddingTask = (e: FormEvent) => {
-        const form = e.target as HTMLFormElement;
-        const formData = new FormData(form);
-        const confirmedTask: any = {}
-        formData.forEach((val, key) => {
-            confirmedTask[key] = val;
-        })
-
-        // PH: Add tasks to database
-        if(confirmedTask.id) { /* Update */ }
-        else confirmedTask.id = '0010' /* Create */
-
-        setTasks([...tasks, confirmedTask])
-    }
-
     return (
         <div className="my-10 mx-20 shadow">
             {showNewProj && 
@@ -133,9 +118,8 @@ function TaskContainer(){
                     <TaskBlock
                         data={t} 
                         projects={projects} 
-                        addProject={addProject}
+                        addProject={addProject} 
                         remover={()=>removeTask(idx)} 
-                        taskAdder={confirmAddingTask}
                         displayProjs={true}
                     />
                 ))}
@@ -153,8 +137,8 @@ type TaskData = {
     date: string
 }
 export function TaskBlock(
-    {data, projects, addProject, remover, taskAdder, displayProjs}: 
-    {data: TaskData, projects?: string[], addProject?: ()=>void, remover: ()=>void, taskAdder: (e: FormEvent)=>void, displayProjs: boolean}){
+    {data, projects, addProject, remover, displayProjs}: 
+    {data: TaskData, projects?: string[], addProject?: ()=>void, remover: ()=>void, displayProjs: boolean}){
 
     const checkBox = (isDone: boolean) => (
         isDone
@@ -162,11 +146,11 @@ export function TaskBlock(
         : <input className="w-5" type="checkbox"/>
     )
 
-    const isNew = data.id.length === 0
     const [showMenu, setShowMenu] = useState(false)
-    const [edit, setEdit] = useState(isNew)
     const [isComplete, setIsComplete] = useState(data.status === 'done')
-
+    const [isNew, setIsNew] = useState(data.id.length === 0)
+    const [edit, setEdit] = useState(isNew)
+    
     const changeCompletion = () => {
         setIsComplete(!isComplete)
     }
@@ -176,21 +160,28 @@ export function TaskBlock(
         else setEdit(false);
     }
 
-    const confirmEdit = (e: FormEvent) => {
-        e.preventDefault()
-        taskAdder(e)
+    const confirmEdit = () => {
+        if(isNew){
+            // PH: Create
+            data.id = '0010'
+        } else {
+            // PH: Update
+        }
+        setIsNew(false)
+        setEdit(false)
     }
 
     return (
         <div className={
             "border-b border-light py-3 grid grid-cols-12" + (isComplete ? ' bg-light opacity-50 -mx-5 px-5' : '')
         }>
-            {   displayProjs
-                && <p className="text-gray">{data.id}</p>}
+            {/* <h2>{isNew ? "true" : "false"}</h2> */}
+            {displayProjs
+            && <p className="text-gray">{data.id}</p>}
             {
                 edit
                 ? (
-                <form className="col-span-11 grid grid-cols-11" onSubmit={confirmEdit}>
+                <>
                 {
                 displayProjs
                 ? <div className="col-span-2 flex flex-col gap-2">
@@ -218,20 +209,19 @@ export function TaskBlock(
                 </div>
                 <div className={"flex flex-col w-fit ml-auto h-fit gap-2 " + (displayProjs ? 'col-span-2' : 'col-span-3')}>
                     <button 
-                    type="submit"
+                    onClick={confirmEdit}
                     className={
                         "py-1 rounded bg-accent2 hover:bg-primary "
                         + (displayProjs ? 'px-5 text-sm' : 'px-1 text-xs')
                     }>Confirm</button>
                     {<button
                     onClick={cancelEdit}
-                    type="button"
                     className={
                         "py-1 rounded bg-gray text-white hover:bg-dark "
                         + (displayProjs ? 'px-5 text-sm' : 'px-1 text-xs')
                     }>Cancel</button>}
                 </div>
-                </form>
+                </>
                 ) 
                 : (
                 <>
