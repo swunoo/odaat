@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import Tasks from "./components/Tasks"
 import Projects from "./components/Projects"
+import { Homepapge } from "./Homepage"
 
 function App() {
 
@@ -10,6 +11,7 @@ function App() {
     <BrowserRouter>
       <div className={appStyle}>
           <Routes>
+            <Route path="/home" element={<Homepapge />} />
             <Route path="/tasks" element={<Tasks />} />
             <Route path="/projects" element={<Projects />} />
             <Route path="/" element={<Tasks />} />
