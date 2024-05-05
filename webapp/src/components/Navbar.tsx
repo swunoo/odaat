@@ -16,8 +16,8 @@ export default function Navbar({active}: NavProps){
             <img className='h-8' src={logo} alt="Logo" />
             <div className="flex gap-16">
                 {
-                    ['tasks', 'projects'].map(l => (
-                        <a href={'/' + l} className={linkStyle(l)}>{l}</a>
+                    ['tasks', 'projects'].map((l, idx) => (
+                        <a key={idx} href={'/' + l} className={linkStyle(l)}>{l}</a>
                     ))
                 }
             </div>

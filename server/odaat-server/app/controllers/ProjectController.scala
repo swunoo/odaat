@@ -18,15 +18,13 @@ class ProjectController @Inject()(cc: ControllerComponents, projectService: Proj
   // Typecast JSON to Project
   implicit val projectReads: Reads[Project] = Json.reads[Project]
 
-  // TODO: unify the 'request'
-
-  def getAll() = Action.async { implicit request: Request[AnyContent] =>
+  def getAll() = Action.async { request =>
       projectService.getAll map { projects =>
         Ok(Json.toJson(projects))
       }
   }
 
-  def getTitles() = Action.async { implicit request =>
+  def getTitles() = Action.async { request =>
     projectService.getTitles map { titles =>
       Ok(Json.toJson(titles))
     }
@@ -60,9 +58,10 @@ class ProjectController @Inject()(cc: ControllerComponents, projectService: Proj
     }
   }
 
-  def delete(title: String) = Action.async { implicit request: Request[AnyContent] =>
-    projectService.delete(title) map { res =>
-      Ok("Deleted")
+  def delete(title: String) = Action.async { request =>
+    projectService.delete(title) map {
+      case 1 => Ok("Deleted")
+      case _ => BadRequest("Delete Failed")
     }
   }
 

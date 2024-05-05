@@ -5,8 +5,9 @@ import { AddButton } from "./common";
 import arrowIcon from '../assets/images/arrow.svg';
 import menuIcon from '../assets/images/menu.svg';
 
-import { dateToString, menuBtnStyle, numberInputKeyDown } from "../utils";
+import { dateToString, menuBtnStyle, numberInputKeyDown, numberOrNull } from "../utils";
 import { TaskBlock, TaskData } from "./Tasks";
+import { PROJECT_API, TASK_API } from "../conf";
 
 
 type ProjectData = {
@@ -60,7 +61,12 @@ export default function Projects(){
     // Fetch all projects
     useEffect(() => {
         // API: QUERY ALL PROJECTS
-        setProjects(mockData)
+        fetch(PROJECT_API + '/getAll', {
+            method: 'GET'
+        })
+            .then(res => res.json())
+            .then(data => setProjects(data))
+            .catch(err => console.log(err))
     }, [])
 
     // When "Add Project" button is clicked, show NewProject modal
@@ -71,7 +77,18 @@ export default function Projects(){
     // When "Delete" button is clicked, delete the project
     const removeProject = (idx: number) => {
         // API: DELETE PROJECT OF A GIVEN TITLE
-        setProjects(projects.filter((_, i) => i !== idx))
+        fetch(PROJECT_API + '/delete/' + projects[idx]['title'], {
+            method: 'DELETE'
+        })
+            .then(res => {
+                if(res.status === 200) {
+                    setProjects(projects.filter((_, i) => i !== idx))
+                }
+                else {
+                    console.log(res.text());
+                    alert("Unable to delete")
+                }
+            }).catch(err => console.log(err))
     }
 
     // When "Edit" button is clicked, NewProject modal is open with that project's data
@@ -92,22 +109,61 @@ export default function Projects(){
             confirmedProj[key] = val;
         })
 
+        // Cast the duration into a double value
+        confirmedProj['duration'] = numberOrNull(confirmedProj['duration'])
+
+        // Append the completedat attribute
+
         // 2A. Send a PUT request for project updates
         if(editedProject !== null){
             // API: UPDATE PROJECT OF A GIVEN TITLE
-            confirmedProj.title = projects[editedProject]['title'] // title is immutable
-            projects[editedProject] = confirmedProj
+            const currProject = projects[editedProject];
+            confirmedProj.title = currProject.title // title is immutable
+            confirmedProj.completedAt = currProject.completedAt ?? null
 
-            // 3. Update the UI
-            setProjects(projects)
-            setEditedProject(null)
+            fetch(PROJECT_API + '/update', {
+                method: 'PUT',
+                body: JSON.stringify(confirmedProj),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+                .then(res => {
+                    if(res.status === 200) {
+                        projects[editedProject] = confirmedProj
+
+                        // 3. Update the UI
+                        setProjects(projects)
+                        setEditedProject(null)
+                    }
+                    else {
+                        console.log(res.text());
+                        alert("Unable to update")
+                    }
+                }).catch(err => console.log(err))
 
         // 2B. Send a POST request for project creations
         } else {
-            // API: CREATE A PROJECT
+            confirmedProj.completedAt = null
 
-            // 3. Update the UI
-            setProjects([...projects, confirmedProj])
+            // API: CREATE A PROJECT
+            fetch(PROJECT_API + '/add', {
+                method: 'POST',
+                body: JSON.stringify(confirmedProj),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+                .then(res => {
+                    if(res.status === 200) {
+                        // 3. Update the UI
+                        setProjects([...projects, confirmedProj])
+                    }
+                    else {
+                        console.log(res.text());
+                        alert("Unable to create. Title must be unique.")
+                    }
+                }).catch(err => console.log(err))
         }
 
         // 4. Close the modal
@@ -192,14 +248,20 @@ function ProjectBlock(
 
     useEffect(() => {
         // API: QUERY ALL TASKS OF A GIVEN PROJECT
-        setTasks(mockTasks)
+        fetch(TASK_API + '/get?project=' + data.title, {
+            method: 'GET'
+        })
+            .then(res => res.json())
+            .then(data => setTasks(data))
+            .catch(err => console.log(err))
+        
     }, [])
 
     const initTask = {
-        id: '',
+        id: 0,
         project: data.title,
         task: 'Task Name',
-        duration: '1',
+        duration: 1,
         status: 'inprog',
         date: dateToString(new Date())
     }
@@ -212,11 +274,22 @@ function ProjectBlock(
     // When "Delete" button from a Task is clicked, delete it
     const removeTask = (idx: number) => {
         // API: DELETE A TASK
-        setTasks(tasks.filter((_, i) => i !== idx))
+        fetch(TASK_API + '/delete/' + tasks[idx]['id'], {
+            method: 'DELETE'
+        })
+            .then(res => {
+                if(res.status === 200) {
+                    setTasks(tasks.filter((_, i) => i !== idx))
+                }
+                else {
+                    console.log(res.text());
+                    alert("Unable to delete")
+                }
+            }).catch(err => console.log(err))
     }
 
     return (
-        <div>
+        <div key={data.title}>
             <div className="bg-white px-10 py-5 relative">
                     <img 
                     onClick={() => setShowMenu(!showMenu)} 
@@ -331,7 +404,7 @@ export function NewProjectModal(
                 <label className={label}>Time Est.</label>
                 <input 
                     className={input} 
-                    onKeyDown={numberInputKeyDown}  
+                    // onKeyDown={numberInputKeyDown}  
                     type="number" step={0.1} 
                     name="duration" 
                     defaultValue={data?data.duration:''}
@@ -350,8 +423,8 @@ export function NewProjectModal(
                     className={input + " capitalize"} 
                     name="priority"
                 >   {
-                        ['low', 'medium', 'high'].map(p => (
-                            <option value={p}>{p}</option>
+                        ['low', 'medium', 'high'].map((p, idx) => (
+                            <option key={idx} value={p}>{p}</option>
                         ))
                     }
                 </select>

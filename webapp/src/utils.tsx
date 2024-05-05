@@ -30,6 +30,13 @@ export function getValue(id: string){
     return ele.value
 }
 
+// Cast it to a number, or return null
+export function numberOrNull(input: string){
+    if(input && input.length > 0) return (Number)(input)
+    return null
+}
+
+// Convert date to String
 export function dateToString(date: Date){
     return date.toISOString().split('T')[0]
 }

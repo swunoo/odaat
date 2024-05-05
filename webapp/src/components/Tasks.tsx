@@ -4,15 +4,16 @@ import menuIcon from '../assets/images/menu.svg'
 import calendarIcon from '../assets/images/calendar.svg'
 
 import { FormEvent, useEffect, useState } from "react";
-import { dateToString, getValue, menuBtnStyle, MILLIS_A_DAY, numberInputKeyDown } from "../utils";
+import { dateToString, getValue, menuBtnStyle, MILLIS_A_DAY, numberInputKeyDown, numberOrNull } from "../utils";
 import { AddButton, NewButton, SvgChevronLeft, SvgChevronRight } from "./common";
 import { NewProjectModal } from "./Projects";
+import { PROJECT_API, TASK_API } from "../conf";
 
 export type TaskData = {
-    id: string,
+    id: number,
     project: string,
     task: string,
-    duration: string, 
+    duration: null | number, 
     status: string,
     date: string
 }
@@ -68,20 +69,31 @@ function TaskContainer(){
 
     useEffect(() => {
         // API: GET ALL TASKS OF A GIVEN DATE
-        setTasks(mockTasks)
+        fetch(TASK_API + '/get?date=' + dateToString(date), {
+            method: 'GET'
+        })
+            .then(res => res.json())
+            .then(data => setTasks(data))
+            .catch(err => console.log(err))
+        
     }, [date])
     useEffect(() => {
         // API: GET ALL PROJECTS
-        setProjects(mockProj)
+        fetch(PROJECT_API + '/getTitles', {
+            method: 'GET'
+        })
+            .then(res => res.json())
+            .then(data => setProjects(data))
+            .catch(err => console.log(err))
     }, [])
 
     // When "Add Task" button is clicked, init a new Task
     const addTask = () => {
         const initTask = {
-            id: '',
+            id: 0,
             project: projects[0],
             task: 'Task Name',
-            duration: '1',
+            duration: 1,
             status: 'inprog',
             date: dateToString(date)
         }
@@ -91,7 +103,18 @@ function TaskContainer(){
     // When "Delete" button is clicked on a Task, remove it
     const removeTask = (idx: number) => {
         // API: REMOVE A TASK
-        setTasks(tasks.filter((_, i) => i !== idx))
+        fetch(TASK_API + '/delete/' + tasks[idx]['id'], {
+            method: 'DELETE'
+        })
+            .then(res => {
+                if(res.status === 200) {
+                    setTasks(tasks.filter((_, i) => i !== idx))
+                }
+                else {
+                    console.log(res.text());
+                    alert("Unable to delete")
+                }
+            }).catch(err => console.log(err))
     }
 
     // When "Add Project" button is clicked, show NewProject modal
@@ -110,8 +133,21 @@ function TaskContainer(){
         })
 
         // API: CREATE A PROJECT
-        setProjects([...projects, confirmedProj.title])
-        setShowNewProj(false)
+        fetch(PROJECT_API + '/add', {
+            method: 'POST',
+            body: JSON.stringify(confirmedProj),
+            
+        })
+            .then(res => {
+                if(res.status === 200) {
+                    // 3. Update the UI
+                    setProjects([...projects, confirmedProj])
+                }
+                else {
+                    console.log(res.text());
+                    alert("Unable to create. Title must be unique.")
+                }
+            }).catch(err => console.log(err))
     }
 
     // When the left chevron is clicked, decrement the date
@@ -176,7 +212,7 @@ export function TaskBlock(
     // Whether to show Task menu
     const [showMenu, setShowMenu] = useState(false)
     // Whether the Task is a new Task, or an existing one under update
-    const [isNew, setIsNew] = useState(data.id.length === 0)
+    const [isNew, setIsNew] = useState(data.id === 0)
     // Whether in EDIT mode
     const [edit, setEdit] = useState(isNew)
     
@@ -184,7 +220,18 @@ export function TaskBlock(
     const changeCompletion = () => {
         const newStatus = data.status === 'done' ? 'inprog' : 'done'
         // API: UPDATE THE STATUS OF A TASK
-        setData({...data, status: newStatus})
+        fetch(TASK_API + '/updateStatus/' + data.id + '?status=' + newStatus, {
+            method: 'PUT'
+        })
+        .then(res => {
+            if(res.status === 200) {
+                setData({...data, status: newStatus})
+            }
+            else {
+                console.log(res.text());
+                alert("Unable to update")
+            }
+        }).catch(err => console.log(err))
     }
 
     // When the "Cancel" button on EDIT mode is clicked, data is not saved.
@@ -199,7 +246,7 @@ export function TaskBlock(
         const newData = {
             id: data.id,
             project: isTaskPage ? getValue('task-input-proj') : data.project,
-            duration: getValue('task-input-duration'),
+            duration: numberOrNull(getValue('task-input-duration')),
             task: getValue('task-input-task'),
             status: data.status,
             date: isTaskPage ? data.date : getValue('task-input-date')
@@ -207,20 +254,58 @@ export function TaskBlock(
 
         if(isNew){
             // API: CREATE A TASK
-            newData.id = '0010'
+            fetch(TASK_API + '/add', {
+                method: 'POST',
+                body: JSON.stringify(newData),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(res => {
+                if(res.status === 200) {
+                    return res.json()
+                }
+                else {
+                    console.log(res.text());
+                    throw new Error()
+                }
+            }).then(data => {
+                newData.id = data.id
+                setData(newData)
+            })
+            .catch(err => console.log(err))
+            
         } else {
             // API: UPDATE A TASK
+            fetch(TASK_API + '/update/' + data.id, {
+                method: 'PUT',
+                body: JSON.stringify(newData),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(res => {
+                if(res.status === 200) {
+                    setData(newData)
+
+                }
+                else {
+                    console.log(res.text());
+                    alert("Unable to update")
+                }
+            }).catch(err => console.log(err))
         }
 
-        setData(newData)
         setIsNew(false)
         setEdit(false)
     }
 
     return (
-        <div className={
-            "border-b border-light py-3 grid grid-cols-12" + 
-            (data.status === 'done' ? ' bg-light opacity-50 -mx-5 px-5' : '')
+        <div 
+            key={data.id}
+            className={
+                "border-b border-light py-3 grid grid-cols-12" + 
+                (data.status === 'done' ? ' bg-light opacity-50 -mx-5 px-5' : '')
         }>
             {// attr: Task IDs
                 // Task IDs are shown only in TaskPage
@@ -240,10 +325,10 @@ export function TaskBlock(
                         <select id="task-input-proj" className="
                             h-fit mr-5 px-3 py-1 border-r-4 border-light
                         ">
-                            {projects && projects.map((proj) => (
+                            {projects && projects.map((proj, idx) => (
                                     proj === data.project
-                                    ? <option value={proj} selected>{proj}</option>
-                                    : <option value={proj}>{proj}</option>
+                                    ? <option key={idx} value={proj} selected>{proj}</option>
+                                    : <option key={idx} value={proj}>{proj}</option>
                                 ))}
                         </select>
                         {addProject && <NewButton label="New Project" clickHandler={addProject} />}
@@ -265,7 +350,7 @@ export function TaskBlock(
                         text-right px-3 py-1 w-20 h-fit bg-transparent
                     " type="number" 
                     // onKeyDown={numberInputKeyDown} 
-                    defaultValue={data.duration}/>
+                    defaultValue={data.duration ?? 0}/>
                     <span>h</span>
                 </div>
                 <div 
@@ -303,9 +388,11 @@ export function TaskBlock(
 
                 {/* attr: other attributes are shown in both TaskPage and ProjectPage */}
                 <span className="col-span-6"> {data.task} </span>
-                <span className="text-right"> {data.duration + ' h'} </span>
+                <span className={
+                    "text-right" + (isTaskPage ? '' : ' col-span-2')
+                    }> {data.duration + ' h'} </span>
                 <div 
-                    className={"flex justify-end relative " + (isTaskPage ? "gap-8 col-span-2" : "gap-3 col-span-3")}
+                    className={"flex justify-end relative col-span-2 " + (isTaskPage ? "gap-8" : "gap-3")}
                 >
                     <input
                         onChange={changeCompletion} 
