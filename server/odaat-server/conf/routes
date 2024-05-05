@@ -13,5 +13,12 @@ POST    /api/v1/project/add             controllers.ProjectController.add()
 PUT     /api/v1/project/update          controllers.ProjectController.update()
 DELETE  /api/v1/project/delete/:title   controllers.ProjectController.delete(title: String)
 
+# Task API
+GET     /api/v1/task/getAll             controllers.TaskController.getAll()
+GET     /api/v1/task/get                controllers.TaskController.get(project: Option[String], date: Option[String])
+POST    /api/v1/task/add                controllers.TaskController.add()
+PUT     /api/v1/task/update/:id         controllers.TaskController.update(id: Long)
+DELETE  /api/v1/task/delete/:id         controllers.TaskController.delete(id: Long)
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

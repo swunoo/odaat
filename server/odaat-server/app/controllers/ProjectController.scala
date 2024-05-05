@@ -1,10 +1,10 @@
 package controllers
 
-import models.{Project, low}
-import play.api.mvc._
-import play.api.libs.json._
+import models.Project
 import service.ProjectService
 
+import play.api.mvc._
+import play.api.libs.json._
 import java.time.LocalDate
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -13,10 +13,12 @@ import scala.concurrent.Future
 class ProjectController @Inject()(cc: ControllerComponents, projectService: ProjectService) extends AbstractController(cc){
 
   // Typecase Project to JSON
-  implicit  val projectFormat = Json.format[Project]
+  implicit val projectFormat = Json.format[Project]
 
   // Typecast JSON to Project
   implicit val projectReads: Reads[Project] = Json.reads[Project]
+
+  // TODO: unify the 'request'
 
   def getAll() = Action.async { implicit request: Request[AnyContent] =>
       projectService.getAll map { projects =>

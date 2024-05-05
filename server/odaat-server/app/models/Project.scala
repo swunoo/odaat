@@ -19,22 +19,22 @@ case object high extends ProjectPriority
 // Project model
 case class Project(
     var title: String,
-    duration: Double,
-    completedAt: LocalDate,
-    deadline: LocalDate,
+    duration: Option[Double],
+    completedAt: Option[LocalDate],
+    deadline: Option[LocalDate],
     priority: String,
-    description: String
+    description: Option[String]
 )
 
 
-// Project entity (Project table in the database)
+// Project entity (`project` table)
 class ProjectTableDef(tag: Tag) extends Table[Project](tag, "project"){
   def title = column[String]("title", O.PrimaryKey)
-  def duration = column[Double]("duration")
-  def completedAt = column[LocalDate]("completed_at")
-  def deadline = column[LocalDate]("deadline")
+  def duration = column[Option[Double]]("duration")
+  def completedAt = column[Option[LocalDate]]("completed_at")
+  def deadline = column[Option[LocalDate]]("deadline")
   def priority = column[String]("priority")
-  def description = column[String]("description")
+  def description = column[Option[String]]("description")
 
   override def * =
     (title, duration, completedAt, deadline, priority, description) <> (Project.tupled, Project.unapply)
@@ -43,7 +43,7 @@ class ProjectTableDef(tag: Tag) extends Table[Project](tag, "project"){
 // Repository layer for Project
 class ProjectRepository @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)(
                                  implicit executionContext: ExecutionContext
-) extends  HasDatabaseConfigProvider[JdbcProfile] {
+) extends HasDatabaseConfigProvider[JdbcProfile] {
 
   var projectRepo = TableQuery[ProjectTableDef]
 
@@ -61,7 +61,6 @@ class ProjectRepository @Inject()(protected val dbConfigProvider: DatabaseConfig
       .map(res => 1)
       .recover {
         case ex: Exception => {
-          println("Error from the repo")
           ex.printStackTrace()
           0
         }
@@ -75,7 +74,7 @@ class ProjectRepository @Inject()(protected val dbConfigProvider: DatabaseConfig
             .update(project.duration, project.completedAt, project.deadline, project.priority, project.description)
       )
   }
-  
+
   def delete(title: String): Future[Int] = {
     dbConfig.db.run(projectRepo.filter(_.title === title).delete)
   }
