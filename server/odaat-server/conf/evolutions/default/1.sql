@@ -2,7 +2,7 @@
 
 # --- !Ups
 CREATE TABLE IF NOT EXISTS `odaat`.`project` (
-    `title` VARCHAR(50) NOT NULL,
+    `title` VARCHAR(50) NOT NULL DEFAULT '',
     `duration` DOUBLE,
     `completed_at` DATE,
     `deadline` DATE,

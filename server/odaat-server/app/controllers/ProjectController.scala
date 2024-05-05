@@ -8,19 +8,15 @@ import service.ProjectService
 import java.time.LocalDate
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 class ProjectController @Inject()(cc: ControllerComponents, projectService: ProjectService) extends AbstractController(cc){
 
+  // Typecase Project to JSON
   implicit  val projectFormat = Json.format[Project]
 
   // Typecast JSON to Project
   implicit val projectReads: Reads[Project] = Json.reads[Project]
-
-  def getMock = Action {
-    val project = new Project(
-      "Title", 10.5, LocalDate.now(), LocalDate.now().plusDays(5), "low", "lorem")
-    Ok(Json.toJson(project))
-  }
 
   def getAll() = Action.async { implicit request: Request[AnyContent] =>
       projectService.getAll map { projects =>
@@ -28,26 +24,37 @@ class ProjectController @Inject()(cc: ControllerComponents, projectService: Proj
       }
   }
 
-  def add() = Action(parse.json) { request =>
+  def getTitles() = Action.async { implicit request =>
+    projectService.getTitles map { titles =>
+      Ok(Json.toJson(titles))
+    }
+  }
+
+  def add() = Action(parse.json).async { request =>
     request.body.validate[Project] match {
         case JsSuccess(project, _) => {
-          projectService.add(project)
-          Ok(Json.toJson(project))
+          projectService.add(project).map {
+            case 1 => Ok(Json.toJson(project))
+            case _ => BadRequest("Invalid Data")
+          }
         }
         case JsError(errors) =>
-          BadRequest("Invalid data")
+          println(errors)
+          Future.successful(BadRequest("Invalid Data"))
       }
   }
 
-  def update(title: String) = Action(parse.json) { request =>
+  def update() = Action(parse.json).async { request =>
     request.body.validate[Project] match {
       case JsSuccess(project, _) => {
-        project.title = title
-        projectService.update(project)
-        Ok(Json.toJson(project))
+        projectService.update(project).map {
+          case 1 => Ok(Json.toJson(project))
+          case _ => BadRequest("Update Failed")
+        }
       }
       case JsError(errors) =>
-        BadRequest("Invalid data")
+        println(errors)
+        Future.successful(BadRequest("Invalid Data"))
     }
   }
 

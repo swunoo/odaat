@@ -7,9 +7,10 @@
 GET     /                               controllers.HomeController.index()
 
 # Project API
-GET     /api/v1/project/getAll          controllers.ProjectController.getAll
-POST    /api/v1/project/add             controllers.ProjectController.add
-PUT     /api/v1/project/update/:title   controllers.ProjectController.update(title: String)
+GET     /api/v1/project/getAll          controllers.ProjectController.getAll()
+GET     /api/v1/project/getTitles       controllers.ProjectController.getTitles()
+POST    /api/v1/project/add             controllers.ProjectController.add()
+PUT     /api/v1/project/update          controllers.ProjectController.update()
 DELETE  /api/v1/project/delete/:title   controllers.ProjectController.delete(title: String)
 
 # Map static resources from the /public folder to the /assets URL path

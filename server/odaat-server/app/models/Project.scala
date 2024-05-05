@@ -29,7 +29,7 @@ case class Project(
 
 // Project entity (Project table in the database)
 class ProjectTableDef(tag: Tag) extends Table[Project](tag, "project"){
-  def title = column[String]("title", O.PrimaryKey, O.AutoInc)
+  def title = column[String]("title", O.PrimaryKey)
   def duration = column[Double]("duration")
   def completedAt = column[LocalDate]("completed_at")
   def deadline = column[LocalDate]("deadline")
@@ -47,21 +47,25 @@ class ProjectRepository @Inject()(protected val dbConfigProvider: DatabaseConfig
 
   var projectRepo = TableQuery[ProjectTableDef]
 
-  def add(project: Project): Future[String] = {
-    dbConfig.db
-      .run(projectRepo += project)
-      .map(res => "Success")
-      .recover {
-        case ex: Exception => {
-          val err = ex.getMessage
-          printf(err)
-          err
-        }
-      }
+  def getAll: Future[Seq[Project]] = {
+    dbConfig.db.run(projectRepo.result)
   }
 
-  def delete(title: String): Future[Int] = {
-    dbConfig.db.run(projectRepo.filter(_.title === title).delete)
+  def getTitles: Future[Seq[String]] = {
+    dbConfig.db.run(projectRepo.result).map(_.map(_.title))
+  }
+
+  def add(project: Project): Future[Int] = {
+    dbConfig.db
+      .run(projectRepo += project)
+      .map(res => 1)
+      .recover {
+        case ex: Exception => {
+          println("Error from the repo")
+          ex.printStackTrace()
+          0
+        }
+      }
   }
 
   def update(project: Project): Future[Int] = {
@@ -71,8 +75,8 @@ class ProjectRepository @Inject()(protected val dbConfigProvider: DatabaseConfig
             .update(project.duration, project.completedAt, project.deadline, project.priority, project.description)
       )
   }
-
-  def getAll: Future[Seq[Project]] = {
-    dbConfig.db.run(projectRepo.result)
+  
+  def delete(title: String): Future[Int] = {
+    dbConfig.db.run(projectRepo.filter(_.title === title).delete)
   }
 }
