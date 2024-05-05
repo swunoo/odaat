@@ -1,18 +1,19 @@
 /* Methods and component of TaskBlocks, used by both Tasks.tsx and Projects.tsx */
 
 import { useState, useEffect } from "react"
-import { TASK_API } from "../conf"
+import { PROJECT_API, TASK_API } from "../conf"
 import { dateToString, getValue, menuBtnStyle, numberOrNull } from "../utils"
 import { AddButton, NewButton } from "./common"
 import { TaskData } from "./Tasks"
 import menuIcon from '../assets/images/menu.svg';
 
 export function TaskWrapper(
-    { project, date, projects }
-        : { project?: string, date?: string, projects?: string[] }
+    { project, date }: { project?: string, date?: Date }
 ) {
 
     const [tasks, setTasks] = useState<TaskData[]>([])
+
+    const [projectList, setProjectList] = useState<string[]>([])
 
     useEffect(() => {
         // API: QUERY ALL TASKS OF A GIVEN PROJECT
@@ -27,6 +28,16 @@ export function TaskWrapper(
             .then(data => setTasks(data))
             .catch(err => console.log(err))
 
+    }, [])
+
+    useEffect(() => {
+        // API: GET ALL PROJECTS
+        fetch(PROJECT_API + '/getTitles', {
+            method: 'GET'
+        })
+            .then(res => res.json())
+            .then(data => setProjectList(data))
+            .catch(err => console.log(err))
     }, [])
 
     const initTask = {
@@ -221,8 +232,8 @@ export function TaskBlock(
                                     // on TaskPage
                                     ? <div className="col-span-2 flex flex-col gap-2">
                                         <select id="task-input-proj" className="
-                            h-fit mr-5 px-3 py-1 border-r-4 border-light
-                        ">
+                                            h-fit mr-5 px-3 py-1 border-r-4 border-light
+                                        ">
                                             {projects && projects.map((proj, idx) => (
                                                 proj === data.project
                                                     ? <option key={idx} value={proj} selected>{proj}</option>

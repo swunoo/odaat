@@ -52,15 +52,7 @@ function TaskContainer(){
             .catch(err => console.log(err))
         
     }, [date])
-    useEffect(() => {
-        // API: GET ALL PROJECTS
-        fetch(PROJECT_API + '/getTitles', {
-            method: 'GET'
-        })
-            .then(res => res.json())
-            .then(data => setProjects(data))
-            .catch(err => console.log(err))
-    }, [])
+
 
     // When "Add Task" button is clicked, init a new Task
     const addTask = () => {
@@ -174,7 +166,7 @@ function TaskContainer(){
             <main className="
                 bg-white min-h-96 px-5 
             ">
-                <TaskWrapper />
+                <TaskWrapper date={date} />
             </main>
         </div>
     )
