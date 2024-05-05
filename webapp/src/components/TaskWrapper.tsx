@@ -3,12 +3,13 @@
 import { useState, useEffect } from "react"
 import { PROJECT_API, TASK_API } from "../conf"
 import { dateToString, getValue, menuBtnStyle, numberOrNull } from "../utils"
-import { AddButton, NewButton } from "./common"
+import { NewTaskButton, NewButton } from "./common"
 import { TaskData } from "./Tasks"
 import menuIcon from '../assets/images/menu.svg';
 
 export function TaskWrapper(
-    { project, date }: { project?: string, date?: Date }
+    { project, date, addProject, newProjTitle }
+    : { project?: string, date?: Date, addProject?: ()=>void, newProjTitle?: string }
 ) {
 
     const [tasks, setTasks] = useState<TaskData[]>([])
@@ -19,7 +20,7 @@ export function TaskWrapper(
         // API: QUERY ALL TASKS OF A GIVEN PROJECT
         let taskQuery = TASK_API + '/get?'
         if (project) taskQuery += 'project=' + project
-        if (date) taskQuery += '&date=' + date
+        if (date) taskQuery += '&date=' + dateToString(date)
 
         fetch(taskQuery, {
             method: 'GET'
@@ -28,7 +29,7 @@ export function TaskWrapper(
             .then(data => setTasks(data))
             .catch(err => console.log(err))
 
-    }, [])
+    }, [date])
 
     useEffect(() => {
         // API: GET ALL PROJECTS
@@ -40,13 +41,17 @@ export function TaskWrapper(
             .catch(err => console.log(err))
     }, [])
 
+    useEffect(() => {
+        if(newProjTitle) setProjectList([...projectList, newProjTitle])
+    }, [newProjTitle])
+
     const initTask = {
         id: 0,
-        project: (project ?? (projects ? projects[0] : '')),
+        project: project ?? '',
         task: 'Task Name',
         duration: 1,
         status: 'inprog',
-        date: dateToString(new Date())
+        date: dateToString(date ?? new Date())
     }
 
     // When "Add Task" button is clicked, init a new Task
@@ -86,24 +91,29 @@ export function TaskWrapper(
     }
 
     return (
-        <>
-            <div className="">
+        <div className="">
+            <div>
                 {
                     tasks.map((t, idx) => (
                         <TaskBlock
                             initData={t}
                             remover={() => removeTask(idx)}
                             taskSetter={(task) => changeTask(idx, task)}
-                            isTaskPage={false}
+                            isTaskPage={!project}
+                            projects={projectList}
+                            addProject={addProject}
                         />
                     ))
                 }
             </div>
 
-            <div className="flex justify-end py-10">
-                <AddButton label="New Task" clickHandler={addTask} />
+            <div className= {
+                "flex justify-end"
+                + (!project ? ' absolute top-2 right-2' : ' py-10')
+            }>
+                <NewTaskButton clickHandler={addTask} />
             </div>
-        </>
+        </div>
     )
 }
 

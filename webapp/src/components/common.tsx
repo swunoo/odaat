@@ -2,16 +2,29 @@ import plusIcon from '../assets/images/plus.svg'
 
 /** Components */
 
-export function AddButton(
-    {label, clickHandler}:
-    {label: string, clickHandler: ()=>void}
+export function NewProjButton(
+    {clickHandler}:
+    {clickHandler: ()=>void}
 ){
     return (
         <button
             onClick={clickHandler}
             className="
-                bg-white px-5 py-1 rounded text-sm shadow-lg hover:bg-secondary hover:text-white
-        ">{label}</button>
+                bg-white px-5 py-2 rounded text-sm shadow-lg hover:bg-secondary hover:text-white
+        ">New Project</button>
+    )
+}
+
+export function NewTaskButton(
+    {clickHandler}:
+    {clickHandler: ()=>void}
+){
+    return (
+        <button
+            onClick={clickHandler}
+            className="
+                bg-secondary text-white px-5 py-2 rounded text-sm shadow-lg hover:bg-secondary hover:text-white
+        ">New Task</button>
     )
 }
 
