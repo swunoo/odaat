@@ -5,9 +5,9 @@ import { AddButton } from "./common";
 import arrowIcon from '../assets/images/arrow.svg';
 import menuIcon from '../assets/images/menu.svg';
 
-import { dateToString, menuBtnStyle, numberInputKeyDown, numberOrNull } from "../utils";
-import { TaskBlock, TaskData } from "./Tasks";
-import { PROJECT_API, TASK_API } from "../conf";
+import { PROJECT_API } from "../conf";
+import { menuBtnStyle, numberOrNull } from "../utils";
+import { TaskWrapper } from "./TaskWrapper";
 
 
 type ProjectData = {
@@ -23,34 +23,6 @@ type ProjectData = {
 /* Projects Page */
 export default function Projects(){
 
-    const mockData: ProjectData[] = [
-        {
-            id: '001',
-            title: 'Learn Scala',
-            duration: '10',
-            completedAt: null,
-            deadline: '2024-05-15',
-            priority: 'high',
-            description: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Explicabo quis officia corporis ullam repudiandae voluptatibus nobis quam quo architecto amet, minus sint aliquid similique eius ipsum vero cumque cum dolore illo veritatis? Eos qui rerum veritatis voluptas asperiores, iste ullam vero optio fugiat vitae iure magnam ratione delectus ipsum at nulla quasi distinctio modi ducimus, dolore libero corporis suscipit animi ut.'
-        }, {
-            id: '002',
-            title: 'Build Scala',
-            duration: '15',
-            completedAt: null,
-            deadline: '2024-05-25',
-            priority: 'medium',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Id inventore quos iure non blanditiis natus possimus eveniet a aperiam. Officiis!'
-        }, {
-            id: '005',
-            title: 'Build React',
-            duration: '1',
-            completedAt: '2023-10-15',
-            deadline: '2024-08-15',
-            priority: 'low',
-            description: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores, ipsam!'
-        }
-    ]
-
     // Data of all projects
     const [projects, setProjects] = useState<ProjectData[]>([])
     // Whether to show the NewProject modal
@@ -65,7 +37,9 @@ export default function Projects(){
             method: 'GET'
         })
             .then(res => res.json())
-            .then(data => setProjects(data))
+            .then(data => {
+                setProjects(data)
+            })
             .catch(err => console.log(err))
     }, [])
 
@@ -199,7 +173,7 @@ export default function Projects(){
                     <ProjectBlock
                         data={proj}
                         editor={()=>editProject(i)}
-                        remover={()=>removeProject(i)} 
+                        remover={()=>removeProject(i)}
                     />
                 ))}
             </main>
@@ -213,100 +187,10 @@ function ProjectBlock(
     {data: ProjectData, editor: ()=>void, remover: ()=>void}
 ){
 
-    // PH 
-    const mockTasks = [
-        {
-            id: '0015',
-            project: data.title,
-            task: 'Take the 2 hour course',
-            duration: '2',
-            status: 'done',
-            date: '2023-10-15'
-        }, {
-            id: '0020',
-            project: data.title,
-            task: 'Build the backend',
-            duration: '10',
-            status: 'inprog',
-            date: '2024-6-20'
-        }, {
-            id: '0023',
-            project: data.title,
-            task: 'Write the frontend',
-            duration: '0.5',
-            status: 'inprog',
-            date: '2024-1-1'
-        },
-    ]
-
-    // All Tasks belonging to this Project
-    const [tasks, setTasks] = useState<TaskData[]>([])
     // Expand or collapse Tasks data
     const [showTasks, setShowTasks] = useState(false)
     // Whether to show the Project menu
     const [showMenu, setShowMenu] = useState(false)
-
-    useEffect(() => {
-        // API: QUERY ALL TASKS OF A GIVEN PROJECT
-        fetch(TASK_API + '/get?project=' + data.title, {
-            method: 'GET'
-        })
-            .then(res => res.json())
-            .then(data => setTasks(data))
-            .catch(err => console.log(err))
-        
-    }, [])
-
-    const initTask = {
-        id: 0,
-        project: data.title,
-        task: 'Task Name',
-        duration: 1,
-        status: 'inprog',
-        date: dateToString(new Date())
-    }
-
-    // When "Add Task" button is clicked, init a new Task
-    const addTask = () => {
-        setTasks([...tasks, initTask])
-    }
-
-    // After adding a task, it is updated in the block.
-    const changeTask = (idx: number, task: TaskData) => {
-        const newTasks = [...tasks]
-        newTasks[idx] = task;
-        console.log('updated');
-        console.log(task);
-        console.log(newTasks);
-        
-        setTasks(newTasks);
-    }
-
-    // When "Delete" button from a Task is clicked, delete it
-    const removeTask = (idx: number) => {
-
-        const taskId = tasks[idx]['id']
-
-        // For cancelling "Create New", it is not yet saved in the database
-        if(taskId === 0){ 
-            setTasks(tasks.filter((_, i) => i !== idx))
-            return;
-        }
-
-        // API: DELETE A TASK
-        fetch(TASK_API + '/delete/' + taskId, {
-            method: 'DELETE'
-        })
-            .then(res => {
-                if(res.status === 200) {
-                    setTasks(tasks.filter((_, i) => i !== idx))
-                }
-                else {
-                    console.log(res.text());
-                    alert("Unable to delete")
-                }
-            }).catch(err => console.log(err))
-    }
 
     return (
         <div key={data.title}>
@@ -365,26 +249,7 @@ function ProjectBlock(
                     <span>Tasks</span>
                 </button>
 
-                {
-                showTasks &&
-                <>
-                <div className="">
-                    {
-                        tasks.map((t, idx) => (
-                            <TaskBlock 
-                                initData={t} 
-                                remover={()=>removeTask(idx)}
-                                taskSetter={(task)=>changeTask(idx, task)}
-                                isTaskPage={false}
-                            />
-                        ))
-                    }
-                </div>
-
-                <div className="flex justify-end py-10">
-                    <AddButton label="New Task" clickHandler={addTask} />
-                </div>
-                </>}
+                { showTasks && <TaskWrapper project={data.title} /> }
 
             </div>
         </div>
@@ -418,25 +283,24 @@ export function NewProjectModal(
                     data
                     ? <input className={input + ' border-none'} type="text" name="title" value={data.title} disabled/>
                     : <input
-                        className={input} type="text" name="title" 
+                        className={input} type="text" name="title" required
                     />
                 }
 
                 <label className={label}>Time Est.</label>
                 <input 
                     className={input} 
-                    // onKeyDown={numberInputKeyDown}  
                     type="number" step={0.1} 
                     name="duration" 
-                    defaultValue={data?data.duration:''}
+                    defaultValue={data ? data.duration : 1}
                 />
 
                 <label className={label}>Deadline</label>
                 <input 
                     className={input} 
                     type="date" 
-                    name="deadline"  
-                    defaultValue={data?data.deadline:''}
+                    name="deadline"
+                    defaultValue={data ? data.deadline: '2025-01-01'}
                 />
 
                 <label className={label}>Priority</label>
