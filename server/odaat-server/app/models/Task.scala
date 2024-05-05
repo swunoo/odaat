@@ -76,6 +76,14 @@ class TaskRepository @Inject()(
       )
   }
 
+  def updateStatus(id: Long, status: String): Future[Int] = {
+    dbConfig.db
+      .run(taskRepo.filter(_.id === id)
+        .map(t => (t.status))
+        .update(status)
+      )
+  }
+
   def delete(id: Long): Future[Int] = {
     dbConfig.db.run(taskRepo.filter(_.id === id).delete)
   }

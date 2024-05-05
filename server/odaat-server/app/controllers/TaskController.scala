@@ -58,9 +58,17 @@ class TaskController @Inject()(cc: ControllerComponents, taskService: TaskServic
     }
   }
 
+  def updateStatus(id: Long, status: String) = Action.async { request =>
+    taskService.updateStatus(id, status) map  {
+      case 1 => Ok("Updated")
+      case _ => (BadRequest("Update Failed"))
+    }
+  }
+
   def delete(id: Long) = Action.async { request =>
-    taskService.delete(id) map { res =>
-      Ok("Deleted")
+    taskService.delete(id) map  {
+      case 1 => Ok("Deleted")
+      case _ => BadRequest("Delete Failed")
     }
   }
 

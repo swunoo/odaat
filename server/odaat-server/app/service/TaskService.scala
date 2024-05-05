@@ -24,6 +24,10 @@ class TaskService @Inject()(taskRepo: TaskRepository) {
     taskRepo.update(task)
   }
 
+  def updateStatus(id: Long, status: String): Future[Int] = {
+    taskRepo.updateStatus(id, status)
+  }
+
   def delete(id: Long): Future[Int] = {
     taskRepo.delete(id)
   }

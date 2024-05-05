@@ -18,6 +18,7 @@ GET     /api/v1/task/getAll             controllers.TaskController.getAll()
 GET     /api/v1/task/get                controllers.TaskController.get(project: Option[String], date: Option[String])
 POST    /api/v1/task/add                controllers.TaskController.add()
 PUT     /api/v1/task/update/:id         controllers.TaskController.update(id: Long)
+PUT     /api/v1/task/updateStatus/:id   controllers.TaskController.updateStatus(id: Long, status: String)
 DELETE  /api/v1/task/delete/:id         controllers.TaskController.delete(id: Long)
 
 # Map static resources from the /public folder to the /assets URL path
