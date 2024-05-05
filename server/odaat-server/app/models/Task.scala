@@ -56,16 +56,10 @@ class TaskRepository @Inject()(
     dbConfig.db.run(filteredQuery.result)
   }
 
-  def add(task: Task): Future[Int] = {
+  def add(task: Task): Future[Long] = {
     dbConfig.db
-      .run(taskRepo += task)
-      .map(res => 1)
-      .recover {
-        case ex: Exception => {
-          ex.printStackTrace()
-          0
-        }
-      }
+      .run(taskRepo returning taskRepo.map(_.id) += task)
+      .map { id => id }
   }
 
   def update(task: Task): Future[Int] = {

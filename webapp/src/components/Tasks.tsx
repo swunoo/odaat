@@ -100,6 +100,19 @@ function TaskContainer(){
         setTasks([...tasks, initTask])
     }
 
+    // After adding a task, it is updated in the block.
+    const changeTask = (idx: number, task: TaskData) => {
+        const newTasks = [...tasks]
+        newTasks[idx] = task;
+        console.log('updated');
+        console.log(task);
+        console.log(newTasks);
+        
+        
+        
+        setTasks(newTasks);
+    }
+
     // When "Delete" button is clicked on a Task, remove it
     const removeTask = (idx: number) => {
         // API: REMOVE A TASK
@@ -194,6 +207,7 @@ function TaskContainer(){
                         projects={projects} 
                         addProject={addProject} 
                         remover={()=>removeTask(idx)} 
+                        taskSetter={(task)=>changeTask(idx, task)}
                         isTaskPage={true}
                     />
                 ))}
@@ -204,8 +218,8 @@ function TaskContainer(){
 
 /* Component of Each Task, used in both the TaskPage and ProjectPage */
 export function TaskBlock(
-    {initData, projects, addProject, remover, isTaskPage}: 
-    {initData: TaskData, projects?: string[], addProject?: ()=>void, remover: ()=>void, isTaskPage: boolean}){
+    {initData, projects, addProject, remover, taskSetter, isTaskPage}: 
+    {initData: TaskData, projects?: string[], addProject?: ()=>void, remover: ()=>void, taskSetter: (task: TaskData)=>void, isTaskPage: boolean}){
 
     // Data of the Task
     const [data, setData] = useState<TaskData>(initData)
@@ -215,6 +229,10 @@ export function TaskBlock(
     const [isNew, setIsNew] = useState(data.id === 0)
     // Whether in EDIT mode
     const [edit, setEdit] = useState(isNew)
+
+    useEffect(() => {
+        setData(initData)
+    }, [initData])
     
     // When the "Done" checkbox is toggled, status is updated
     const changeCompletion = () => {
@@ -269,9 +287,9 @@ export function TaskBlock(
                     console.log(res.text());
                     throw new Error()
                 }
-            }).then(data => {
-                newData.id = data.id
-                setData(newData)
+            }).then(addedId => {
+                newData.id = (Number)(addedId)
+                taskSetter(newData)
             })
             .catch(err => console.log(err))
             
@@ -287,7 +305,6 @@ export function TaskBlock(
             .then(res => {
                 if(res.status === 200) {
                     setData(newData)
-
                 }
                 else {
                     console.log(res.text());
@@ -307,6 +324,7 @@ export function TaskBlock(
                 "border-b border-light py-3 grid grid-cols-12" + 
                 (data.status === 'done' ? ' bg-light opacity-50 -mx-5 px-5' : '')
         }>
+
             {// attr: Task IDs
                 // Task IDs are shown only in TaskPage
                 isTaskPage && <p className="text-gray">{data.id}</p>

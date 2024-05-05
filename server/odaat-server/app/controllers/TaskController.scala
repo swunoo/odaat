@@ -33,10 +33,7 @@ class TaskController @Inject()(cc: ControllerComponents, taskService: TaskServic
   def add() = Action(parse.json).async { request =>
     request.body.validate[Task] match {
       case JsSuccess(task, _) => {
-        taskService.add(task).map {
-          case 1 => Ok(Json.toJson(task))
-          case _ => BadRequest("Invalid Data")
-        }
+        taskService.add(task).map { addedId => Ok(addedId.toString) }
       }
       case JsError(errors) =>
         println(errors)

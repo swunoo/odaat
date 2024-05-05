@@ -271,10 +271,30 @@ function ProjectBlock(
         setTasks([...tasks, initTask])
     }
 
+    // After adding a task, it is updated in the block.
+    const changeTask = (idx: number, task: TaskData) => {
+        const newTasks = [...tasks]
+        newTasks[idx] = task;
+        console.log('updated');
+        console.log(task);
+        console.log(newTasks);
+        
+        setTasks(newTasks);
+    }
+
     // When "Delete" button from a Task is clicked, delete it
     const removeTask = (idx: number) => {
+
+        const taskId = tasks[idx]['id']
+
+        // For cancelling "Create New", it is not yet saved in the database
+        if(taskId === 0){ 
+            setTasks(tasks.filter((_, i) => i !== idx))
+            return;
+        }
+
         // API: DELETE A TASK
-        fetch(TASK_API + '/delete/' + tasks[idx]['id'], {
+        fetch(TASK_API + '/delete/' + taskId, {
             method: 'DELETE'
         })
             .then(res => {
@@ -353,7 +373,8 @@ function ProjectBlock(
                         tasks.map((t, idx) => (
                             <TaskBlock 
                                 initData={t} 
-                                remover={()=>removeTask(idx)} 
+                                remover={()=>removeTask(idx)}
+                                taskSetter={(task)=>changeTask(idx, task)}
                                 isTaskPage={false}
                             />
                         ))

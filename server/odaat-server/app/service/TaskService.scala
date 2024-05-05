@@ -15,7 +15,7 @@ class TaskService @Inject()(taskRepo: TaskRepository) {
     taskRepo.get(project, date)
   }
 
-  def add(task: Task): Future[Int] = {
+  def add(task: Task): Future[Long] = {
     taskRepo.add(task)
   }
 
