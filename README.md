@@ -1,20 +1,20 @@
 # ODAAT - Personal Task Management Tool
 
-<section style="display: flex !important; flex-direction: row; gap: 100px;">
-    <img style="height:18px; padding-right: 5px; display: inline-flex;" src="./readme_images/scala.png" />
-    <p style="padding-left: 20px; padding-right: 5px; display: inline-flex;">Scala</p>
-    <img style="height:18px; " src="./readme_images/play.png" />
-    <p style="padding-left: 20px; padding-right: 5px; display: inline-flex;">Play</p>
+<section>
+    <img style="height:18px;" src="./readme_images/scala.png" />
+    <span>Scala</span>
+    <img style="height:18px; " src="./readme_images/spanlay.png" />
+    <span>Play</span>
     <img style="height:18px; " src="./readme_images/js.png" />
-    <p style="padding-left: 20px; padding-right: 5px; display: inline-flex;">JavaScript</p>
+    <span>JavaScript</span>
     <img style="height:18px; " src="./readme_images/ts.png" />
-    <p style="padding-left: 20px; padding-right: 5px; display: inline-flex;">TypeScript</p>
+    <span>TypeScript</span>
     <img style="height:18px; " src="./readme_images/react.png" />
-    <p style="padding-left: 20px; padding-right: 5px; display: inline-flex;">React</p>
+    <span>React</span>
     <img style="height:18px; " src="./readme_images/mysql.png" />
-    <p style="padding-left: 20px; padding-right: 5px; display: inline-flex;">MySQL</p>
+    <span>MySQL</span>
     <img style="height:18px; " src="./readme_images/docker.png" />
-    <p style="padding-left: 20px; padding-right: 5px; display: inline-flex;">Docker</p>
+    <span>Docker</span>
 </section>
 
 ## Tech Stack
@@ -31,13 +31,13 @@
 - View detailed tasks for each day.
 
 ### Projects
-![Project Page](./readme_images/project.png)
+![Project Page](./readme_images/spanroject.png)
 - Turn your long-term goals into doable chunks.
 - Create, update, and prioritize work.
 - Manage tasks based on different projects.
 
 ### Progress
-![Progress Page](./readme_images/progress.png)
+![Progress Page](./readme_images/spanrogress.png)
 - Update your progress with a single click.
 - Track completion dates and deadlines for each project.
 - Adjust daily tasks by moving them between dates.
