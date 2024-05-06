@@ -73,7 +73,7 @@ export default function Projects() {
 
     // When "Cancel" button from NewProject modal is clicked, modal is reset
     const closeNewProjectModal = () => {
-        if (editedProject) setEditedProject(null)
+        if (editedProject !== null) setEditedProject(null)
         setShowNewProj(false)
     }
 
@@ -82,11 +82,13 @@ export default function Projects() {
 
         const newProjects = [...projects]
 
-        if (editedProject) {
+        if (editedProject !== null) {
+            
             newProjects[editedProject] = proj
             setEditedProject(null)
 
         } else {
+
             newProjects.push(proj)
 
         }
@@ -183,8 +185,10 @@ function ProjectBlock(
                 </div>
             </div>
             <div className="bg-light px-10">
-                <p className="py-5">{data.description}</p>
-                <hr />
+                <p className="py-5" dangerouslySetInnerHTML={
+                    {__html: data.description}
+                }></p>
+                <hr className="border-gray"/>
                 <button
                     onClick={() => setShowTasks(!showTasks)}
                     className="flex gap-5 py-5">
@@ -263,9 +267,7 @@ export function NewProjectModal(
             })
                 .then(res => {
                     if (res.status === 200) {
-
                         projectSetter(confirmedProj)
-
                     }
                     else {
                         console.log(res.text());

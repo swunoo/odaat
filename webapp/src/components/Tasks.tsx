@@ -20,33 +20,45 @@ export type TaskData = {
 /* Tasks Page */
 export default function Tasks(){
 
-    return (
-        <div className="md:max-h-screen py-10 px-20">
-            <Navbar active="tasks"/>
-            <TaskContainer />
-        </div>
-    )
-}
-
-/* Container for the header and each Task */
-function TaskContainer(){
-
-    // Date of the Tasks to display
-    const [date, setDate] = useState(new Date())
     // Whether to show the NewProject modal
     const [showNewProj, setShowNewProj] = useState(false)
     // To render newly added project titles after adding NewProject on TaskPage
     const [newProjTitle, setNewProjTitle] = useState<string | undefined>(undefined)
 
-    // When "Add Project" button is clicked, show NewProject modal
-    const addProject = () => {
-        setShowNewProj(true)
-    }
-
     // After adding a new project, it is reflected in TaskWrapper
     const onProjectCreate = (p: ProjectData) => {
         setNewProjTitle(p.title)
         setShowNewProj(false)
+    }
+
+    return (
+        <div className="md:max-h-screen py-10 px-20">
+            {showNewProj && 
+                <NewProjectModal
+                    data={null}
+                    cancelHandler={() => setShowNewProj(false)}
+                    projectSetter={(p)=> onProjectCreate(p)}
+                />
+            }
+
+            <Navbar active="tasks"/>
+            <TaskContainer newProjTitle={newProjTitle} setShowNewProj={setShowNewProj} />
+        </div>
+    )
+}
+
+/* Container for the header and each Task */
+function TaskContainer(
+    {newProjTitle, setShowNewProj}
+    : {newProjTitle?: string, setShowNewProj: (s: boolean)=>void}
+){
+
+    // Date of the Tasks to display
+    const [date, setDate] = useState(new Date())
+
+    // When "Add Project" button is clicked, show NewProject modal
+    const addProject = () => {
+        setShowNewProj(true)
     }
 
     // When the left chevron is clicked, decrement the date
@@ -61,13 +73,6 @@ function TaskContainer(){
 
     return (
         <div className="my-10 mx-20 shadow relative">
-            {showNewProj && 
-                <NewProjectModal
-                    data={null}
-                    cancelHandler={() => setShowNewProj(false)}
-                    projectSetter={(p)=> onProjectCreate(p)}
-                />
-            }
 
             <nav className="
                 flex justify-between px-5 py-3 bg-accent2

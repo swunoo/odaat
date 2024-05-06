@@ -302,16 +302,20 @@ export function TaskBlock(
                                             {data.project}
                                         </span>
                                     </span>
-                                    : <p className="col-span-2 text-xs self-center">{data.date}</p>
+                                    : <p className="col-span-2 text-xs py-1">{data.date}</p>
                             }
 
                             {/* attr: other attributes are shown in both TaskPage and ProjectPage */}
-                            <span className="col-span-6"> {data.task} </span>
+                            <span className="col-span-6"
+                                dangerouslySetInnerHTML={{__html: data.task}}
+                            ></span>
                             <span className={
                                 "text-right" + (isTaskPage ? '' : ' col-span-2')
                             }> {data.duration + ' h'} </span>
                             <div
-                                className={"flex justify-end relative col-span-2 " + (isTaskPage ? "gap-8" : "gap-3")}
+                                className={"flex justify-end relative col-span-2 " 
+                                + (data.status !== 'done' ? 'self-baseline ' : '')
+                                + (isTaskPage ? "gap-8" : "gap-3")}
                             >
                                 <input
                                     onChange={changeCompletion}
