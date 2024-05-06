@@ -1,11 +1,11 @@
 /* Methods and component of TaskBlocks, used by both Tasks.tsx and Projects.tsx */
 
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
+import menuIcon from '../assets/images/menu.svg'
 import { PROJECT_API, TASK_API } from "../conf"
 import { dateToString, getValue, menuBtnStyle, numberOrNull } from "../utils"
-import { NewTaskButton, NewButton } from "./common"
+import { NewButton, NewTaskButton } from "./common"
 import { TaskData } from "./Tasks"
-import menuIcon from '../assets/images/menu.svg';
 
 export function TaskWrapper(
     { project, date, addProject, newProjTitle }

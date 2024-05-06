@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
-import Tasks from "./components/Tasks"
 import Projects from "./components/Projects"
+import Tasks from "./components/Tasks"
 import { Homepapge } from "./Homepage"
 
 function App() {

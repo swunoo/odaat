@@ -1,4 +1,4 @@
-import logo from '../assets/images/logo.png'
+import logo from '../assets/images/logo.png';
 
 type NavProps = {active: string}
 
