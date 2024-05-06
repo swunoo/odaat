@@ -1,6 +1,6 @@
 # ODAAT - Personal Task Management Tool
 
-<div style="display: grid; grid-template-columns: 1fr 1fr 1fr;">
+<div style="display: inline-block;">
     <div style="display:flex; gap:5px; align-items: center; width:fit-content;">
         <img style="height:18px;" src="./readme_images/scala.png" />
         <span>Scala</span>
