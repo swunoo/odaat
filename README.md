@@ -1,6 +1,6 @@
 # ODAAT - Personal Task Management Tool
 
-<div style="display: flex; gap:10px; flex-direction: row;">
+<div style="display: grid; grid-template-columns: 1fr 1fr 1fr;">
     <div style="display:flex; gap:5px; align-items: center; width:fit-content;">
         <img style="height:18px;" src="./readme_images/scala.png" />
         <span>Scala</span>
@@ -39,19 +39,19 @@
 ## Features
 
 ### Tasks
-![Task Page](./screenshots/task.png)
+![Task Page](./readme_images/task.png)
 - Keep track of all tasks.
 - Oragnize tasks based on date and project.
 - View detailed tasks for each day.
 
 ### Projects
-![Project Page](./screenshots/project.png)
+![Project Page](./readme_images/project.png)
 - Turn your long-term goals into doable chunks.
 - Create, update, and prioritize work.
 - Manage tasks based on different projects.
 
 ### Progress
-![Progress Page](./screenshots/progress.png)
+![Progress Page](./readme_images/progress.png)
 - Update your progress with a single click.
 - Track completion dates and deadlines for each project.
 - Adjust daily tasks by moving them between dates.
