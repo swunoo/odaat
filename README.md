@@ -1,32 +1,32 @@
 # ODAAT - Personal Task Management Tool
 
-<div style="display:flex; gap:10px; flex-wrap:wrap;">
+<div style="display:flex; gap:10px;">
     <div style="display:flex; gap:5px; align-items: center; width:fit-content;">
-        <img style="height:15px;" src="./readme_images/scala.png" />
+        <img style="height:18px;" src="./readme_images/scala.png" />
         <span>Scala</span>
     </div>
     <div style="display:flex; gap:5px; align-items: center; width:fit-content;">
-        <img style="height:15px;" src="./readme_images/play.png" />
+        <img style="height:18px;" src="./readme_images/play.png" />
         <span>Play</span>
     </div>
     <div style="display:flex; gap:5px; align-items: center; width:fit-content;">
-        <img style="height:15px;" src="./readme_images/js.png" />
+        <img style="height:18px;" src="./readme_images/js.png" />
         <span>JavaScript</span>
     </div>
     <div style="display:flex; gap:5px; align-items: center; width:fit-content;">
-        <img style="height:15px;" src="./readme_images/ts.png" />
+        <img style="height:18px;" src="./readme_images/ts.png" />
         <span>TypeScript</span>
     </div>
     <div style="display:flex; gap:5px; align-items: center; width:fit-content;">
-        <img style="height:15px;" src="./readme_images/react.png" />
+        <img style="height:18px;" src="./readme_images/react.png" />
         <span>React</span>
     </div>
     <div style="display:flex; gap:5px; align-items: center; width:fit-content;">
-        <img style="height:15px;" src="./readme_images/mysql.png" />
+        <img style="height:18px;" src="./readme_images/mysql.png" />
         <span>MySQL</span>
     </div>
     <div style="display:flex; gap:5px; align-items: center; width:fit-content;">
-        <img style="height:15px;" src="./readme_images/docker.png" />
+        <img style="height:18px;" src="./readme_images/docker.png" />
         <span>Docker</span>
     </div>
 </div>
