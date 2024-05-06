@@ -14,9 +14,3 @@ libraryDependencies += "com.typesafe.play" %% "play-slick" % "4.0.2"
 libraryDependencies += "com.typesafe.play" %% "play-slick-evolutions" % "4.0.2"
 
 ThisBuild / evictionErrorLevel := Level.Info
-
-// Adds additional packages into Twirl
-//TwirlKeys.templateImports += "com.odaat.controllers._"
-
-// Adds additional packages into conf/routes
-// play.sbt.routes.RoutesKeys.routesImport += "com.odaat.binders._"

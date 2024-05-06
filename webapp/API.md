@@ -1,6 +1,6 @@
 # Required APIs
 
-## Basics
+## v1
 
 | endpoint | method | payload | response | description |
 | --- | --- | --- | --- | --- |
