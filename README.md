@@ -1,20 +1,20 @@
 # ODAAT - Personal Task Management Tool
 
 <div>
-    <img style="height:18px; display: inline-block; margin-right: 5px;" src="./readme_images/scala.png" />
-    <span style="margin-left: 20px; margin-right: 5px;">Scala</span>
+    <img style="height:18px; display: inline-block; padding-right: 5px;" src="./readme_images/scala.png" />
+    <span style="padding-left: 20px; padding-right: 5px;">Scala</span>
     <img style="height:18px; display: inline-block; " src="./readme_images/play.png" />
-    <span style="margin-left: 20px; margin-right: 5px;">Play</span>
+    <span style="padding-left: 20px; padding-right: 5px;">Play</span>
     <img style="height:18px; display: inline-block; " src="./readme_images/js.png" />
-    <span style="margin-left: 20px; margin-right: 5px;">JavaScript</span>
+    <span style="padding-left: 20px; padding-right: 5px;">JavaScript</span>
     <img style="height:18px; display: inline-block; " src="./readme_images/ts.png" />
-    <span style="margin-left: 20px; margin-right: 5px;">TypeScript</span>
+    <span style="padding-left: 20px; padding-right: 5px;">TypeScript</span>
     <img style="height:18px; display: inline-block; " src="./readme_images/react.png" />
-    <span style="margin-left: 20px; margin-right: 5px;">React</span>
+    <span style="padding-left: 20px; padding-right: 5px;">React</span>
     <img style="height:18px; display: inline-block; " src="./readme_images/mysql.png" />
-    <span style="margin-left: 20px; margin-right: 5px;">MySQL</span>
+    <span style="padding-left: 20px; padding-right: 5px;">MySQL</span>
     <img style="height:18px; display: inline-block; " src="./readme_images/docker.png" />
-    <span style="margin-left: 20px; margin-right: 5px;">Docker</span>
+    <span style="padding-left: 20px; padding-right: 5px;">Docker</span>
 </div>
 
 ## Tech Stack
