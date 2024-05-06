@@ -1,20 +1,20 @@
 # ODAAT - Personal Task Management Tool
 
 <div style="display: flex; flex-direction: row; gap: 100px;">
-    <img style="height:18px; padding-right: 5px;" src="./readme_images/scala.png" />
-    <p style="padding-left: 20px; padding-right: 5px;">Scala</p>
+    <img style="height:18px; padding-right: 5px; display: inline-flex;" src="./readme_images/scala.png" />
+    <p style="padding-left: 20px; padding-right: 5px; display: inline-flex;">Scala</p>
     <img style="height:18px; " src="./readme_images/play.png" />
-    <p style="padding-left: 20px; padding-right: 5px;">Play</p>
+    <p style="padding-left: 20px; padding-right: 5px; display: inline-flex;">Play</p>
     <img style="height:18px; " src="./readme_images/js.png" />
-    <p style="padding-left: 20px; padding-right: 5px;">JavaScript</p>
+    <p style="padding-left: 20px; padding-right: 5px; display: inline-flex;">JavaScript</p>
     <img style="height:18px; " src="./readme_images/ts.png" />
-    <p style="padding-left: 20px; padding-right: 5px;">TypeScript</p>
+    <p style="padding-left: 20px; padding-right: 5px; display: inline-flex;">TypeScript</p>
     <img style="height:18px; " src="./readme_images/react.png" />
-    <p style="padding-left: 20px; padding-right: 5px;">React</p>
+    <p style="padding-left: 20px; padding-right: 5px; display: inline-flex;">React</p>
     <img style="height:18px; " src="./readme_images/mysql.png" />
-    <p style="padding-left: 20px; padding-right: 5px;">MySQL</p>
+    <p style="padding-left: 20px; padding-right: 5px; display: inline-flex;">MySQL</p>
     <img style="height:18px; " src="./readme_images/docker.png" />
-    <p style="padding-left: 20px; padding-right: 5px;">Docker</p>
+    <p style="padding-left: 20px; padding-right: 5px; display: inline-flex;">Docker</p>
 </div>
 
 ## Tech Stack
