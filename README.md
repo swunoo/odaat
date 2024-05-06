@@ -54,7 +54,7 @@ You can run the application by:
 4. Run the script with `./run.sh`
 3. Go to `http://localhost:5173/`
 
-## Further Development
+## Future Development
 The following features are to be added soon.
 - Cloud deployment with authentication
 - Daily/monthly report generation
