@@ -1,6 +1,6 @@
 # ODAAT - Personal Task Management Tool
 
-<div style="display: flex !important; flex-direction: row; gap: 100px;">
+<section style="display: flex !important; flex-direction: row; gap: 100px;">
     <img style="height:18px; padding-right: 5px; display: inline-flex;" src="./readme_images/scala.png" />
     <p style="padding-left: 20px; padding-right: 5px; display: inline-flex;">Scala</p>
     <img style="height:18px; " src="./readme_images/play.png" />
@@ -15,7 +15,7 @@
     <p style="padding-left: 20px; padding-right: 5px; display: inline-flex;">MySQL</p>
     <img style="height:18px; " src="./readme_images/docker.png" />
     <p style="padding-left: 20px; padding-right: 5px; display: inline-flex;">Docker</p>
-</div>
+</section>
 
 ## Tech Stack
 - Scala (Play framework)
