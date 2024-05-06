@@ -1,34 +1,20 @@
 # ODAAT - Personal Task Management Tool
 
-<div style="display: inline-block;">
-    <div style="display: inline-block; gap:5px; align-items: center; width:fit-content;">
-        <img style="height:18px;" src="./readme_images/scala.png" />
-        <span>Scala</span>
-    </div>
-    <div style="display: inline-block; gap:5px; align-items: center; width:fit-content;">
-        <img style="height:18px;" src="./readme_images/play.png" />
-        <span>Play</span>
-    </div>
-    <div style="display: inline-block; gap:5px; align-items: center; width:fit-content;">
-        <img style="height:18px;" src="./readme_images/js.png" />
-        <span>JavaScript</span>
-    </div>
-    <div style="display: inline-block; gap:5px; align-items: center; width:fit-content;">
-        <img style="height:18px;" src="./readme_images/ts.png" />
-        <span>TypeScript</span>
-    </div>
-    <div style="display: inline-block; gap:5px; align-items: center; width:fit-content;">
-        <img style="height:18px;" src="./readme_images/react.png" />
-        <span>React</span>
-    </div>
-    <div style="display: inline-block; gap:5px; align-items: center; width:fit-content;">
-        <img style="height:18px;" src="./readme_images/mysql.png" />
-        <span>MySQL</span>
-    </div>
-    <div style="display: inline-block; gap:5px; align-items: center; width:fit-content;">
-        <img style="height:18px;" src="./readme_images/docker.png" />
-        <span>Docker</span>
-    </div>
+<div>
+    <img style="height:18px; display: inline-block;" src="./readme_images/scala.png" />
+    <span>Scala</span>
+    <img style="height:18px; display: inline-block;" src="./readme_images/play.png" />
+    <span>Play</span>
+    <img style="height:18px; display: inline-block;" src="./readme_images/js.png" />
+    <span>JavaScript</span>
+    <img style="height:18px; display: inline-block;" src="./readme_images/ts.png" />
+    <span>TypeScript</span>
+    <img style="height:18px; display: inline-block;" src="./readme_images/react.png" />
+    <span>React</span>
+    <img style="height:18px; display: inline-block;" src="./readme_images/mysql.png" />
+    <span>MySQL</span>
+    <img style="height:18px; display: inline-block;" src="./readme_images/docker.png" />
+    <span>Docker</span>
 </div>
 
 ## Tech Stack
