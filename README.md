@@ -2,19 +2,19 @@
 
 <div>
     <img style="height:18px; display: inline-block; margin-right: 5px;" src="./readme_images/scala.png" />
-    <span>Scala</span>
-    <img style="height:18px; display: inline-block; margin-left: 20px; margin-right: 5px;" src="./readme_images/play.png" />
-    <span>Play</span>
-    <img style="height:18px; display: inline-block; margin-left: 20px; margin-right: 5px;" src="./readme_images/js.png" />
-    <span>JavaScript</span>
-    <img style="height:18px; display: inline-block; margin-left: 20px; margin-right: 5px;" src="./readme_images/ts.png" />
-    <span>TypeScript</span>
-    <img style="height:18px; display: inline-block; margin-left: 20px; margin-right: 5px;" src="./readme_images/react.png" />
-    <span>React</span>
-    <img style="height:18px; display: inline-block; margin-left: 20px; margin-right: 5px;" src="./readme_images/mysql.png" />
-    <span>MySQL</span>
-    <img style="height:18px; display: inline-block; margin-left: 20px; margin-right: 5px;" src="./readme_images/docker.png" />
-    <span>Docker</span>
+    <span style="margin-left: 20px; margin-right: 5px;">Scala</span>
+    <img style="height:18px; display: inline-block; " src="./readme_images/play.png" />
+    <span style="margin-left: 20px; margin-right: 5px;">Play</span>
+    <img style="height:18px; display: inline-block; " src="./readme_images/js.png" />
+    <span style="margin-left: 20px; margin-right: 5px;">JavaScript</span>
+    <img style="height:18px; display: inline-block; " src="./readme_images/ts.png" />
+    <span style="margin-left: 20px; margin-right: 5px;">TypeScript</span>
+    <img style="height:18px; display: inline-block; " src="./readme_images/react.png" />
+    <span style="margin-left: 20px; margin-right: 5px;">React</span>
+    <img style="height:18px; display: inline-block; " src="./readme_images/mysql.png" />
+    <span style="margin-left: 20px; margin-right: 5px;">MySQL</span>
+    <img style="height:18px; display: inline-block; " src="./readme_images/docker.png" />
+    <span style="margin-left: 20px; margin-right: 5px;">Docker</span>
 </div>
 
 ## Tech Stack
