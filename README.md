@@ -1,19 +1,19 @@
 # ODAAT - Personal Task Management Tool
 
 <div>
-    <img style="height:18px; display: inline-block;" src="./readme_images/scala.png" />
+    <img style="height:18px; display: inline-block; margin-right: 5px;" src="./readme_images/scala.png" />
     <span>Scala</span>
-    <img style="height:18px; display: inline-block;" src="./readme_images/play.png" />
+    <img style="height:18px; display: inline-block; margin-left: 10px; margin-right: 5px;" src="./readme_images/play.png" />
     <span>Play</span>
-    <img style="height:18px; display: inline-block;" src="./readme_images/js.png" />
+    <img style="height:18px; display: inline-block; margin-left: 10px; margin-right: 5px;" src="./readme_images/js.png" />
     <span>JavaScript</span>
-    <img style="height:18px; display: inline-block;" src="./readme_images/ts.png" />
+    <img style="height:18px; display: inline-block; margin-left: 10px; margin-right: 5px;" src="./readme_images/ts.png" />
     <span>TypeScript</span>
-    <img style="height:18px; display: inline-block;" src="./readme_images/react.png" />
+    <img style="height:18px; display: inline-block; margin-left: 10px; margin-right: 5px;" src="./readme_images/react.png" />
     <span>React</span>
-    <img style="height:18px; display: inline-block;" src="./readme_images/mysql.png" />
+    <img style="height:18px; display: inline-block; margin-left: 10px; margin-right: 5px;" src="./readme_images/mysql.png" />
     <span>MySQL</span>
-    <img style="height:18px; display: inline-block;" src="./readme_images/docker.png" />
+    <img style="height:18px; display: inline-block; margin-left: 10px; margin-right: 5px;" src="./readme_images/docker.png" />
     <span>Docker</span>
 </div>
 
