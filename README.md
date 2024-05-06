@@ -17,11 +17,6 @@
     <span style="">&nbsp; Docker &nbsp; &nbsp; &nbsp; </span>
 </section>
 
-## Tech Stack
-- Scala (Play framework)
-- JavaScript/TypeScript (React)
-- MySQL
-
 ## Features
 
 ### Tasks
@@ -31,13 +26,13 @@
 - View detailed tasks for each day.
 
 ### Projects
-![Project Page](./readme_images/spanroject.png)
+![Project Page](./readme_images/project.png)
 - Turn your long-term goals into doable chunks.
 - Create, update, and prioritize work.
 - Manage tasks based on different projects.
 
 ### Progress
-![Progress Page](./readme_images/spanrogress.png)
+![Progress Page](./readme_images/progress.png)
 - Update your progress with a single click.
 - Track completion dates and deadlines for each project.
 - Adjust daily tasks by moving them between dates.
