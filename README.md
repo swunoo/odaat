@@ -2,19 +2,19 @@
 
 <section>
     <img style="height:18px;" src="./readme_images/scala.png" />
-    <span style="width: 100px;">Scala</span>
+    <span style="">Scala |     </span>
     <img style="height:18px; " src="./readme_images/play.png" />
-    <span style="width: 100px;">Play</span>
+    <span style="">Play     |     </span>
     <img style="height:18px; " src="./readme_images/js.png" />
-    <span style="width: 100px;">JavaScript</span>
+    <span style="">JavaScript     |     </span>
     <img style="height:18px; " src="./readme_images/ts.png" />
-    <span style="width: 100px;">TypeScript</span>
+    <span style="">TypeScript     |     </span>
     <img style="height:18px; " src="./readme_images/react.png" />
-    <span style="width: 100px;">React</span>
+    <span style="">React     |     </span>
     <img style="height:18px; " src="./readme_images/mysql.png" />
-    <span style="width: 100px;">MySQL</span>
+    <span style="">MySQL     |     </span>
     <img style="height:18px; " src="./readme_images/docker.png" />
-    <span style="width: 100px;">Docker</span>
+    <span style="">Docker     |     </span>
 </section>
 
 ## Tech Stack
