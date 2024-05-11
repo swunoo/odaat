@@ -339,13 +339,7 @@ export function TaskBlock(
                                 absolute top-8 right-0 flex flex-col
                                 z-10 bg-primary shadow rounded-lg overflow-hidden
                             ">
-                                                {/* { // Show extra options on TaskPage
-                                    isTaskPage &&
-                                    <>
-                                        <button className={menuBtnStyle()}>Postpone 1 day</button>
-                                        <button className={menuBtnStyle()}>Put on Hold</button>
-                                    </>
-                                } */}
+                                
 
                                                 <button
                                                     onClick={() => { setShowMenu(false); setEdit(true); }}
