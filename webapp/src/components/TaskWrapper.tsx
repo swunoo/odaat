@@ -339,8 +339,6 @@ export function TaskBlock(
                                 absolute top-8 right-0 flex flex-col
                                 z-10 bg-primary shadow rounded-lg overflow-hidden
                             ">
-                                
-
                                                 <button
                                                     onClick={() => { setShowMenu(false); setEdit(true); }}
                                                     className={menuBtnStyle()}
