@@ -22,28 +22,38 @@
 - タスクの開始/終了時刻や期間を設定できます。
 
 ## API設計
-| Entity | Method | Endpoint | Body | Responses |
+
+### Endpoints
+| ID | Method | Endpoint | Body | Responses |
 | --- | --- | --- | --- | --- |
-| Program | GET | /get | NA | 200 Program[], 404 |
-| Program | GET | /detail/:id | NA | 200 Program, 404, 400 |
-| Program | POST | /add | Program | 200 Program, 400 |
-| Program | PUT | /update/:id | Program | 200 Program, 400 |
-| Program | DELETE | /delete/:id | NA | 200, 400 |
+| C01 | GET | /get | NA | 200 Category[], 404 |
+| C02 | GET | /detail/:id | NA | 200 Category, 404, 400 |
+| C03 | POST | /add | Category | 200 Category, 400 |
+| C04 | PUT | /update/:id | Category | 200 Category, 400 |
+| C05 | DELETE | /delete/:id | NA | 200, 400 |
+| T01 | GET | /get?{date|project|status} | NA | 200 Task[] |
+| T02 | GET | /detail/:id | NA | 200 Task, 400 |
+| T03 | POST | /add | Task | 200 Task, 400 |
+| T04 | PUT | /update/:id | Task | 200 Task, 400 |
+| T05 | PUT | /confirm/:id | NA | 200 Task, 400 |
+| T06 | PUT | /change/:id?{status} | NA | 200 Task, 400 |
+| T07 | PUT | /change/:id?{priority} | NA | 200 Task, 400 |
+| T08 | DELETE | /delete/:id | NA | 200, 400 |
+| P01 | GET | /get?{status|program} | NA | 200 Project[] |
+| P02 | GET | /detail/:id | NA | 200 Project, 400 |
+| P03 | POST | /add | Project | 200 Project, 400 |
+| P04 | PUT | /update/:id | Project | 200 Project, 400 |
+| P05 | DELETE | /delete/:id | NA | 200, 400 |
+| Blg01 | GET | /sync | NA | 200, 403 |
 
-| Task | GET | /get?{date|project|status} | NA | 200 Task[] |
-| Task | GET | /detail/:id | NA | 200 Task, 400 |
-| Task | POST | /add | Task | 200 Task, 400 |
-| Task | PUT | /update/:id | Task | 200 Task, 400 |
-| Task | PUT | /confirm/:id | NA | 200 Task, 400 |
-| Task | PUT | /change/:id?{status} | NA | 200 Task, 400 |
-| Task | PUT | /change/:id?{priority} | NA | 200 Task, 400 |
-| Task | DELETE | /delete/:id | NA | 200, 400 |
+### Entities
+| Endpoint ID | Entity | Prefix |
+| --- | --- | --- |
+| C** | Category | /category |
+| P** | Project | /project |
+| T** | Task | /task |
+| Blg** | Backlog | /backlog |
 
-| Project | GET | /get?{status|program} | NA | 200 Project[] |
-| Project | GET | /detail/:id | NA | 200 Project, 400 |
-| Project | POST | /add | Project | 200 Project, 400 |
-| Project | PUT | /update/:id | Project | 200 Project, 400 |
-| Project | DELETE | /delete/:id | NA | 200, 400 |
 
 ## データベース設計
 - データはリレーショナルであり、ACID特性と使いやすさを求めて、RDBMS（MySQL）を選択します。
@@ -106,14 +116,14 @@
 ## API Design
 | Entity | Method | Endpoint | Params | Successful Response |
 | --- | --- | --- | --- | --- |
-| Program | GET | /getPrograms |  | Program[] |
+| Category | GET | /getPrograms |  | Category[] |
 | Task | GET | /getTasks |  | Task[] |
 
 ## Database Design
 - Since the data is relational, I want ACID properties, and ease of use, I choose a RDBMS (MySQL).
 - Entities and ER Diagram are as follows.
 
-#### Program
+#### Category
 | Column | Type | Constraints |
 | --- | --- | --- |
 | id | long | PK, AUTO_INCREMENTED |
