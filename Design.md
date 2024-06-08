@@ -1,97 +1,3 @@
-【English follows】
-
-# Design (V1.0, 2024/06/08)
-
-- 通常、基本設計書、詳細設計書、画面設計書などが作成されます。
-- しかし、このプロジェクトの開発を迅速に進めるために、UI、API、およびデータベース設計の簡潔なドキュメントのみを作成します。
-
-## UI設計
-- 以下は、3つの主要画面の設計です。
-- これらはアイデアを視覚化するためのものであり、詳細は変更される可能性があります。
-
-### 1. プロジェクト管理画面
-- ユーザーが自分のプロジェクトを管理するための画面です。
-- プロジェクトの追加、編集、削除が可能です。
-
-### 2. タスク管理画面
-- 特定のプロジェクトに属するタスクを管理する画面です。
-- タスクの追加、編集、削除が可能です。
-
-### 3. 日々のタスク画面
-- その日のタスクリストを表示する画面です。
-- タスクの開始/終了時刻や期間を設定できます。
-
-## API設計
-
-### Endpoints
-| ID | Method | Endpoint | Body | Responses |
-| --- | --- | --- | --- | --- |
-| C01 | GET | /get | NA | 200 Category[], 404 |
-| C02 | GET | /detail/:id | NA | 200 Category, 404, 400 |
-| C03 | POST | /add | Category | 200 Category, 400 |
-| C04 | PUT | /update/:id | Category | 200 Category, 400 |
-| C05 | DELETE | /delete/:id | NA | 200, 400 |
-| T01 | GET | /get?{date|project|status} | NA | 200 Task[] |
-| T02 | GET | /detail/:id | NA | 200 Task, 400 |
-| T03 | POST | /add | Task | 200 Task, 400 |
-| T04 | PUT | /update/:id | Task | 200 Task, 400 |
-| T05 | PUT | /confirm/:id | NA | 200 Task, 400 |
-| T06 | PUT | /change/:id?{status} | NA | 200 Task, 400 |
-| T07 | PUT | /change/:id?{priority} | NA | 200 Task, 400 |
-| T08 | DELETE | /delete/:id | NA | 200, 400 |
-| P01 | GET | /get?{status|program} | NA | 200 Project[] |
-| P02 | GET | /detail/:id | NA | 200 Project, 400 |
-| P03 | POST | /add | Project | 200 Project, 400 |
-| P04 | PUT | /update/:id | Project | 200 Project, 400 |
-| P05 | DELETE | /delete/:id | NA | 200, 400 |
-| Blg01 | GET | /sync | NA | 200, 403 |
-
-### Entities
-| Endpoint ID | Entity | Prefix |
-| --- | --- | --- |
-| C** | Category | /category |
-| P** | Project | /project |
-| T** | Task | /task |
-| Blg** | Backlog | /backlog |
-
-
-## データベース設計
-- データはリレーショナルであり、ACID特性と使いやすさを求めて、RDBMS（MySQL）を選択します。
-- エンティティとER図は以下の通りです。
-
-#### Program（プログラム）
-| カラム | タイプ | 制約 |
-| --- | --- | --- |
-| id | long | PK, AUTO_INCREMENTED |
-| userid | long | FK id on user |
-| name | varchar(64) | NOT NULL |
-| created_at | datetime | AUTO_CREATED, NON_EDITABLE |
-| updated_at | datetime | AUTO_UPDATED, NON_EDITABLE |
-
-#### Task（タスク）
-| カラム | タイプ | 制約 |
-| --- | --- | --- |
-| id | long | PK, AUTO_INCREMENTED |
-| program_id | long | FK id on program |
-| name | varchar(64) | NOT NULL |
-| description | text |  |
-| due_date | datetime |  |
-| status | varchar(32) | NOT NULL |
-| created_at | datetime | AUTO_CREATED, NON_EDITABLE |
-| updated_at | datetime | AUTO_UPDATED, NON_EDITABLE |
-
-#### User（ユーザー）
-| カラム | タイプ | 制約 |
-| --- | --- | --- |
-| id | long | PK, AUTO_INCREMENTED |
-| name | varchar(64) | NOT NULL |
-| email | varchar(128) | UNIQUE, NOT NULL |
-| password | varchar(128) | NOT NULL |
-| created_at | datetime | AUTO_CREATED, NON_EDITABLE |
-| updated_at | datetime | AUTO_UPDATED, NON_EDITABLE |
-
----
-
 # Design (V1.0, 2024/06/08)
 
 - Usually, basic design documents, detailed design documents, screen design documents, etc. are created.
@@ -101,55 +7,104 @@
 - Designs for three main screens are as follows.
 - These are just to visualize the idea with the details subject to change.
 
-### 1. Project Management Screen
-- A screen for users to manage their projects.
-- Users can add, edit, and delete projects.
-
-### 2. Task Management Screen
-- A screen to manage tasks that belong to a specific project.
-- Users can add, edit, and delete tasks.
-
-### 3. Daily Tasks Screen
-- A screen to display the task list for the day.
-- Users can set start/end times or durations for each task.
+*Design available upon request*
 
 ## API Design
-| Entity | Method | Endpoint | Params | Successful Response |
+### Endpoints
+| ID | Method | Endpoint | Body | Responses |
 | --- | --- | --- | --- | --- |
-| Category | GET | /getPrograms |  | Category[] |
-| Task | GET | /getTasks |  | Task[] |
+| C01 | GET | /get |  | 200 Category[] |
+| C02 | GET | /detail/:id |  | 200 Category, 400 |
+| C03 | POST | /add | Category | 200 Category, 400 |
+| C04 | PUT | /update/:id | Category | 200 Category, 400 |
+| C05 | DELETE | /delete/:id |  | 200, 400 |
+| T01 | GET | /get?{date&project&status} |  | 200 Task[] |
+| T02 | GET | /detail/:id |  | 200 Task, 400 |
+| T03 | POST | /add | Task | 200 Task, 400 |
+| T04 | PUT | /update/:id | Task | 200 Task, 400 |
+| T06 | PUT | /change/:id?{status} |  | 200 Task, 400 |
+| T07 | PUT | /change/:id?{priority} |  | 200 Task, 400 |
+| T08 | DELETE | /delete/:id |  | 200, 400 |
+| P01 | GET | /get?{status&program} |  | 200 Project[] |
+| P02 | GET | /detail/:id |  | 200 Project, 400 |
+| P03 | POST | /add | Project | 200 Project, 400 |
+| P04 | PUT | /update/:id | Project | 200 Project, 400 |
+| P05 | PUT | /change/:id?{status} |  | 200 Project, 400 |
+| P06 | PUT | /change/:id?{priority} |  | 200 Project, 400 |
+| P07 | DELETE | /delete/:id |  | 200, 400 |
+| Bg01 | GET | /sync |  | 200, 403 |
+
+
+### Entities
+| Endpoint ID | Entity | Prefix |
+| --- | --- | --- |
+| C* | Category | /category |
+| P* | Project | /project |
+| T* | Task | /task |
+| Bg* | Backlog | /backlog |
 
 ## Database Design
 - Since the data is relational, I want ACID properties, and ease of use, I choose a RDBMS (MySQL).
-- Entities and ER Diagram are as follows.
+
+### Entities
+
+#### Uzer
+| Column | Type | Constraints |
+| --- | --- | --- |
+| id | long | PK, AUTO_INCREMENTED |
+| name | varchar(32) | DEFAULT "Anon" |
+| email | varchar(255) | NOT NULL |
+| password | varchar(72) | NOT NULL |
+| is_deleted | boolean | DEFAULT "false" |
+| deleted_at | datetime | |
+| created_at | datetime | AUTO_CREATED |
+| updated_at | datetime | AUTO_UPDATED |
 
 #### Category
 | Column | Type | Constraints |
 | --- | --- | --- |
 | id | long | PK, AUTO_INCREMENTED |
-| userid | long | FK id on user |
+| uzer_id | long | FK id on uzer |
 | name | varchar(64) | NOT NULL |
-| created_at | datetime | AUTO_CREATED, NON_EDITABLE |
-| updated_at | datetime | AUTO_UPDATED, NON_EDITABLE |
+| created_at | datetime | AUTO_CREATED |
+| updated_at | datetime | AUTO_UPDATED |
+
+#### Project
+| Column | Type | Constraints |
+| --- | --- | --- |
+| id | long | PK, AUTO_INCREMENTED |
+| uzer_id | long | FK id on uzer |
+| category_id | long | FK id on category |
+| name | varchar(64) | DEFAULT "now()" |
+| description | text | DEFAULT "" |
+| status | project_status | DEFAULT "created" |
+| priority_scale | int | MIN_1, MAX_5 |
+| start_time | datetime | |
+| end_time | datetime | |
+| due_time | datetime | |
+| estimated_hr | int | |
+| daily_hr | int | |
+| is_deleted | boolean | DEFAULT "false" |
+| deleted_at | datetime | |
+| created_at | datetime | AUTO_CREATED |
+| updated_at | datetime | AUTO_UPDATED |
 
 #### Task
 | Column | Type | Constraints |
 | --- | --- | --- |
 | id | long | PK, AUTO_INCREMENTED |
-| program_id | long | FK id on program |
-| name | varchar(64) | NOT NULL |
-| description | text |  |
-| due_date | datetime |  |
-| status | varchar(32) | NOT NULL |
-| created_at | datetime | AUTO_CREATED, NON_EDITABLE |
-| updated_at | datetime | AUTO_UPDATED, NON_EDITABLE |
+| uzer_id | long | FK id on uzer |
+| project_id | long | FK id on project |
+| description | text | DEFAULT "" |
+| status | task_status | DEFAULT "created" |
+| priority_scale | int | MIN_1, MAX_5 |
+| start_time | datetime | |
+| duration_hr | int | DEFAULT "2" |
+| created_at | datetime | AUTO_CREATED |
+| updated_at | datetime | AUTO_UPDATED |
 
-#### User
-| Column | Type | Constraints |
+### Custom Types
+| No. | Type | Possible Values |
 | --- | --- | --- |
-| id | long | PK, AUTO_INCREMENTED |
-| name | varchar(64) | NOT NULL |
-| email | varchar(128) | UNIQUE, NOT NULL |
-| password | varchar(128) | NOT NULL |
-| created_at | datetime | AUTO_CREATED, NON_EDITABLE |
-| updated_at | datetime | AUTO_UPDATED, NON_EDITABLE |
+| 1 | project_status | CREATED, STARTED, COMPLETED, PAUSED, STOPPED |
+| 2 | task_status | GENERATED, PLANNED, COMPLETED |
