@@ -12,7 +12,7 @@ import scala.concurrent.Future
 
 class ProjectController @Inject()(cc: ControllerComponents, projectService: ProjectService) extends AbstractController(cc){
 
-  // Typecase Project to JSON
+  // Typecast Project to JSON
   implicit val projectFormat = Json.format[Project]
 
   // Typecast JSON to Project
