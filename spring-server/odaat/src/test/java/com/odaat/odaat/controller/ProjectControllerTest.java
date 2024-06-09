@@ -27,6 +27,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.odaat.odaat.model.Project;
 import com.odaat.odaat.service.ProjectService;
+import com.odaat.odaat.service.SecurityService;
 
 class ProjectControllerTest {
 
@@ -35,6 +36,9 @@ class ProjectControllerTest {
     @Mock
     private ProjectService projectService;
 
+    @Mock
+    private SecurityService securityService;
+    
     @InjectMocks
     private ProjectController projectController;
 

@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 public class ProjectRequest {
 
     @NotNull
-    private Integer category_id;
+    private Integer categoryId;
 
     private String name;
     private String description;

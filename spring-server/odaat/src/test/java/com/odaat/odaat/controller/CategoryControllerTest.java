@@ -26,7 +26,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.odaat.odaat.model.Category;
+import com.odaat.odaat.model.Uzer;
 import com.odaat.odaat.service.CategoryService;
+import com.odaat.odaat.service.SecurityService;
 
 class CategoryControllerTest {
 
@@ -34,6 +36,9 @@ class CategoryControllerTest {
 
     @Mock
     private CategoryService categoryService;
+
+    @Mock
+    private SecurityService securityService;
 
     @InjectMocks
     private CategoryController categoryController;
@@ -70,13 +75,17 @@ class CategoryControllerTest {
     @Test
     void testCreateCategory() throws Exception {
         Category category = new Category();
+        category.setId(1);
         when(categoryService.save(any(Category.class))).thenReturn(category);
+        Uzer mockUzer = new Uzer();
+        mockUzer.setId(1);
+        when(securityService.getCurrentUser()).thenReturn(mockUzer);
 
         mockMvc.perform(post("/api/categories")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\": \"Test Category\", \"uzerId\": 1}"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").doesNotExist());
+                .andExpect(jsonPath("$.id").value(1));
 
         verify(categoryService, times(1)).save(any(Category.class));
     }
@@ -87,10 +96,13 @@ class CategoryControllerTest {
         category.setId(1);
         when(categoryService.findById(anyInt())).thenReturn(Optional.of(category));
         when(categoryService.save(any(Category.class))).thenReturn(category);
+        Uzer mockUzer = new Uzer();
+        mockUzer.setId(1);
+        when(securityService.getCurrentUser()).thenReturn(mockUzer);
 
         mockMvc.perform(put("/api/categories/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\": \"Updated Category\", \"uzerId\": 1}"))
+                .content("{\"name\": \"Updated Category\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1));
 

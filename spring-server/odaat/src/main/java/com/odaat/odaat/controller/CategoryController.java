@@ -2,6 +2,7 @@ package com.odaat.odaat.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -17,8 +18,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.odaat.odaat.dao.request.CategoryRequest;
+import com.odaat.odaat.dao.response.CategoryResponse;
 import com.odaat.odaat.model.Category;
 import com.odaat.odaat.service.CategoryService;
+import com.odaat.odaat.service.SecurityService;
 
 @RestController
 @RequestMapping("/api/categories")
@@ -26,37 +30,52 @@ public class CategoryController {
 
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private SecurityService securityService;
 
     @GetMapping
-    public List<Category> getAllCategories() {
-        return categoryService.findAll();
+    public List<CategoryResponse> getAllCategories() {
+        return categoryService.findAll().stream()
+                .map(this::convertToDao)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Category> getCategoryById(@PathVariable Integer id) {
+    public ResponseEntity<CategoryResponse> getCategoryById(@PathVariable Integer id) {
         Optional<Category> category = categoryService.findById(id);
-        return category.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+
+        if (!category.isPresent()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(convertToDao(category.get()));
+        }
     }
 
     @PostMapping
-    public ResponseEntity<?> createCategory(@Valid @RequestBody Category category, BindingResult bindingResult) {
+    public ResponseEntity<?> createCategory(@Valid @RequestBody CategoryRequest categoryRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         }
-        return ResponseEntity.ok(categoryService.save(category));
+
+        Category category = convertToEntity(categoryRequest);
+        Category savedCategory = categoryService.save(category);
+        return ResponseEntity.ok(convertToDao(savedCategory));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateCategory(@PathVariable Integer id, @Valid @RequestBody Category category, BindingResult bindingResult) {
+    public ResponseEntity<?> updateCategory(@PathVariable Integer id, @Valid @RequestBody CategoryRequest categoryRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         }
-        Optional<Category> existingCategory = categoryService.findById(id);
-        if (existingCategory.isPresent()) {
-            category.setId(id);
-            return ResponseEntity.ok(categoryService.save(category));
+        
+        if (!categoryService.existsById(id)) {
+            return ResponseEntity.badRequest().build();
+            
         } else {
-            return ResponseEntity.notFound().build();
+            Category category = convertToEntity(categoryRequest);
+            category.setId(id);
+            Category savedCategory = categoryService.save(category);
+            return ResponseEntity.ok(convertToDao(savedCategory));
         }
     }
 
@@ -65,4 +84,17 @@ public class CategoryController {
         categoryService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+    // DAO CONVERTERS
+    private CategoryResponse convertToDao(Category category) {
+        return new CategoryResponse(category.getId(), category.getName());
+    }
+
+    private Category convertToEntity(CategoryRequest categoryRequest) {
+        Category category = new Category();
+        category.setUzer(securityService.getCurrentUser());
+        category.setName(categoryRequest.getName());
+        return category;
+    }
+
 }

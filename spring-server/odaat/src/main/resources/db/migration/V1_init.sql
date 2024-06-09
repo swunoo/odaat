@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS uzer (
 
 CREATE TABLE IF NOT EXISTS category (
     'id' INT AUTO_INCREMENT PRIMARY KEY,
-    'uzer_id' INT NOT NULL REFERENCES uzer(id),
+    'uzer_id' INT NOT NULL REFERENCES uzer(id) ON DELETE CASCADE,
     'name' VARCHAR(32) DEFAULT "My Category",
     'created_at' TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     'updated_at' TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -19,8 +19,8 @@ CREATE TABLE IF NOT EXISTS category (
 
 CREATE TABLE IF NOT EXISTS project (
     'id' INT AUTO_INCREMENT PRIMARY KEY,
-    'uzer_id' INT NOT NULL REFERENCES uzer(id),
-    'category_id' INT NOT NULL REFERENCES category(id),
+    'uzer_id' INT NOT NULL REFERENCES uzer(id) ON DELETE CASCADE,
+    'category_id' INT NOT NULL REFERENCES category(id) ON DELETE CASCADE,
     'name' VARCHAR(32) DEFAULT "My Project",
     'description' TEXT,
     'status' ENUM('created', 'started', 'completed', 'paused', 'stopped') DEFAULT 'created',
@@ -39,8 +39,8 @@ CREATE TABLE IF NOT EXISTS project (
 
 CREATE TABLE IF NOT EXISTS task (
     'id' INT AUTO_INCREMENT PRIMARY KEY,
-    'uzer_id' INT NOT NULL REFERENCES uzer(id),
-    'project_id' INT NOT NULL REFERENCES project(id),
+    'uzer_id' INT NOT NULL REFERENCES uzer(id) ON DELETE CASCADE,
+    'project_id' INT NOT NULL REFERENCES project(id) ON DELETE CASCADE,
     'description' TEXT,
     'status' ENUM('generated', 'planned', 'completed') DEFAULT 'generated',
     'priority' ENUM('lowest', 'low', 'medium', 'high', 'highest') DEFAULT 'low',

@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 public class TaskRequest {
 
     @NotNull
-    private Integer project_id;
+    private Integer projectId;
 
     private String description;
     private TaskStatus status;

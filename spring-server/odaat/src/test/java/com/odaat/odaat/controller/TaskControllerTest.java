@@ -26,6 +26,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.odaat.odaat.model.Task;
+import com.odaat.odaat.service.SecurityService;
 import com.odaat.odaat.service.TaskService;
 
 class TaskControllerTest {
@@ -35,6 +36,9 @@ class TaskControllerTest {
     @Mock
     private TaskService taskService;
 
+    @Mock
+    private SecurityService securityService;
+    
     @InjectMocks
     private TaskController taskController;
 

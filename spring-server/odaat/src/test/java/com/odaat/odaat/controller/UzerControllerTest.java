@@ -26,6 +26,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.odaat.odaat.model.Uzer;
+import com.odaat.odaat.service.SecurityService;
 import com.odaat.odaat.service.UzerService;
 
 class UzerControllerTest {
@@ -34,6 +35,9 @@ class UzerControllerTest {
 
     @Mock
     private UzerService uzerService;
+
+    @Mock
+    private SecurityService securityService;
 
     @InjectMocks
     private UzerController uzerController;

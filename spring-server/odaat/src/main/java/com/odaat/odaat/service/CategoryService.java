@@ -30,4 +30,8 @@ public class CategoryService {
     public void deleteById(Integer id) {
         categoryRepository.deleteById(id);
     }
+
+    public boolean existsById(Integer id) {
+        return categoryRepository.existsById(id);
+    }
 }

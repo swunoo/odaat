@@ -30,4 +30,8 @@ public class ProjectService {
     public void deleteById(Integer id) {
         projectRepository.deleteById(id);
     }
+
+    public boolean existsById(Integer id) {
+        return projectRepository.existsById(id);
+    }
 }
