@@ -1,11 +1,23 @@
 package com.odaat.odaat.model;
 
-import jakarta.persistence.*;
+import java.time.LocalDateTime;
+
+import com.odaat.odaat.model.enums.Priority;
+import com.odaat.odaat.model.enums.TaskStatus;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "task")
@@ -29,7 +41,7 @@ public class Task {
     private String description;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private TaskStatus status;
 
     @Enumerated(EnumType.STRING)
     private Priority priority;
@@ -43,14 +55,4 @@ public class Task {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    // Enums
-    public enum Status {
-        GENERATED, PLANNED, COMPLETED
-    }
-
-    public enum Priority {
-        LOWEST, LOW, MEDIUM, HIGH, HIGHEST
-    }
-
-    
 }
