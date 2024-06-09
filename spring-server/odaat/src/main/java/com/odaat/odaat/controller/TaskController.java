@@ -1,5 +1,6 @@
 package com.odaat.odaat.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -17,13 +18,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.odaat.odaat.dao.request.TaskRequest;
 import com.odaat.odaat.dao.response.TaskResponse;
-import com.odaat.odaat.model.Category;
 import com.odaat.odaat.model.Project;
 import com.odaat.odaat.model.Task;
+import com.odaat.odaat.model.enums.TaskStatus;
 import com.odaat.odaat.service.SecurityService;
 import com.odaat.odaat.service.TaskService;
 
@@ -36,14 +38,17 @@ public class TaskController {
     @Autowired
     private SecurityService securityService;
 
-    @GetMapping
-    public List<TaskResponse> getAllTasks() {
-        return taskService.findAll().stream()
+    @GetMapping("/get")
+    public List<TaskResponse> getAllTasks(
+        @RequestParam(value = "projectId", required = false) Integer projectId,
+        @RequestParam(value = "date", required = false) LocalDate date
+    ) {
+        return taskService.findAll(projectId, date).stream()
                 .map(this::convertToDao)
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/detail/{id}")
     public ResponseEntity<TaskResponse> getTaskById(@PathVariable Integer id) {
         Optional<Task> task = taskService.findById(id);
         if (!task.isPresent()) {
@@ -53,7 +58,7 @@ public class TaskController {
         }
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public ResponseEntity<?> createTask(@Valid @RequestBody TaskRequest taskRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
@@ -64,7 +69,7 @@ public class TaskController {
         return ResponseEntity.ok(convertToDao(savedTask));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<?> updateTask(@PathVariable Integer id, @Valid @RequestBody TaskRequest taskRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
@@ -81,7 +86,28 @@ public class TaskController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @PutMapping("/updateStatus/{id}")
+    public ResponseEntity<?> updateTask(
+        @PathVariable Integer id, @RequestParam @Valid TaskStatus status, BindingResult bindingResult
+    ) {
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+        }
+
+        Optional<Task> taskOptional = taskService.findById(id);
+        
+        if (taskOptional.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+            
+        } else {
+            Task task = taskOptional.get();
+            task.setStatus(status);
+            task = taskService.save(task);
+            return ResponseEntity.ok(convertToDao(task));
+        }
+    }
+
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable Integer id) {
         taskService.deleteById(id);
         return ResponseEntity.noContent().build();

@@ -52,7 +52,7 @@ class ProjectControllerTest {
     void testGetAllProjects() throws Exception {
         when(projectService.findAll()).thenReturn(Collections.singletonList(new Project()));
 
-        mockMvc.perform(get("/api/project"))
+        mockMvc.perform(get("/api/project/get"))
                 .andExpect(status().isOk());
 
         verify(projectService, times(1)).findAll();
@@ -64,7 +64,7 @@ class ProjectControllerTest {
         project.setId(1);
         when(projectService.findById(anyInt())).thenReturn(Optional.of(project));
 
-        mockMvc.perform(get("/api/project/1"))
+        mockMvc.perform(get("/api/project/detail/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1));
 
@@ -76,7 +76,7 @@ class ProjectControllerTest {
         Project project = new Project();
         when(projectService.save(any(Project.class))).thenReturn(project);
 
-        mockMvc.perform(post("/api/project")
+        mockMvc.perform(post("/api/project/add")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\": \"Test Project\", \"uzerId\": 1, \"categoryId\": 1}"))
                 .andExpect(status().isOk())
@@ -92,7 +92,7 @@ class ProjectControllerTest {
         when(projectService.existsById(1)).thenReturn(true);
         when(projectService.save(any(Project.class))).thenReturn(project);
 
-        mockMvc.perform(put("/api/project/1")
+        mockMvc.perform(put("/api/project/update/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\": \"Updated Project\"}"))
                 .andExpect(status().isOk())
@@ -106,7 +106,7 @@ class ProjectControllerTest {
     void testDeleteProject() throws Exception {
         doNothing().when(projectService).deleteById(anyInt());
 
-        mockMvc.perform(delete("/api/project/1"))
+        mockMvc.perform(delete("/api/project/delete/1"))
                 .andExpect(status().isNoContent());
 
         verify(projectService, times(1)).deleteById(anyInt());

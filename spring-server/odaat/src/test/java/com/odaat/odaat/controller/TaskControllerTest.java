@@ -50,12 +50,12 @@ class TaskControllerTest {
 
     @Test
     void testGetAllTasks() throws Exception {
-        when(taskService.findAll()).thenReturn(Collections.singletonList(new Task()));
+        when(taskService.findAll(null, null)).thenReturn(Collections.singletonList(new Task()));
 
-        mockMvc.perform(get("/api/task"))
+        mockMvc.perform(get("/api/task/get"))
                 .andExpect(status().isOk());
 
-        verify(taskService, times(1)).findAll();
+        verify(taskService, times(1)).findAll(null, null);
     }
 
     @Test
@@ -64,7 +64,7 @@ class TaskControllerTest {
         task.setId(1);
         when(taskService.findById(anyInt())).thenReturn(Optional.of(task));
 
-        mockMvc.perform(get("/api/task/1"))
+        mockMvc.perform(get("/api/task/detail/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1));
 
@@ -76,7 +76,7 @@ class TaskControllerTest {
         Task task = new Task();
         when(taskService.save(any(Task.class))).thenReturn(task);
 
-        mockMvc.perform(post("/api/task")
+        mockMvc.perform(post("/api/task/add")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"description\": \"Test Task\", \"uzerId\": 1, \"projectId\": 1}"))
                 .andExpect(status().isOk())
@@ -92,7 +92,7 @@ class TaskControllerTest {
         when(taskService.existsById(1)).thenReturn(true);
         when(taskService.save(any(Task.class))).thenReturn(task);
 
-        mockMvc.perform(put("/api/task/1")
+        mockMvc.perform(put("/api/task/update/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"description\": \"Updated Task\", \"uzerId\": 1, \"projectId\": 1}"))
                 .andExpect(status().isOk())
@@ -106,7 +106,7 @@ class TaskControllerTest {
     void testDeleteTask() throws Exception {
         doNothing().when(taskService).deleteById(anyInt());
 
-        mockMvc.perform(delete("/api/task/1"))
+        mockMvc.perform(delete("/api/task/delete/1"))
                 .andExpect(status().isNoContent());
 
         verify(taskService, times(1)).deleteById(anyInt());

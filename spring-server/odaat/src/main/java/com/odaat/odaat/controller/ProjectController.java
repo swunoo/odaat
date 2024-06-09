@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.odaat.odaat.dao.request.CategoryRequest;
 import com.odaat.odaat.dao.request.ProjectRequest;
 import com.odaat.odaat.dao.response.CategoryResponse;
+import com.odaat.odaat.dao.response.ProjectIdAndName;
 import com.odaat.odaat.dao.response.ProjectResponse;
 import com.odaat.odaat.model.Category;
 import com.odaat.odaat.model.Project;
@@ -37,14 +38,21 @@ public class ProjectController {
     @Autowired
     private SecurityService securityService;
 
-    @GetMapping
+    @GetMapping("/get")
     public List<ProjectResponse> getAllProjects() {
         return projectService.findAll().stream()
                 .map(this::convertToDao)
                 .collect(Collectors.toList());
     }
+    
+    @GetMapping("/getIdName")
+    public List<ProjectIdAndName> getProjectIdAndNames() {
+        return projectService.findAll().stream()
+                .map(project -> new ProjectIdAndName(project.getId(), project.getName()))
+                .collect(Collectors.toList());
+    }
 
-    @GetMapping("/{id}")
+    @GetMapping("/detail/{id}")
     public ResponseEntity<ProjectResponse> getProjectById(@PathVariable Integer id) {
         Optional<Project> project = projectService.findById(id);
         if (!project.isPresent()) {
@@ -54,7 +62,7 @@ public class ProjectController {
         }
     }
 
-    @PostMapping
+    @PostMapping("add")
     public ResponseEntity<?> createProject(@Valid @RequestBody ProjectRequest projectRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
@@ -65,7 +73,7 @@ public class ProjectController {
         return ResponseEntity.ok(convertToDao(savedProject));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<?> updateProject(@PathVariable Integer id, @Valid @RequestBody ProjectRequest projectRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
@@ -82,7 +90,7 @@ public class ProjectController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteProject(@PathVariable Integer id) {
         projectService.deleteById(id);
         return ResponseEntity.noContent().build();

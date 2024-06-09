@@ -22,15 +22,13 @@
 | T02 | GET | /detail/:id |  | 200 Task, 400 |
 | T03 | POST | /add | Task | 200 Task, 400 |
 | T04 | PUT | /update/:id | Task | 200 Task, 400 |
-| T06 | PUT | /change/:id?{status} |  | 200 Task, 400 |
-| T07 | PUT | /change/:id?{priority} |  | 200 Task, 400 |
+| T06 | PUT | /updateStatus/:id?{status} |  | 200 Task, 400 |
 | T08 | DELETE | /delete/:id |  | 200, 400 |
 | P01 | GET | /get?{status&program} |  | 200 Project[] |
 | P02 | GET | /detail/:id |  | 200 Project, 400 |
 | P03 | POST | /add | Project | 200 Project, 400 |
 | P04 | PUT | /update/:id | Project | 200 Project, 400 |
-| P05 | PUT | /change/:id?{status} |  | 200 Project, 400 |
-| P06 | PUT | /change/:id?{priority} |  | 200 Project, 400 |
+| P05 | PUT | /updateStatus/:id?{status} |  | 200 Project, 400 |
 | P07 | DELETE | /delete/:id |  | 200, 400 |
 | Bg01 | GET | /sync |  | 200, 403 |
 

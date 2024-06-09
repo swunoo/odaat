@@ -33,7 +33,7 @@ export default function Projects() {
     // Fetch all projects
     useEffect(() => {
         // API: QUERY ALL PROJECTS
-        fetch(PROJECT_API + '/getAll', {
+        fetch(PROJECT_API + '/get', {
             method: 'GET'
         })
             .then(res => res.json())

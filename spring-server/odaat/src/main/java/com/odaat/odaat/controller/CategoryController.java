@@ -33,14 +33,14 @@ public class CategoryController {
     @Autowired
     private SecurityService securityService;
 
-    @GetMapping
+    @GetMapping("/get")
     public List<CategoryResponse> getAllCategories() {
         return categoryService.findAll().stream()
                 .map(this::convertToDao)
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/detail/{id}")
     public ResponseEntity<CategoryResponse> getCategoryById(@PathVariable Integer id) {
         Optional<Category> category = categoryService.findById(id);
 
@@ -51,7 +51,7 @@ public class CategoryController {
         }
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public ResponseEntity<?> createCategory(@Valid @RequestBody CategoryRequest categoryRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
@@ -62,7 +62,7 @@ public class CategoryController {
         return ResponseEntity.ok(convertToDao(savedCategory));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<?> updateCategory(@PathVariable Integer id, @Valid @RequestBody CategoryRequest categoryRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
@@ -79,7 +79,7 @@ public class CategoryController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable Integer id) {
         categoryService.deleteById(id);
         return ResponseEntity.noContent().build();

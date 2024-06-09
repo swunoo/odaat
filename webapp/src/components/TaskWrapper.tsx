@@ -33,7 +33,7 @@ export function TaskWrapper(
 
     useEffect(() => {
         // API: GET ALL PROJECTS
-        fetch(PROJECT_API + '/getTitles', {
+        fetch(PROJECT_API + '/getIdName', {
             method: 'GET'
         })
             .then(res => res.json())

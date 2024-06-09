@@ -39,11 +39,11 @@ class TaskServiceTest {
     @Test
     void testFindAll() {
         Task task = new Task();
-        when(taskRepository.findAll()).thenReturn(Collections.singletonList(task));
+        when(taskRepository.find(null, null)).thenReturn(Collections.singletonList(task));
 
-        List<Task> tasks = taskService.findAll();
+        List<Task> tasks = taskService.findAll(null, null);
         assertEquals(1, tasks.size());
-        verify(taskRepository, times(1)).findAll();
+        verify(taskRepository, times(1)).find(null, null);
     }
 
     @Test

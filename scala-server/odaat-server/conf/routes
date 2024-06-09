@@ -7,14 +7,14 @@
 GET     /                               controllers.HomeController.index()
 
 # Project API
-GET     /api/v1/project/getAll          controllers.ProjectController.getAll()
-GET     /api/v1/project/getTitles       controllers.ProjectController.getTitles()
+GET     /api/v1/project/get          controllers.ProjectController.getAll()
+GET     /api/v1/project/getIdName       controllers.ProjectController.getTitles()
 POST    /api/v1/project/add             controllers.ProjectController.add()
 PUT     /api/v1/project/update          controllers.ProjectController.update()
-DELETE  /api/v1/project/delete/:title   controllers.ProjectController.delete(title: String)
+DELETE  /api/v1/project/delete/:id   controllers.ProjectController.delete(title: String)
 
 # Task API
-GET     /api/v1/task/getAll             controllers.TaskController.getAll()
+GET     /api/v1/task/get             controllers.TaskController.getAll()
 GET     /api/v1/task/get                controllers.TaskController.get(project: Option[String], date: Option[String])
 POST    /api/v1/task/add                controllers.TaskController.add()
 PUT     /api/v1/task/update/:id         controllers.TaskController.update(id: Long)
