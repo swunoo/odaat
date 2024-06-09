@@ -2,6 +2,8 @@ package com.odaat.odaat.model;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.SQLRestriction;
+
 import com.odaat.odaat.model.enums.Priority;
 import com.odaat.odaat.model.enums.ProjectStatus;
 
@@ -21,6 +23,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "project")
+@SQLRestriction(value = "is_deleted = false")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

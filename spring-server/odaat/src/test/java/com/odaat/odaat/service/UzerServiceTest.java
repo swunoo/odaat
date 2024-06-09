@@ -70,9 +70,9 @@ class UzerServiceTest {
 
     @Test
     void testDeleteById() {
-        doNothing().when(uzerRepository).deleteById(anyInt());
+        doNothing().when(uzerRepository).softDelete(anyInt());
 
         uzerService.deleteById(1);
-        verify(uzerRepository, times(1)).deleteById(anyInt());
+        verify(uzerRepository, times(1)).softDelete(anyInt());
     }
 }

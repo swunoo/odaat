@@ -28,7 +28,7 @@ public class ProjectService {
     }
 
     public void deleteById(Integer id) {
-        projectRepository.deleteById(id);
+        projectRepository.softDelete(id);
     }
 
     public boolean existsById(Integer id) {

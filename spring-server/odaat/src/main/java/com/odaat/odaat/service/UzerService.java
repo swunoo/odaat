@@ -28,6 +28,6 @@ public class UzerService {
     }
 
     public void deleteById(Integer id) {
-        uzerRepository.deleteById(id);
+        uzerRepository.softDelete(id);
     }
 }

@@ -70,9 +70,9 @@ class ProjectServiceTest {
 
     @Test
     void testDeleteById() {
-        doNothing().when(projectRepository).deleteById(anyInt());
+        doNothing().when(projectRepository).softDelete(anyInt());
 
         projectService.deleteById(1);
-        verify(projectRepository, times(1)).deleteById(anyInt());
+        verify(projectRepository, times(1)).softDelete(anyInt());
     }
 }

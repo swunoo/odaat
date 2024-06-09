@@ -2,6 +2,8 @@ package com.odaat.odaat.model;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.Where;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
