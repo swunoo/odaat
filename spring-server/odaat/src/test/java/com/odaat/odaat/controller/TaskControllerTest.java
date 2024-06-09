@@ -52,7 +52,7 @@ class TaskControllerTest {
     void testGetAllTasks() throws Exception {
         when(taskService.findAll()).thenReturn(Collections.singletonList(new Task()));
 
-        mockMvc.perform(get("/api/tasks"))
+        mockMvc.perform(get("/api/task"))
                 .andExpect(status().isOk());
 
         verify(taskService, times(1)).findAll();
@@ -64,7 +64,7 @@ class TaskControllerTest {
         task.setId(1);
         when(taskService.findById(anyInt())).thenReturn(Optional.of(task));
 
-        mockMvc.perform(get("/api/tasks/1"))
+        mockMvc.perform(get("/api/task/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1));
 
@@ -76,7 +76,7 @@ class TaskControllerTest {
         Task task = new Task();
         when(taskService.save(any(Task.class))).thenReturn(task);
 
-        mockMvc.perform(post("/api/tasks")
+        mockMvc.perform(post("/api/task")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"description\": \"Test Task\", \"uzerId\": 1, \"projectId\": 1}"))
                 .andExpect(status().isOk())
@@ -89,16 +89,16 @@ class TaskControllerTest {
     void testUpdateTask() throws Exception {
         Task task = new Task();
         task.setId(1);
-        when(taskService.findById(anyInt())).thenReturn(Optional.of(task));
+        when(taskService.existsById(1)).thenReturn(true);
         when(taskService.save(any(Task.class))).thenReturn(task);
 
-        mockMvc.perform(put("/api/tasks/1")
+        mockMvc.perform(put("/api/task/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"description\": \"Updated Task\", \"uzerId\": 1, \"projectId\": 1}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1));
 
-        verify(taskService, times(1)).findById(anyInt());
+        verify(taskService, times(1)).existsById(1);
         verify(taskService, times(1)).save(any(Task.class));
     }
 
@@ -106,7 +106,7 @@ class TaskControllerTest {
     void testDeleteTask() throws Exception {
         doNothing().when(taskService).deleteById(anyInt());
 
-        mockMvc.perform(delete("/api/tasks/1"))
+        mockMvc.perform(delete("/api/task/1"))
                 .andExpect(status().isNoContent());
 
         verify(taskService, times(1)).deleteById(anyInt());

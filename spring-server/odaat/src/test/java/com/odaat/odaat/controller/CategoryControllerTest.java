@@ -53,7 +53,7 @@ class CategoryControllerTest {
     void testGetAllCategories() throws Exception {
         when(categoryService.findAll()).thenReturn(Collections.singletonList(new Category()));
 
-        mockMvc.perform(get("/api/categories"))
+        mockMvc.perform(get("/api/category"))
                 .andExpect(status().isOk());
 
         verify(categoryService, times(1)).findAll();
@@ -65,7 +65,7 @@ class CategoryControllerTest {
         category.setId(1);
         when(categoryService.findById(anyInt())).thenReturn(Optional.of(category));
 
-        mockMvc.perform(get("/api/categories/1"))
+        mockMvc.perform(get("/api/category/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1));
 
@@ -81,7 +81,7 @@ class CategoryControllerTest {
         mockUzer.setId(1);
         when(securityService.getCurrentUser()).thenReturn(mockUzer);
 
-        mockMvc.perform(post("/api/categories")
+        mockMvc.perform(post("/api/category")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\": \"Test Category\", \"uzerId\": 1}"))
                 .andExpect(status().isOk())
@@ -94,19 +94,19 @@ class CategoryControllerTest {
     void testUpdateCategory() throws Exception {
         Category category = new Category();
         category.setId(1);
-        when(categoryService.findById(anyInt())).thenReturn(Optional.of(category));
+        when(categoryService.existsById(1)).thenReturn(true);
         when(categoryService.save(any(Category.class))).thenReturn(category);
         Uzer mockUzer = new Uzer();
         mockUzer.setId(1);
         when(securityService.getCurrentUser()).thenReturn(mockUzer);
 
-        mockMvc.perform(put("/api/categories/1")
+        mockMvc.perform(put("/api/category/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\": \"Updated Category\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1));
 
-        verify(categoryService, times(1)).findById(anyInt());
+        verify(categoryService, times(1)).existsById(1);
         verify(categoryService, times(1)).save(any(Category.class));
     }
 
@@ -114,7 +114,7 @@ class CategoryControllerTest {
     void testDeleteCategory() throws Exception {
         doNothing().when(categoryService).deleteById(anyInt());
 
-        mockMvc.perform(delete("/api/categories/1"))
+        mockMvc.perform(delete("/api/category/1"))
                 .andExpect(status().isNoContent());
 
         verify(categoryService, times(1)).deleteById(anyInt());

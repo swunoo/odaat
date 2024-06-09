@@ -25,7 +25,7 @@ import com.odaat.odaat.service.CategoryService;
 import com.odaat.odaat.service.SecurityService;
 
 @RestController
-@RequestMapping("/api/categories")
+@RequestMapping("/api/category")
 public class CategoryController {
 
     @Autowired

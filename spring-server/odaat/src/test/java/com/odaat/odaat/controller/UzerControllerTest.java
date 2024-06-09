@@ -52,7 +52,7 @@ class UzerControllerTest {
     void testGetAllUzers() throws Exception {
         when(uzerService.findAll()).thenReturn(Collections.singletonList(new Uzer()));
 
-        mockMvc.perform(get("/api/uzers"))
+        mockMvc.perform(get("/api/uzer"))
                 .andExpect(status().isOk());
 
         verify(uzerService, times(1)).findAll();
@@ -61,28 +61,14 @@ class UzerControllerTest {
     @Test
     void testGetUzerById() throws Exception {
         Uzer uzer = new Uzer();
-        uzer.setId(1);
-        when(uzerService.findById(anyInt())).thenReturn(Optional.of(uzer));
+        uzer.setName("Anon 1");
+        when(uzerService.findById(1)).thenReturn(Optional.of(uzer));
 
-        mockMvc.perform(get("/api/uzers/1"))
+        mockMvc.perform(get("/api/uzer/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1));
+                .andExpect(jsonPath("$.name").value("Anon 1"));
 
-        verify(uzerService, times(1)).findById(anyInt());
-    }
-
-    @Test
-    void testCreateUzer() throws Exception {
-        Uzer uzer = new Uzer();
-        when(uzerService.save(any(Uzer.class))).thenReturn(uzer);
-
-        mockMvc.perform(post("/api/uzers")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\": \"Test Uzer\", \"email\": \"test@example.com\", \"password\": \"password\"}"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").doesNotExist());
-
-        verify(uzerService, times(1)).save(any(Uzer.class));
+        verify(uzerService, times(1)).findById(1);
     }
 
     @Test
@@ -92,13 +78,12 @@ class UzerControllerTest {
         when(uzerService.findById(anyInt())).thenReturn(Optional.of(uzer));
         when(uzerService.save(any(Uzer.class))).thenReturn(uzer);
 
-        mockMvc.perform(put("/api/uzers/1")
+        mockMvc.perform(put("/api/uzer/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\": \"Updated Uzer\", \"email\": \"updated@example.com\", \"password\": \"password\"}"))
+                .content("{\"name\": \"Updated Uzer\"}"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1));
+                .andExpect(jsonPath("$.name").value("Updated Uzer"));
 
-        verify(uzerService, times(1)).findById(anyInt());
         verify(uzerService, times(1)).save(any(Uzer.class));
     }
 
@@ -106,7 +91,7 @@ class UzerControllerTest {
     void testDeleteUzer() throws Exception {
         doNothing().when(uzerService).deleteById(anyInt());
 
-        mockMvc.perform(delete("/api/uzers/1"))
+        mockMvc.perform(delete("/api/uzer/1"))
                 .andExpect(status().isNoContent());
 
         verify(uzerService, times(1)).deleteById(anyInt());

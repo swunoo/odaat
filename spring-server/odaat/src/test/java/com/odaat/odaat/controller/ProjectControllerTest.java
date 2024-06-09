@@ -52,7 +52,7 @@ class ProjectControllerTest {
     void testGetAllProjects() throws Exception {
         when(projectService.findAll()).thenReturn(Collections.singletonList(new Project()));
 
-        mockMvc.perform(get("/api/projects"))
+        mockMvc.perform(get("/api/project"))
                 .andExpect(status().isOk());
 
         verify(projectService, times(1)).findAll();
@@ -64,7 +64,7 @@ class ProjectControllerTest {
         project.setId(1);
         when(projectService.findById(anyInt())).thenReturn(Optional.of(project));
 
-        mockMvc.perform(get("/api/projects/1"))
+        mockMvc.perform(get("/api/project/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1));
 
@@ -76,7 +76,7 @@ class ProjectControllerTest {
         Project project = new Project();
         when(projectService.save(any(Project.class))).thenReturn(project);
 
-        mockMvc.perform(post("/api/projects")
+        mockMvc.perform(post("/api/project")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\": \"Test Project\", \"uzerId\": 1, \"categoryId\": 1}"))
                 .andExpect(status().isOk())
@@ -89,16 +89,16 @@ class ProjectControllerTest {
     void testUpdateProject() throws Exception {
         Project project = new Project();
         project.setId(1);
-        when(projectService.findById(anyInt())).thenReturn(Optional.of(project));
+        when(projectService.existsById(1)).thenReturn(true);
         when(projectService.save(any(Project.class))).thenReturn(project);
 
-        mockMvc.perform(put("/api/projects/1")
+        mockMvc.perform(put("/api/project/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\": \"Updated Project\", \"uzerId\": 1, \"categoryId\": 1}"))
+                .content("{\"name\": \"Updated Project\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1));
 
-        verify(projectService, times(1)).findById(anyInt());
+        verify(projectService, times(1)).existsById(1);
         verify(projectService, times(1)).save(any(Project.class));
     }
 
@@ -106,7 +106,7 @@ class ProjectControllerTest {
     void testDeleteProject() throws Exception {
         doNothing().when(projectService).deleteById(anyInt());
 
-        mockMvc.perform(delete("/api/projects/1"))
+        mockMvc.perform(delete("/api/project/1"))
                 .andExpect(status().isNoContent());
 
         verify(projectService, times(1)).deleteById(anyInt());

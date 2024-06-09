@@ -29,7 +29,7 @@ import com.odaat.odaat.service.ProjectService;
 import com.odaat.odaat.service.SecurityService;
 
 @RestController
-@RequestMapping("/api/projects")
+@RequestMapping("/api/project")
 public class ProjectController {
 
     @Autowired

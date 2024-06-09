@@ -28,7 +28,7 @@ import com.odaat.odaat.service.SecurityService;
 import com.odaat.odaat.service.TaskService;
 
 @RestController
-@RequestMapping("/api/tasks")
+@RequestMapping("/api/task")
 public class TaskController {
 
     @Autowired

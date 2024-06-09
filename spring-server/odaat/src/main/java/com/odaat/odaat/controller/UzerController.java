@@ -28,7 +28,7 @@ import com.odaat.odaat.service.SecurityService;
 import com.odaat.odaat.service.UzerService;
 
 @RestController
-@RequestMapping("/api/uzers")
+@RequestMapping("/api/uzer")
 public class UzerController {
 
     @Autowired
