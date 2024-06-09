@@ -51,7 +51,7 @@
 #### Uzer
 | Column | Type | Constraints |
 | --- | --- | --- |
-| id | long | PK, AUTO_INCREMENTED |
+| id | int | PK, AUTO_INCREMENTED |
 | name | varchar(32) | DEFAULT "Anon" |
 | email | varchar(255) | NOT NULL |
 | password | varchar(72) | NOT NULL |
@@ -63,8 +63,8 @@
 #### Category
 | Column | Type | Constraints |
 | --- | --- | --- |
-| id | long | PK, AUTO_INCREMENTED |
-| uzer_id | long | FK id on uzer |
+| id | int | PK, AUTO_INCREMENTED |
+| uzer_id | int | FK id on uzer |
 | name | varchar(64) | NOT NULL |
 | created_at | datetime | AUTO_CREATED |
 | updated_at | datetime | AUTO_UPDATED |
@@ -72,18 +72,18 @@
 #### Project
 | Column | Type | Constraints |
 | --- | --- | --- |
-| id | long | PK, AUTO_INCREMENTED |
-| uzer_id | long | FK id on uzer |
-| category_id | long | FK id on category |
+| id | int | PK, AUTO_INCREMENTED |
+| uzer_id | int | FK id on uzer |
+| category_id | int | FK id on category |
 | name | varchar(64) | DEFAULT "now()" |
 | description | text | DEFAULT "" |
 | status | project_status | DEFAULT "created" |
-| priority_scale | int | MIN_1, MAX_5 |
+| priority | priority_level | DEFAULT "low" |
 | start_time | datetime | |
 | end_time | datetime | |
 | due_time | datetime | |
-| estimated_hr | int | |
-| daily_hr | int | |
+| estimated_hr | double | |
+| daily_hr | double | |
 | is_deleted | boolean | DEFAULT "false" |
 | deleted_at | datetime | |
 | created_at | datetime | AUTO_CREATED |
@@ -92,12 +92,12 @@
 #### Task
 | Column | Type | Constraints |
 | --- | --- | --- |
-| id | long | PK, AUTO_INCREMENTED |
-| uzer_id | long | FK id on uzer |
-| project_id | long | FK id on project |
+| id | int | PK, AUTO_INCREMENTED |
+| uzer_id | int | FK id on uzer |
+| project_id | int | FK id on project |
 | description | text | DEFAULT "" |
 | status | task_status | DEFAULT "created" |
-| priority_scale | int | MIN_1, MAX_5 |
+| priority | priority_level | DEFAULT "low" |
 | start_time | datetime | |
 | duration_hr | int | DEFAULT "2" |
 | created_at | datetime | AUTO_CREATED |
@@ -108,3 +108,4 @@
 | --- | --- | --- |
 | 1 | project_status | CREATED, STARTED, COMPLETED, PAUSED, STOPPED |
 | 2 | task_status | GENERATED, PLANNED, COMPLETED |
+| 3 | priority_level | LOWEST, LOW, MEDIUM, HIGH, HIGHEST |

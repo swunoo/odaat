@@ -34,7 +34,7 @@
 ### Progress
 ![Progress Page](./readme_images/progress.png)
 - Update your progress with a single click.
-- Track completion dates and deadlines for each project.
+- Track completion dates and dues for each project.
 - Adjust daily tasks by moving them between dates.
 
 ## Setup

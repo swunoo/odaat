@@ -15,7 +15,7 @@ export type ProjectData = {
     title: string,
     duration: string,
     completedAt: string | null,
-    deadline: string,
+    due: string,
     priority: 'low' | 'medium' | 'high',
     description: string
 }
@@ -179,7 +179,7 @@ function ProjectBlock(
                                 {data.completedAt}
                             </p>
                             : <p className="text-red-500">
-                                {data.deadline}
+                                {data.due}
                             </p>
                     }
                 </div>
@@ -310,12 +310,12 @@ export function NewProjectModal(
                     defaultValue={data ? data.duration : 1}
                 />
 
-                <label className={label}>Deadline</label>
+                <label className={label}>Due</label>
                 <input
                     className={input}
                     type="date"
-                    name="deadline"
-                    defaultValue={data ? data.deadline : '2025-01-01'}
+                    name="due"
+                    defaultValue={data ? data.due : '2025-01-01'}
                 />
 
                 <label className={label}>Priority</label>
