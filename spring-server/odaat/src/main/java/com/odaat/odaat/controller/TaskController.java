@@ -33,6 +33,8 @@ import com.odaat.odaat.service.TaskService;
 @RequestMapping("/api/task")
 public class TaskController {
 
+    // TODO: return only tasks for the user
+
     @Autowired
     private TaskService taskService;
     @Autowired
