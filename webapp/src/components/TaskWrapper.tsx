@@ -2,10 +2,9 @@
 
 import { useEffect, useState } from "react"
 import menuIcon from '../assets/images/menu.svg'
-import { PROJECT_API, TASK_API } from "../conf"
+import { PROJECT_API, TASK_API, TaskData } from "../conf"
 import { dateToString, getValue, menuBtnStyle, numberOrNull } from "../utils"
 import { NewButton, NewTaskButton } from "./common"
-import { TaskData } from "./Tasks"
 
 export function TaskWrapper(
     { project, date, addProject, newProjTitle }

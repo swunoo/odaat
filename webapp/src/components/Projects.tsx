@@ -5,20 +5,9 @@ import { NewProjButton } from "./common";
 import arrowIcon from '../assets/images/arrow.svg';
 import menuIcon from '../assets/images/menu.svg';
 
-import { PROJECT_API } from "../conf";
+import { PROJECT_API, ProjectData } from "../conf";
 import { menuBtnStyle, numberOrNull } from "../utils";
 import { TaskWrapper } from "./TaskWrapper";
-
-
-export type ProjectData = {
-    id: string,
-    title: string,
-    duration: string,
-    completedAt: string | null,
-    due: string,
-    priority: 'low' | 'medium' | 'high',
-    description: string
-}
 
 /* Projects Page */
 export default function Projects() {

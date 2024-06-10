@@ -5,17 +5,9 @@ import calendarIcon from '../assets/images/calendar.svg';
 import { useState } from "react";
 import { dateToString, MILLIS_A_DAY } from "../utils";
 import { SvgChevronLeft, SvgChevronRight } from "./common";
-import { NewProjectModal, ProjectData } from "./Projects";
+import { NewProjectModal } from "./Projects";
 import { TaskWrapper } from "./TaskWrapper";
-
-export type TaskData = {
-    id: number,
-    project: string,
-    task: string,
-    duration: null | number, 
-    status: string,
-    date: string
-}
+import { ProjectData } from "../conf";
 
 /* Tasks Page */
 export default function Tasks(){
