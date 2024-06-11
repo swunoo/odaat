@@ -25,4 +25,5 @@ public class ProjectResponse {
     private Double estimatedHr;
     private Double dailyHr;
     private LocalDateTime createdAt;    
+    private LocalDateTime updatedAt;
 }
