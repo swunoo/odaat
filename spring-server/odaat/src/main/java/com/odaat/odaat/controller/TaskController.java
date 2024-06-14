@@ -92,11 +92,8 @@ public class TaskController {
 
     @PutMapping("/updateStatus/{id}")
     public ResponseEntity<?> updateTask(
-        @PathVariable Integer id, @RequestParam @Valid TaskStatus status, BindingResult bindingResult
+        @PathVariable Integer id, @RequestParam TaskStatus status
     ) {
-        if (bindingResult.hasErrors()) {
-            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
-        }
 
         Optional<Task> taskOptional = taskService.findById(id);
         
