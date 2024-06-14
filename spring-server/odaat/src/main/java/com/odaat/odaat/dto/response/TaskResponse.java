@@ -1,4 +1,4 @@
-package com.odaat.odaat.dao.response;
+package com.odaat.odaat.dto.response;
 
 import java.time.LocalDateTime;
 

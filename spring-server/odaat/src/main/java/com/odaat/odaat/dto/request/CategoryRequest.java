@@ -1,4 +1,4 @@
-package com.odaat.odaat.dao.request;
+package com.odaat.odaat.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

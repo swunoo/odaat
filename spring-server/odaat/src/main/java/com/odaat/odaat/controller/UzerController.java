@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.odaat.odaat.dao.request.CategoryRequest;
-import com.odaat.odaat.dao.request.UzerNameUpdateRequest;
-import com.odaat.odaat.dao.response.CategoryResponse;
-import com.odaat.odaat.dao.response.UzerResponse;
+import com.odaat.odaat.dto.request.CategoryRequest;
+import com.odaat.odaat.dto.request.UzerNameUpdateRequest;
+import com.odaat.odaat.dto.response.CategoryResponse;
+import com.odaat.odaat.dto.response.UzerResponse;
 import com.odaat.odaat.model.Category;
 import com.odaat.odaat.model.Uzer;
 import com.odaat.odaat.service.SecurityService;
@@ -39,7 +39,7 @@ public class UzerController {
     @GetMapping
     public List<UzerResponse> getAllUzers() {
         return uzerService.findAll().stream()
-                .map(this::convertToDao)
+                .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
@@ -49,7 +49,7 @@ public class UzerController {
         if (!uzer.isPresent()) {
             return ResponseEntity.notFound().build();
         } else {
-            return ResponseEntity.ok(convertToDao(uzer.get()));
+            return ResponseEntity.ok(convertToDto(uzer.get()));
         }
     }
 
@@ -67,7 +67,7 @@ public class UzerController {
                 Uzer uzer = existingUzer.get();
                 uzer.setName(uzerRequest.getName());
                 uzer = uzerService.save(uzer);
-                return ResponseEntity.ok(convertToDao(uzer));
+                return ResponseEntity.ok(convertToDto(uzer));
         }
     }
 
@@ -77,8 +77,8 @@ public class UzerController {
         return ResponseEntity.noContent().build();
     }
 
-    // DAO CONVERTERS
-    private UzerResponse convertToDao(Uzer uzer) {
+    // DTO and Entity Conversion
+    private UzerResponse convertToDto(Uzer uzer) {
         return new UzerResponse(uzer.getName(), uzer.getEmail(), uzer.getCreatedAt());
     }
 }

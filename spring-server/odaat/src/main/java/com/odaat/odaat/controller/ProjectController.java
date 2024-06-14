@@ -19,11 +19,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.odaat.odaat.dao.request.CategoryRequest;
-import com.odaat.odaat.dao.request.ProjectRequest;
-import com.odaat.odaat.dao.response.CategoryResponse;
-import com.odaat.odaat.dao.response.ProjectIdAndName;
-import com.odaat.odaat.dao.response.ProjectResponse;
+import com.odaat.odaat.dto.request.CategoryRequest;
+import com.odaat.odaat.dto.request.ProjectRequest;
+import com.odaat.odaat.dto.response.CategoryResponse;
+import com.odaat.odaat.dto.response.ProjectIdAndName;
+import com.odaat.odaat.dto.response.ProjectResponse;
 import com.odaat.odaat.model.Category;
 import com.odaat.odaat.model.Project;
 import com.odaat.odaat.service.ProjectService;
@@ -41,7 +41,7 @@ public class ProjectController {
     @GetMapping("/get")
     public List<ProjectResponse> getAllProjects() {
         return projectService.findAll().stream()
-                .map(this::convertToDao)
+                .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
     
@@ -58,7 +58,7 @@ public class ProjectController {
         if (!project.isPresent()) {
             return ResponseEntity.notFound().build();
         } else {
-            return ResponseEntity.ok(convertToDao(project.get()));
+            return ResponseEntity.ok(convertToDto(project.get()));
         }
     }
 
@@ -70,7 +70,7 @@ public class ProjectController {
         
         Project project = convertToEntity(projectRequest);
         Project savedProject = projectService.save(project);
-        return ResponseEntity.ok(convertToDao(savedProject));
+        return ResponseEntity.ok(convertToDto(savedProject));
     }
 
     @PutMapping("/update/{id}")
@@ -86,7 +86,7 @@ public class ProjectController {
             Project project = convertToEntity(projectRequest);
             project.setId(id);
             Project savedCategory = projectService.save(project);
-            return ResponseEntity.ok(convertToDao(savedCategory));
+            return ResponseEntity.ok(convertToDto(savedCategory));
         }
     }
 
@@ -96,8 +96,8 @@ public class ProjectController {
         return ResponseEntity.noContent().build();
     }
 
-    // DAO CONVERTERS
-    private ProjectResponse convertToDao(Project project) {
+    // DTO and Entity Conversion
+    private ProjectResponse convertToDto(Project project) {
         ProjectResponse projectResponse = new ProjectResponse();
         BeanUtils.copyProperties(project, projectResponse);
         return projectResponse;

@@ -21,9 +21,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.odaat.odaat.dao.request.TaskRequest;
-import com.odaat.odaat.dao.response.ProjectResponse;
-import com.odaat.odaat.dao.response.TaskResponse;
+import com.odaat.odaat.dto.request.TaskRequest;
+import com.odaat.odaat.dto.response.ProjectResponse;
+import com.odaat.odaat.dto.response.TaskResponse;
 import com.odaat.odaat.model.Project;
 import com.odaat.odaat.model.Task;
 import com.odaat.odaat.model.enums.TaskStatus;
@@ -46,8 +46,9 @@ public class TaskController {
         @RequestParam(value = "projectId", required = false) Integer projectId,
         @RequestParam(value = "date", required = false) LocalDate date
     ) {
+
         return taskService.findAll(projectId, date).stream()
-                .map(this::convertToDao)
+                .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
@@ -57,7 +58,7 @@ public class TaskController {
         if (!task.isPresent()) {
             return ResponseEntity.notFound().build();
         } else {
-            return ResponseEntity.ok(convertToDao(task.get()));
+            return ResponseEntity.ok(convertToDto(task.get()));
         }
     }
 
@@ -69,7 +70,7 @@ public class TaskController {
         
         Task task = convertToEntity(taskRequest);
         Task savedTask = taskService.save(task);
-        return ResponseEntity.ok(convertToDao(savedTask));
+        return ResponseEntity.ok(convertToDto(savedTask));
     }
 
     @PutMapping("/update/{id}")
@@ -85,7 +86,7 @@ public class TaskController {
             Task task = convertToEntity(taskRequest);
             task.setId(id);
             Task savedTask = taskService.save(task);
-            return ResponseEntity.ok(convertToDao(savedTask));
+            return ResponseEntity.ok(convertToDto(savedTask));
         }
     }
 
@@ -106,7 +107,7 @@ public class TaskController {
             Task task = taskOptional.get();
             task.setStatus(status);
             task = taskService.save(task);
-            return ResponseEntity.ok(convertToDao(task));
+            return ResponseEntity.ok(convertToDto(task));
         }
     }
 
@@ -116,8 +117,8 @@ public class TaskController {
         return ResponseEntity.noContent().build();
     }
 
-    // DAO CONVERTERS
-    private TaskResponse convertToDao(Task task) {
+    // DTO and Entity Conversion
+    private TaskResponse convertToDto(Task task) {
         TaskResponse taskResponse = new TaskResponse();
         BeanUtils.copyProperties(task, taskResponse);
         ProjectResponse projectResponse = new ProjectResponse();

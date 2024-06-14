@@ -1,7 +1,8 @@
-package com.odaat.odaat.dao.request;
+package com.odaat.odaat.dto.request;
 
 import java.time.LocalDateTime;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import com.odaat.odaat.model.enums.Priority;
@@ -17,6 +18,7 @@ import lombok.NoArgsConstructor;
 public class ProjectRequest {
 
     @NotNull
+    @Min(1)
     private Integer categoryId;
 
     private String name;

@@ -188,7 +188,7 @@ function ProjectBlock(
                     <span>Tasks</span>
                 </button>
 
-                {showTasks && <TaskWrapper project={data.name} />}
+                {showTasks && <TaskWrapper project={data} />}
 
             </div>
         </div>

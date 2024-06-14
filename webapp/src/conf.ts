@@ -15,7 +15,7 @@ export interface ProjectCategory {
 }
 
 export interface ProjectData {
-    id: string,
+    id: number,
     category: ProjectCategory,
     name: string,
     description: string,
@@ -40,4 +40,26 @@ export interface TaskData {
     durationHr: number,
     createdAt: Date,
     updatedAt: Date
+}
+
+export interface ProjectRequest {
+    categoryId: number,
+    name: string,
+    description: string,
+    status: ProjectStatus,
+    priority: Priority,
+    startTime: Date,
+    endTime: Date,
+    dueTime: Date,
+    estimatedHr: number,
+    dailyHr: number
+}
+
+export interface TaskRequest {
+    projectId: number,
+    description: string,
+    status: TaskStatus,
+    priority: Priority,
+    startTime: Date,
+    durationHr: number
 }

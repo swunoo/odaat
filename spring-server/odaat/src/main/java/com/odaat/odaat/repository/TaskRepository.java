@@ -14,11 +14,14 @@ import com.odaat.odaat.model.Task;
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Integer> {
 
-    @Query("SELECT t FROM Task t " +
-           "WHERE (:projectId IS NULL OR t.project.id = :projectId) " +
-           "AND (:date IS NULL OR t.startTime = :date)")
-    List<Task> find(
-        @Param("projectId") Integer projectId,
-        @Param("date") LocalDateTime date
+    @Query("SELECT t FROM Task t WHERE t.project.id = :projectId")
+    List<Task> findByProjectId(
+        @Param("projectId") Integer projectId
+    );
+
+    @Query("SELECT t FROM Task t WHERE t.startTime <= :dayEnd AND t.startTime >= :dayStart")
+    List<Task> findByDate(
+        @Param("dayStart") LocalDateTime dayStart,
+        @Param("dayEnd") LocalDateTime dayEnd
     );
 }

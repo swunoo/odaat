@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.odaat.odaat.dao.request.CategoryRequest;
-import com.odaat.odaat.dao.response.CategoryResponse;
+import com.odaat.odaat.dto.request.CategoryRequest;
+import com.odaat.odaat.dto.response.CategoryResponse;
 import com.odaat.odaat.model.Category;
 import com.odaat.odaat.service.CategoryService;
 import com.odaat.odaat.service.SecurityService;
@@ -36,7 +36,7 @@ public class CategoryController {
     @GetMapping("/get")
     public List<CategoryResponse> getAllCategories() {
         return categoryService.findAll().stream()
-                .map(this::convertToDao)
+                .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
@@ -47,7 +47,7 @@ public class CategoryController {
         if (!category.isPresent()) {
             return ResponseEntity.notFound().build();
         } else {
-            return ResponseEntity.ok(convertToDao(category.get()));
+            return ResponseEntity.ok(convertToDto(category.get()));
         }
     }
 
@@ -59,7 +59,7 @@ public class CategoryController {
 
         Category category = convertToEntity(categoryRequest);
         Category savedCategory = categoryService.save(category);
-        return ResponseEntity.ok(convertToDao(savedCategory));
+        return ResponseEntity.ok(convertToDto(savedCategory));
     }
 
     @PutMapping("/update/{id}")
@@ -75,7 +75,7 @@ public class CategoryController {
             Category category = convertToEntity(categoryRequest);
             category.setId(id);
             Category savedCategory = categoryService.save(category);
-            return ResponseEntity.ok(convertToDao(savedCategory));
+            return ResponseEntity.ok(convertToDto(savedCategory));
         }
     }
 
@@ -85,8 +85,8 @@ public class CategoryController {
         return ResponseEntity.noContent().build();
     }
 
-    // DAO CONVERTERS
-    private CategoryResponse convertToDao(Category category) {
+    // DTO and Entity Conversion
+    private CategoryResponse convertToDto(Category category) {
         return new CategoryResponse(category.getId(), category.getName());
     }
 

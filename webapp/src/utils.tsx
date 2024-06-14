@@ -25,9 +25,12 @@ export const menuBtnStyle = (option?: string) => {
 } 
 
 // Given an id, return the value of an input|textarea|select element with that id.
-export function getValue(id: string){
-    const ele = document.getElementById(id) as (HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement)
-    return ele.value
+export function getValue(id: string): string {
+    const ele = document.getElementById(id);
+    if (ele instanceof HTMLInputElement || ele instanceof HTMLTextAreaElement || ele instanceof HTMLSelectElement) {
+        return ele.value;
+    }
+    return '';
 }
 
 // Cast it to a number, or return null

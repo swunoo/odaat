@@ -1,14 +1,13 @@
 package com.odaat.odaat.service;
 
 import java.time.LocalDate;
-import java.util.Collection;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.odaat.odaat.dao.response.TaskResponse;
 import com.odaat.odaat.model.Task;
 import com.odaat.odaat.repository.TaskRepository;
 
@@ -20,9 +19,9 @@ public class TaskService {
     
     public List<Task> findAll(Integer projectId, LocalDate date){
         if(date != null){
-            return taskRepository.find(projectId, date.atStartOfDay());
+            return taskRepository.findByDate(date.atTime(LocalTime.MIN), date.atTime(LocalTime.MAX));
         }
-        return taskRepository.find(projectId, null);
+        return taskRepository.findByProjectId(projectId);
     }
         
     public Optional<Task> findById(Integer id) {

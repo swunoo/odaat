@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from "react"
 import menuIcon from '../assets/images/menu.svg'
-import { PROJECT_API, ProjectData, TASK_API, TaskData } from "../conf"
+import { PROJECT_API, ProjectData, TASK_API, TaskData, TaskRequest } from "../conf"
 import { dateToString, getValue, menuBtnStyle, numberOrNull } from "../utils"
 import { NewButton, NewTaskButton } from "./common"
 
 export function TaskWrapper(
     { project, date, addProject, newProjTitle }
-    : { project?: string, date?: Date, addProject?: ()=>void, newProjTitle?: string }
+        : { project?: ProjectData, date?: Date, addProject?: () => void, newProjTitle?: string }
 ) {
 
     const [tasks, setTasks] = useState<TaskData[]>([])
@@ -18,7 +18,7 @@ export function TaskWrapper(
     useEffect(() => {
         // API: QUERY ALL TASKS OF A GIVEN PROJECT
         let taskQuery = TASK_API + '/get?'
-        if (project) taskQuery += 'project=' + project
+        if (project) taskQuery += 'projectId=' + project.id
         if (date) taskQuery += '&date=' + dateToString(date)
 
         fetch(taskQuery, {
@@ -47,9 +47,8 @@ export function TaskWrapper(
 
     const initTask: TaskData = {
         id: 0,
-        project: projectList[0],
+        project: project ?? projectList[0],
         description: 'Task Name',
-        duration: 1,
         status: 'PLANNED',
         priority: 'LOW',
         startTime: new Date(),
@@ -111,7 +110,7 @@ export function TaskWrapper(
                 }
             </div>
 
-            <div className= {
+            <div className={
                 "flex justify-end"
                 + (!project ? ' absolute top-2 right-2' : ' py-10')
             }>
@@ -163,67 +162,49 @@ export function TaskBlock(
         else setEdit(false);
     }
 
-    // TODO:
     // When the "Confirm" button on EDIT mode is clicked, data is saved.
-    /*
     const confirmEdit = () => {
 
-        const newData = {
-            id: data.id,
-            project: isTaskPage ? getValue('task-input-proj') : data.project,
-            duration: numberOrNull(getValue('task-input-duration')),
-            task: getValue('task-input-task'),
-            status: data.status,
-            date: isTaskPage ? data.startTime : getValue('task-input-date')
+        const newData: TaskRequest = {
+            projectId: getValue('task-input-proj') ? (Number)(getValue('task-input-proj')) : data.project.id,
+            description: getValue('task-input-task') ?? data.description,
+            status: data.status ?? 'PLANNED',
+            priority: data.priority ?? 'MEDIUM',
+            startTime: getValue('task-input-date') ? new Date(getValue('task-input-date')) : data.startTime,
+            durationHr: (Number)(getValue('task-input-duration'))
         }
 
-        if (isNew) {
-            // API: CREATE A TASK
-            fetch(TASK_API + '/add', {
-                method: 'POST',
-                body: JSON.stringify(newData),
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            })
-                .then(res => {
-                    if (res.status === 200) {
-                        return res.json()
-                    }
-                    else {
-                        console.log(res.text());
-                        throw new Error()
-                    }
-                }).then(addedId => {
-                    newData.id = (Number)(addedId)
-                    taskSetter(newData)
-                })
-                .catch(err => console.log(err))
+        // API: CREATE A TASK
+        // API: UPDATE A TASK
+        const url = TASK_API + (isNew ? `/add` : `/update/${data.id}`);
+        const method = isNew ? 'POST' : 'PUT';
+        const callback = isNew ? taskSetter : setData;
 
-        } else {
-            // API: UPDATE A TASK
-            fetch(TASK_API + '/update/' + data.id, {
-                method: 'PUT',
-                body: JSON.stringify(newData),
-                headers: {
-                    "Content-Type": "application/json"
+        fetch(url, {
+            method: method,
+            body: JSON.stringify(newData),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+            .then(res => {
+                if (res.status === 200) {
+                    return res.json()
                 }
+                else {
+                    console.log(res.text());
+                    throw new Error()
+                }
+            }).then(task => {
+                // Add project name to task
+                task.project.name = projects?.find(proj => proj.id === task.project.id)?.name
+                callback(task)
             })
-                .then(res => {
-                    if (res.status === 200) {
-                        setData(newData)
-                    }
-                    else {
-                        console.log(res.text());
-                        alert("Unable to update")
-                    }
-                }).catch(err => console.log(err))
-        }
+            .catch(err => console.log(err))
 
         setIsNew(false)
         setEdit(false)
     }
-    */
 
     return (
         <div
@@ -276,14 +257,14 @@ export function TaskBlock(
                         text-right px-3 py-1 w-20 h-fit bg-transparent
                     " type="number"
                                     // onKeyDown={numberInputKeyDown} 
-                                    defaultValue={data.duration ?? 0} />
+                                    defaultValue={data.durationHr ?? 0} />
                                 <span>h</span>
                             </div>
                             <div
                                 className={"flex flex-col w-fit ml-auto h-fit gap-2 " + (isTaskPage ? 'col-span-2' : 'col-span-3')}
                             >
                                 <button
-                                    // onClick={confirmEdit}
+                                    onClick={confirmEdit}
                                     className={
                                         "py-1 rounded bg-accent2 hover:bg-primary "
                                         + (isTaskPage ? 'px-5 text-sm' : 'px-1 text-xs')
@@ -314,15 +295,15 @@ export function TaskBlock(
 
                             {/* attr: other attributes are shown in both TaskPage and ProjectPage */}
                             <span className="col-span-6"
-                                dangerouslySetInnerHTML={{__html: data.description}}
+                                dangerouslySetInnerHTML={{ __html: data.description }}
                             ></span>
                             <span className={
                                 "text-right" + (isTaskPage ? '' : ' col-span-2')
                             }> {data.durationHr + ' h'} </span>
                             <div
-                                className={"flex justify-end relative col-span-2 " 
-                                + (data.status !== 'COMPLETED' ? 'self-baseline ' : '')
-                                + (isTaskPage ? "gap-8" : "gap-3")}
+                                className={"flex justify-end relative col-span-2 "
+                                    + (data.status !== 'COMPLETED' ? 'self-baseline ' : '')
+                                    + (isTaskPage ? "gap-8" : "gap-3")}
                             >
                                 <input
                                     onChange={changeCompletion}
