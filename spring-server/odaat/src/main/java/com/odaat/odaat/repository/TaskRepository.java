@@ -5,11 +5,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.odaat.odaat.model.Task;
+
+import jakarta.transaction.Transactional;
 
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Integer> {
@@ -24,4 +27,9 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
         @Param("dayStart") LocalDateTime dayStart,
         @Param("dayEnd") LocalDateTime dayEnd
     );
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Task t WHERE t.project.id = :projectId")
+    void deleteAllByProjectId(@Param("projectId") Integer projectId);
 }

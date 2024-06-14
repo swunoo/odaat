@@ -8,12 +8,16 @@ import org.springframework.stereotype.Service;
 
 import com.odaat.odaat.model.Project;
 import com.odaat.odaat.repository.ProjectRepository;
+import com.odaat.odaat.repository.TaskRepository;
 
 @Service
 public class ProjectService {
 
     @Autowired
     private ProjectRepository projectRepository;
+
+    @Autowired
+    private TaskRepository taskRepository;
 
     public List<Project> findAll() {
         return projectRepository.findAll();
@@ -28,6 +32,7 @@ public class ProjectService {
     }
 
     public void deleteById(Integer id) {
+        taskRepository.deleteAllByProjectId(id);
         projectRepository.softDelete(id);
     }
 
