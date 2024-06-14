@@ -83,7 +83,7 @@ export function TaskWrapper(
             method: 'DELETE'
         })
             .then(res => {
-                if (res.status === 200) {
+                if (res.ok) {
                     setTasks(tasks.filter((_, i) => i !== idx))
                 }
                 else {
@@ -146,7 +146,7 @@ export function TaskBlock(
             method: 'PUT'
         })
             .then(res => {
-                if (res.status === 200) {
+                if (res.ok) {
                     setData({ ...data, status: newStatus })
                 }
                 else {
@@ -188,7 +188,7 @@ export function TaskBlock(
             }
         })
             .then(res => {
-                if (res.status === 200) {
+                if (res.ok) {
                     return res.json()
                 }
                 else {

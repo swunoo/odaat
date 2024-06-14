@@ -44,7 +44,7 @@ export default function Projects() {
             method: 'DELETE'
         })
             .then(res => {
-                if (res.status === 200) {
+                if (res.ok) {
                     setProjects(projects.filter((_, i) => i !== idx))
                 }
                 else {
@@ -233,7 +233,7 @@ export function NewProjectModal(
                 }
             })
                 .then(res => {
-                    if (res.status === 200) {
+                    if (res.ok) {
                         projectSetter(confirmedProj)
                     }
                     else {
@@ -255,7 +255,7 @@ export function NewProjectModal(
                 }
             })
                 .then(res => {
-                    if (res.status === 200) {
+                    if (res.ok) {
                         projectSetter(confirmedProj)
                     }
                     else {
