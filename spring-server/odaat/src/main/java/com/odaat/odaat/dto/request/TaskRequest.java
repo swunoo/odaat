@@ -25,6 +25,8 @@ public class TaskRequest {
     private String description;
     private TaskStatus status;
     private Priority priority;
+
+    @NotNull
     private LocalDateTime startTime;
     private Double durationHr;
 

@@ -170,7 +170,7 @@ export function TaskBlock(
             description: getValue('task-input-task') ?? data.description,
             status: data.status ?? 'PLANNED',
             priority: data.priority ?? 'MEDIUM',
-            startTime: getValue('task-input-date') ? new Date(getValue('task-input-date')) : data.startTime,
+            startTime: getValue('task-input-date') ? new Date((getValue('task-input-date')) as string) : data.startTime,
             durationHr: (Number)(getValue('task-input-duration'))
         }
 
