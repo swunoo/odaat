@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.odaat.odaat.dao.request.TaskRequest;
+import com.odaat.odaat.dao.response.ProjectResponse;
 import com.odaat.odaat.dao.response.TaskResponse;
 import com.odaat.odaat.model.Project;
 import com.odaat.odaat.model.Task;
@@ -119,6 +120,10 @@ public class TaskController {
     private TaskResponse convertToDao(Task task) {
         TaskResponse taskResponse = new TaskResponse();
         BeanUtils.copyProperties(task, taskResponse);
+        ProjectResponse projectResponse = new ProjectResponse();
+        BeanUtils.copyProperties(task.getProject(), projectResponse);
+        taskResponse.setProject(projectResponse);
+        System.out.println(taskResponse);
         return taskResponse;
     }
 

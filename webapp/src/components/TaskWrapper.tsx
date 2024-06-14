@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import menuIcon from '../assets/images/menu.svg'
-import { PROJECT_API, TASK_API, TaskData } from "../conf"
+import { PROJECT_API, ProjectData, TASK_API, TaskData } from "../conf"
 import { dateToString, getValue, menuBtnStyle, numberOrNull } from "../utils"
 import { NewButton, NewTaskButton } from "./common"
 
@@ -13,7 +13,7 @@ export function TaskWrapper(
 
     const [tasks, setTasks] = useState<TaskData[]>([])
 
-    const [projectList, setProjectList] = useState<string[]>([])
+    const [projectList, setProjectList] = useState<ProjectData[]>([])
 
     useEffect(() => {
         // API: QUERY ALL TASKS OF A GIVEN PROJECT
@@ -40,17 +40,22 @@ export function TaskWrapper(
             .catch(err => console.log(err))
     }, [])
 
-    useEffect(() => {
-        if(newProjTitle) setProjectList([...projectList, newProjTitle])
-    }, [newProjTitle])
+    // TODO:
+    // useEffect(() => {
+    //     if(newProjTitle) setProjectList([...projectList, newProjTitle])
+    // }, [newProjTitle])
 
-    const initTask = {
+    const initTask: TaskData = {
         id: 0,
-        project: project ?? '',
-        task: 'Task Name',
+        project: projectList[0],
+        description: 'Task Name',
         duration: 1,
-        status: 'inprog',
-        date: dateToString(date ?? new Date())
+        status: 'PLANNED',
+        priority: 'LOW',
+        startTime: new Date(),
+        durationHr: 1,
+        createdAt: new Date(),
+        updatedAt: new Date()
     }
 
     // When "Add Task" button is clicked, init a new Task
@@ -119,7 +124,7 @@ export function TaskWrapper(
 /* Component of Each Task */
 export function TaskBlock(
     { initData, projects, addProject, remover, taskSetter, isTaskPage }:
-        { initData: TaskData, projects?: string[], addProject?: () => void, remover: () => void, taskSetter: (task: TaskData) => void, isTaskPage: boolean }) {
+        { initData: TaskData, projects?: ProjectData[], addProject?: () => void, remover: () => void, taskSetter: (task: TaskData) => void, isTaskPage: boolean }) {
 
     // Data of the Task
     const [data, setData] = useState<TaskData>(initData)
@@ -136,7 +141,7 @@ export function TaskBlock(
 
     // When the "Done" checkbox is toggled, status is updated
     const changeCompletion = () => {
-        const newStatus = data.status === 'done' ? 'inprog' : 'done'
+        const newStatus = data.status === 'COMPLETED' ? 'PLANNED' : 'COMPLETED'
         // API: UPDATE THE STATUS OF A TASK
         fetch(TASK_API + '/updateStatus/' + data.id + '?status=' + newStatus, {
             method: 'PUT'
@@ -158,7 +163,9 @@ export function TaskBlock(
         else setEdit(false);
     }
 
+    // TODO:
     // When the "Confirm" button on EDIT mode is clicked, data is saved.
+    /*
     const confirmEdit = () => {
 
         const newData = {
@@ -167,7 +174,7 @@ export function TaskBlock(
             duration: numberOrNull(getValue('task-input-duration')),
             task: getValue('task-input-task'),
             status: data.status,
-            date: isTaskPage ? data.date : getValue('task-input-date')
+            date: isTaskPage ? data.startTime : getValue('task-input-date')
         }
 
         if (isNew) {
@@ -216,13 +223,14 @@ export function TaskBlock(
         setIsNew(false)
         setEdit(false)
     }
+    */
 
     return (
         <div
             key={data.id}
             className={
                 "border-b border-light py-3 grid grid-cols-12" +
-                (data.status === 'done' ? ' bg-light opacity-50 -mx-5 px-5' : '')
+                (data.status === 'COMPLETED' ? ' bg-light opacity-50 -mx-5 px-5' : '')
             }>
 
             {// attr: Task IDs
@@ -245,15 +253,15 @@ export function TaskBlock(
                                         ">
                                             {projects && projects.map((proj, idx) => (
                                                 proj === data.project
-                                                    ? <option key={idx} value={proj} selected>{proj}</option>
-                                                    : <option key={idx} value={proj}>{proj}</option>
+                                                    ? <option key={idx} value={proj.id} selected>{proj.name}</option>
+                                                    : <option key={idx} value={proj.id}>{proj.name}</option>
                                             ))}
                                         </select>
                                         {addProject && <NewButton label="New Project" clickHandler={addProject} />}
                                     </div>
 
                                     // on Project Page
-                                    : <input id="task-input-date" className="col-span-3 h-fit text-xs bg-transparent pr-3 mt-3" type="date" defaultValue={data.date} />
+                                    : <input id="task-input-date" className="col-span-3 h-fit text-xs bg-transparent pr-3 mt-3" type="date" defaultValue={data.startTime.toString()} />
                             }
 
                             {/* attr: other attributes are shown in both TaskPage and ProjectPage */}
@@ -262,7 +270,7 @@ export function TaskBlock(
                                 className={
                                     "border px-3 py-1 " + (isTaskPage ? 'border-light col-span-6' : 'border-gray col-span-5 bg-transparent')
                                 }
-                                defaultValue={data.task}></textarea>
+                                defaultValue={data.description}></textarea>
                             <div className="flex items-center h-fit">
                                 <input id="task-input-duration" className="
                         text-right px-3 py-1 w-20 h-fit bg-transparent
@@ -275,7 +283,7 @@ export function TaskBlock(
                                 className={"flex flex-col w-fit ml-auto h-fit gap-2 " + (isTaskPage ? 'col-span-2' : 'col-span-3')}
                             >
                                 <button
-                                    onClick={confirmEdit}
+                                    // onClick={confirmEdit}
                                     className={
                                         "py-1 rounded bg-accent2 hover:bg-primary "
                                         + (isTaskPage ? 'px-5 text-sm' : 'px-1 text-xs')
@@ -298,33 +306,33 @@ export function TaskBlock(
                                 isTaskPage
                                     ? <span className="col-span-2">
                                         <span className="border border-gray px-3 py-1 text-sm font-medium">
-                                            {data.project}
+                                            {data.project.name}
                                         </span>
                                     </span>
-                                    : <p className="col-span-2 text-xs py-1">{data.date}</p>
+                                    : <p className="col-span-2 text-xs py-1">{data.startTime.toString()}</p>
                             }
 
                             {/* attr: other attributes are shown in both TaskPage and ProjectPage */}
                             <span className="col-span-6"
-                                dangerouslySetInnerHTML={{__html: data.task}}
+                                dangerouslySetInnerHTML={{__html: data.description}}
                             ></span>
                             <span className={
                                 "text-right" + (isTaskPage ? '' : ' col-span-2')
-                            }> {data.duration + ' h'} </span>
+                            }> {data.durationHr + ' h'} </span>
                             <div
                                 className={"flex justify-end relative col-span-2 " 
-                                + (data.status !== 'done' ? 'self-baseline ' : '')
+                                + (data.status !== 'COMPLETED' ? 'self-baseline ' : '')
                                 + (isTaskPage ? "gap-8" : "gap-3")}
                             >
                                 <input
                                     onChange={changeCompletion}
                                     className="w-5 cursor-pointer"
                                     type="checkbox"
-                                    checked={data.status === 'done'}
+                                    checked={data.status === 'COMPLETED'}
                                 />
 
                                 { // controls: Menu can be toggled if the Task is not "done"
-                                    data.status !== 'done' &&
+                                    data.status !== 'COMPLETED' &&
                                     <>
                                         <img
                                             onClick={() => setShowMenu(!showMenu)}

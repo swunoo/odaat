@@ -19,7 +19,7 @@ export default function Tasks(){
 
     // After adding a new project, it is reflected in TaskWrapper
     const onProjectCreate = (p: ProjectData) => {
-        setNewProjTitle(p.title)
+        setNewProjTitle(p.name)
         setShowNewProj(false)
     }
 

@@ -40,7 +40,7 @@ export default function Projects() {
     // When "Delete" button is clicked, delete the project
     const removeProject = (idx: number) => {
         // API: DELETE PROJECT OF A GIVEN TITLE
-        fetch(PROJECT_API + '/delete/' + projects[idx]['title'], {
+        fetch(PROJECT_API + '/delete/' + projects[idx]['id'], {
             method: 'DELETE'
         })
             .then(res => {
@@ -130,7 +130,7 @@ function ProjectBlock(
     const [showMenu, setShowMenu] = useState(false)
 
     return (
-        <div key={data.title}>
+        <div key={data.id}>
             <div className="bg-white px-10 py-5 relative">
                 <img
                     onClick={() => setShowMenu(!showMenu)}
@@ -158,17 +158,17 @@ function ProjectBlock(
                 }
 
                 <h3 className="font-bold text-xl ">
-                    {data.title}
+                    {data.name}
                 </h3>
                 <div className="flex justify-between text-xs">
-                    <p>{data.duration ? data.duration : 0} h</p>
+                    <p>{data.estimatedHr ? data.estimatedHr : 0} h</p>
                     {
-                        data.completedAt
+                        data.endTime
                             ? <p className="text-gray">
-                                {data.completedAt}
+                                {data.endTime.toString()}
                             </p>
                             : <p className="text-red-500">
-                                {data.due}
+                                {data.dueTime.toString()}
                             </p>
                     }
                 </div>
@@ -188,7 +188,7 @@ function ProjectBlock(
                     <span>Tasks</span>
                 </button>
 
-                {showTasks && <TaskWrapper project={data.title} />}
+                {showTasks && <TaskWrapper project={data.name} />}
 
             </div>
         </div>
@@ -216,14 +216,14 @@ export function NewProjectModal(
         // Cast the duration into a double value
         confirmedProj['duration'] = numberOrNull(confirmedProj['duration'])
 
-        // Append the completedat attribute
+        // Append the endTime attribute
 
         // 2A. Send a PUT request for project updates
         if (data) {
             // API: UPDATE PROJECT OF A GIVEN TITLE
             const currProject = { ...data };
-            confirmedProj.title = currProject.title // title is immutable
-            confirmedProj.completedAt = currProject.completedAt ?? null
+            confirmedProj.title = currProject.name // title is immutable
+            confirmedProj.endTime = currProject.endTime ?? null
 
             fetch(PROJECT_API + '/update', {
                 method: 'PUT',
@@ -244,7 +244,7 @@ export function NewProjectModal(
 
         // 2B. Send a POST request for project creations
         } else {
-            confirmedProj.completedAt = null
+            confirmedProj.endTime = null
 
             // API: CREATE A PROJECT
             fetch(PROJECT_API + '/add', {
@@ -285,7 +285,7 @@ export function NewProjectModal(
                 <label className={label}>Title</label>
                 {
                     data
-                        ? <input className={input + ' border-none'} type="text" name="title" value={data.title} disabled />
+                        ? <input className={input + ' border-none'} type="text" name="title" value={data.name} disabled />
                         : <input
                             className={input} type="text" name="title" required
                         />
@@ -296,7 +296,7 @@ export function NewProjectModal(
                     className={input}
                     type="number" step={0.1}
                     name="duration"
-                    defaultValue={data ? data.duration : 1}
+                    defaultValue={data ? data.estimatedHr : 1}
                 />
 
                 <label className={label}>Due</label>
@@ -304,7 +304,7 @@ export function NewProjectModal(
                     className={input}
                     type="date"
                     name="due"
-                    defaultValue={data ? data.due : '2025-01-01'}
+                    defaultValue={data ? data.endTime.toString() : '2025-01-01'}
                 />
 
                 <label className={label}>Priority</label>

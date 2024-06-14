@@ -14,9 +14,9 @@ public class DatabaseCleanup implements ApplicationListener<ContextClosedEvent> 
 
     @Override
     public void onApplicationEvent(ContextClosedEvent event) {
-        jdbcTemplate.update("DELETE FROM category");
-        jdbcTemplate.update("DELETE FROM project");
-        jdbcTemplate.update("DELETE FROM task");
-        jdbcTemplate.update("DELETE FROM uzer");
+        // jdbcTemplate.update("DELETE FROM category");
+        // jdbcTemplate.update("DELETE FROM project");
+        // jdbcTemplate.update("DELETE FROM task");
+        // jdbcTemplate.update("DELETE FROM uzer");
     }
 }

@@ -34,7 +34,6 @@ export interface TaskData {
     id: number,
     project: ProjectData,
     description: string,
-    duration: null | number, 
     status: TaskStatus,
     priority: Priority,
     startTime: Date,
