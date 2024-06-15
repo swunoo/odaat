@@ -97,13 +97,13 @@ public class ProjectController {
     }
 
     // DTO and Entity Conversion
-    private ProjectResponse convertToDto(Project project) {
+    public ProjectResponse convertToDto(Project project) {
         ProjectResponse projectResponse = new ProjectResponse();
         BeanUtils.copyProperties(project, projectResponse);
         return projectResponse;
     }
 
-    private Project convertToEntity(ProjectRequest projectRequest) {
+    public Project convertToEntity(ProjectRequest projectRequest) {
         Project project = new Project();
         BeanUtils.copyProperties(projectRequest, project);
         Category category = new Category();

@@ -25,9 +25,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.odaat.odaat.dto.request.UzerNameUpdateRequest;
 import com.odaat.odaat.model.Uzer;
 import com.odaat.odaat.service.SecurityService;
 import com.odaat.odaat.service.UzerService;
+import com.odaat.odaat.utils.MockUtil;
 
 class UzerControllerTest {
 
@@ -42,10 +45,13 @@ class UzerControllerTest {
     @InjectMocks
     private UzerController uzerController;
 
+    private ObjectMapper objectMapper = new ObjectMapper();
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(uzerController).build();
+        objectMapper.findAndRegisterModules();
     }
 
     @Test
@@ -72,17 +78,18 @@ class UzerControllerTest {
     }
 
     @Test
-    void testUpdateUzer() throws Exception {
-        Uzer uzer = new Uzer();
-        uzer.setId(1);
+    void testUpdateUzername() throws Exception {
+        Uzer uzer = MockUtil.mockInstance(Uzer.class);
+        UzerNameUpdateRequest updateRequest = new UzerNameUpdateRequest();
+        updateRequest.setName("Updated Name");
         when(uzerService.findById(anyInt())).thenReturn(Optional.of(uzer));
         when(uzerService.save(any(Uzer.class))).thenReturn(uzer);
 
         mockMvc.perform(put("/api/uzer/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\": \"Updated Uzer\"}"))
+                .content(objectMapper.writeValueAsString(updateRequest)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("Updated Uzer"));
+                .andExpect(jsonPath("$.name").value("Updated Name"));
 
         verify(uzerService, times(1)).save(any(Uzer.class));
     }

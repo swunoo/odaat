@@ -39,4 +39,8 @@ public class TaskService {
     public boolean existsById(Integer id) {
         return taskRepository.existsById(id);
     }
+
+    public void deleteAllByProjectId(Integer projectId) {
+        taskRepository.deleteAllByProjectId(projectId);
+    }
 }

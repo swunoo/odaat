@@ -115,7 +115,7 @@ public class TaskController {
     }
 
     // DTO and Entity Conversion
-    private TaskResponse convertToDto(Task task) {
+    public TaskResponse convertToDto(Task task) {
         TaskResponse taskResponse = new TaskResponse();
         BeanUtils.copyProperties(task, taskResponse);
         ProjectResponse projectResponse = new ProjectResponse();
@@ -125,7 +125,7 @@ public class TaskController {
         return taskResponse;
     }
 
-    private Task convertToEntity(TaskRequest taskRequest) {
+    public Task convertToEntity(TaskRequest taskRequest) {
 
         Task task = new Task();
         BeanUtils.copyProperties(taskRequest, task);

@@ -10,6 +10,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +25,7 @@ import org.mockito.MockitoAnnotations;
 
 import com.odaat.odaat.model.Task;
 import com.odaat.odaat.repository.TaskRepository;
+import com.odaat.odaat.utils.MockUtil;
 
 class TaskServiceTest {
 
@@ -37,13 +41,27 @@ class TaskServiceTest {
     }
 
     @Test
-    void testFindAll() {
-        Task task = new Task();
-        when(taskRepository.findByProjectId(null)).thenReturn(Collections.singletonList(task));
+    void testFindByProject() {
+        Task task = MockUtil.mockInstance(Task.class);
+        Integer projectId = task.getProject().getId();
+        when(taskRepository.findByProjectId(projectId)).thenReturn(List.of(task));
 
-        List<Task> tasks = taskService.findAll(null, null);
+        List<Task> tasks = taskService.findAll(projectId, null);
         assertEquals(1, tasks.size());
-        verify(taskRepository, times(1)).findByProjectId(null);
+        verify(taskRepository, times(1)).findByProjectId(projectId);
+    }
+
+    @Test
+    void testFindByDate() {
+        Task task = MockUtil.mockInstance(Task.class);
+        LocalDate date = task.getStartTime().toLocalDate();
+        LocalDateTime start = date.atTime(LocalTime.MIN);
+        LocalDateTime end = date.atTime(LocalTime.MAX);
+        when(taskRepository.findByDate(start, end)).thenReturn(List.of(task));
+
+        List<Task> tasks = taskService.findAll(null, date);
+        assertEquals(1, tasks.size());
+        verify(taskRepository, times(1)).findByDate(start, end);
     }
 
     @Test

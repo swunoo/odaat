@@ -14,6 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -25,10 +26,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.odaat.odaat.dto.request.CategoryRequest;
+import com.odaat.odaat.model.Category;
 import com.odaat.odaat.model.Category;
 import com.odaat.odaat.model.Uzer;
 import com.odaat.odaat.service.CategoryService;
 import com.odaat.odaat.service.SecurityService;
+import com.odaat.odaat.utils.MockUtil;
 
 class CategoryControllerTest {
 
@@ -43,18 +48,23 @@ class CategoryControllerTest {
     @InjectMocks
     private CategoryController categoryController;
 
+    private ObjectMapper objectMapper = new ObjectMapper();
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(categoryController).build();
+        objectMapper.findAndRegisterModules();
     }
 
     @Test
     void testGetAllCategories() throws Exception {
-        when(categoryService.findAll()).thenReturn(Collections.singletonList(new Category()));
+        Category category = MockUtil.mockInstance(Category.class);
+        when(categoryService.findAll()).thenReturn(List.of(category));
 
         mockMvc.perform(get("/api/category/get"))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].name").value(category.getName()));
 
         verify(categoryService, times(1)).findAll();
     }
@@ -74,16 +84,14 @@ class CategoryControllerTest {
 
     @Test
     void testCreateCategory() throws Exception {
-        Category category = new Category();
+        CategoryRequest categoryRequest = MockUtil.mockInstance(CategoryRequest.class);
+        Category category = categoryController.convertToEntity(categoryRequest);
         category.setId(1);
         when(categoryService.save(any(Category.class))).thenReturn(category);
-        Uzer mockUzer = new Uzer();
-        mockUzer.setId(1);
-        when(securityService.getCurrentUser()).thenReturn(mockUzer);
 
         mockMvc.perform(post("/api/category/add")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\": \"Test Category\", \"uzerId\": 1}"))
+                .content(objectMapper.writeValueAsString(categoryRequest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1));
 
@@ -92,19 +100,18 @@ class CategoryControllerTest {
 
     @Test
     void testUpdateCategory() throws Exception {
-        Category category = new Category();
+        CategoryRequest categoryRequest = MockUtil.mockInstance(CategoryRequest.class);
+        categoryRequest.setName("updated name");
+        Category category = categoryController.convertToEntity(categoryRequest);
         category.setId(1);
         when(categoryService.existsById(1)).thenReturn(true);
         when(categoryService.save(any(Category.class))).thenReturn(category);
-        Uzer mockUzer = new Uzer();
-        mockUzer.setId(1);
-        when(securityService.getCurrentUser()).thenReturn(mockUzer);
 
         mockMvc.perform(put("/api/category/update/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\": \"Updated Category\"}"))
+                .content(objectMapper.writeValueAsString(categoryRequest)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1));
+                .andExpect(jsonPath("$.name").value("updated name"));
 
         verify(categoryService, times(1)).existsById(1);
         verify(categoryService, times(1)).save(any(Category.class));

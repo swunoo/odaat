@@ -28,6 +28,9 @@ class ProjectServiceTest {
     @Mock
     private ProjectRepository projectRepository;
 
+    @Mock
+    private TaskService taskService;
+
     @InjectMocks
     private ProjectService projectService;
 
@@ -70,9 +73,11 @@ class ProjectServiceTest {
 
     @Test
     void testDeleteById() {
-        doNothing().when(projectRepository).softDelete(anyInt());
+        doNothing().when(projectRepository).softDelete(1);
+        doNothing().when(taskService).deleteAllByProjectId(1);
 
         projectService.deleteById(1);
-        verify(projectRepository, times(1)).softDelete(anyInt());
+        verify(projectRepository, times(1)).softDelete(1);
+        verify(taskService, times(1)).deleteAllByProjectId(1);
     }
 }

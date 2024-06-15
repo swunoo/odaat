@@ -17,7 +17,7 @@ public class ProjectService {
     private ProjectRepository projectRepository;
 
     @Autowired
-    private TaskRepository taskRepository;
+    private TaskService taskService;
 
     public List<Project> findAll() {
         return projectRepository.findAll();
@@ -32,7 +32,7 @@ public class ProjectService {
     }
 
     public void deleteById(Integer id) {
-        taskRepository.deleteAllByProjectId(id);
+        taskService.deleteAllByProjectId(id);
         projectRepository.softDelete(id);
     }
 

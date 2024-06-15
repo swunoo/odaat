@@ -78,7 +78,7 @@ public class UzerController {
     }
 
     // DTO and Entity Conversion
-    private UzerResponse convertToDto(Uzer uzer) {
+    public UzerResponse convertToDto(Uzer uzer) {
         return new UzerResponse(uzer.getName(), uzer.getEmail(), uzer.getCreatedAt());
     }
 }

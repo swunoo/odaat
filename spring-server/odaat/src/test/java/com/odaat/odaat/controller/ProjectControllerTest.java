@@ -25,9 +25,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.odaat.odaat.dto.request.ProjectRequest;
 import com.odaat.odaat.model.Project;
 import com.odaat.odaat.service.ProjectService;
 import com.odaat.odaat.service.SecurityService;
+import com.odaat.odaat.utils.MockUtil;
 
 class ProjectControllerTest {
 
@@ -42,10 +45,13 @@ class ProjectControllerTest {
     @InjectMocks
     private ProjectController projectController;
 
+    private ObjectMapper objectMapper = new ObjectMapper();
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(projectController).build();
+        objectMapper.findAndRegisterModules();
     }
 
     @Test
@@ -73,30 +79,34 @@ class ProjectControllerTest {
 
     @Test
     void testCreateProject() throws Exception {
-        Project project = new Project();
+        ProjectRequest projectRequest = MockUtil.mockInstance(ProjectRequest.class);
+        Project project = projectController.convertToEntity(projectRequest);
+        project.setId(1);
         when(projectService.save(any(Project.class))).thenReturn(project);
 
         mockMvc.perform(post("/api/project/add")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\": \"Test Project\", \"uzerId\": 1, \"categoryId\": 1}"))
+                .content(objectMapper.writeValueAsString(projectRequest)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").doesNotExist());
+                .andExpect(jsonPath("$.id").value(1));
 
         verify(projectService, times(1)).save(any(Project.class));
     }
 
     @Test
     void testUpdateProject() throws Exception {
-        Project project = new Project();
+        ProjectRequest projectRequest = MockUtil.mockInstance(ProjectRequest.class);
+        projectRequest.setDescription("updated description");
+        Project project = projectController.convertToEntity(projectRequest);
         project.setId(1);
         when(projectService.existsById(1)).thenReturn(true);
         when(projectService.save(any(Project.class))).thenReturn(project);
 
         mockMvc.perform(put("/api/project/update/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\": \"Updated Project\"}"))
+                .content(objectMapper.writeValueAsString(projectRequest)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1));
+                .andExpect(jsonPath("$.description").value("updated description"));
 
         verify(projectService, times(1)).existsById(1);
         verify(projectService, times(1)).save(any(Project.class));

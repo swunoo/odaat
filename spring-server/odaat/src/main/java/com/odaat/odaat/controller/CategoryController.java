@@ -86,11 +86,11 @@ public class CategoryController {
     }
 
     // DTO and Entity Conversion
-    private CategoryResponse convertToDto(Category category) {
+    public CategoryResponse convertToDto(Category category) {
         return new CategoryResponse(category.getId(), category.getName());
     }
 
-    private Category convertToEntity(CategoryRequest categoryRequest) {
+    public Category convertToEntity(CategoryRequest categoryRequest) {
         Category category = new Category();
         category.setUzer(securityService.getCurrentUser());
         category.setName(categoryRequest.getName());
