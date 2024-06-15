@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import menuIcon from '../assets/images/menu.svg'
 import { PROJECT_API, ProjectData, TASK_API, TaskData, TaskRequest } from "../conf"
-import { dateToString, getValue, menuBtnStyle, numberOrNull } from "../utils"
+import { combineDateAndTimeInput, formatTime, getTimeRange, getValue, menuBtnStyle } from "../utils"
 import { NewButton, NewTaskButton } from "./common"
 
 export function TaskWrapper(
@@ -19,7 +19,7 @@ export function TaskWrapper(
         // API: QUERY ALL TASKS OF A GIVEN PROJECT
         let taskQuery = TASK_API + '/get?'
         if (project) taskQuery += 'projectId=' + project.id
-        if (date) taskQuery += '&date=' + dateToString(date)
+        if (date) taskQuery += '&date=' + date.toISOString().split('T')[0];
 
         fetch(taskQuery, {
             method: 'GET'
@@ -51,10 +51,10 @@ export function TaskWrapper(
         description: 'Task Name',
         status: 'PLANNED',
         priority: 'LOW',
-        startTime: new Date(),
+        startTime: date ?? new Date(),
         durationHr: 1,
-        createdAt: new Date(),
-        updatedAt: new Date()
+        createdAt: date ?? new Date(),
+        updatedAt: date ?? new Date()
     }
 
     // When "Add Task" button is clicked, init a new Task
@@ -134,6 +134,8 @@ export function TaskBlock(
     // Whether in EDIT mode
     const [edit, setEdit] = useState(isNew)
 
+    const taskTimeStyle = "text-right " + (isTaskPage ? "col-span-2" : "col-span-4");
+
     useEffect(() => {
         setData(initData)
     }, [initData])
@@ -170,7 +172,7 @@ export function TaskBlock(
             description: getValue('task-input-task') ?? data.description,
             status: data.status ?? 'PLANNED',
             priority: data.priority ?? 'MEDIUM',
-            startTime: getValue('task-input-date') ? new Date((getValue('task-input-date')) as string) : data.startTime,
+            startTime: combineDateAndTimeInput('task-input-startTimeDate', 'task-input-startTimeTime', data.startTime),
             durationHr: (Number)(getValue('task-input-duration'))
         }
 
@@ -178,7 +180,6 @@ export function TaskBlock(
         // API: UPDATE A TASK
         const url = TASK_API + (isNew ? `/add` : `/update/${data.id}`);
         const method = isNew ? 'POST' : 'PUT';
-        const callback = isNew ? taskSetter : setData;
 
         fetch(url, {
             method: method,
@@ -196,9 +197,17 @@ export function TaskBlock(
                     throw new Error()
                 }
             }).then(task => {
-                // Add project name to task
+                // Add project name to task, as the response includes only the projectId
                 task.project.name = projects?.find(proj => proj.id === task.project.id)?.name
-                callback(task)
+
+                // If we are on the Task page and the task is still on the same date, the task is shown on the page.
+                // Otherwise, that task is not displayed
+                if (!isTaskPage || (formatTime(task.startTime) === formatTime(data.startTime))) {
+                    if (isNew) taskSetter(task)
+                    else setData(task)
+                } else {
+                    remover()
+                }
             })
             .catch(err => console.log(err))
 
@@ -210,58 +219,63 @@ export function TaskBlock(
         <div
             key={data.id}
             className={
-                "border-b border-light py-3 grid grid-cols-12" +
+                "border-b border-light py-3 grid grid-cols-16 gap-5" +
                 (data.status === 'COMPLETED' ? ' bg-light opacity-50 -mx-5 px-5' : '')
             }>
 
             {// attr: Task IDs
                 // Task IDs are shown only in TaskPage
-                isTaskPage && <p className="text-gray">{data.id}</p>
+                isTaskPage && !edit && <p className="text-gray">{data.id}</p>
             }
             {/* mode: EDIT */
                 edit
                     ? (
                         <>
-
-                            {// attr: Project and Date
-                                // Projects are shown only in TaskPage, Dates only in ProjectPage
+                            {// attr: Projects are shown only in TaskPage
                                 isTaskPage
 
                                     // on TaskPage
-                                    ? <div className="col-span-2 flex flex-col gap-2">
+                                    && <div className="col-span-3 flex flex-col gap-2">
                                         <select id="task-input-proj" className="
                                             h-fit mr-5 px-3 py-1 border-r-4 border-light
-                                        ">
+                                        " defaultValue={data.project.id}
+                                        >
                                             {projects && projects.map((proj, idx) => (
-                                                proj === data.project
-                                                    ? <option key={idx} value={proj.id} selected>{proj.name}</option>
-                                                    : <option key={idx} value={proj.id}>{proj.name}</option>
+                                                <option key={idx} value={proj.id}>{proj.name}</option>
                                             ))}
                                         </select>
                                         {addProject && <NewButton label="New Project" clickHandler={addProject} />}
                                     </div>
-
-                                    // on Project Page
-                                    : <input id="task-input-date" className="col-span-3 h-fit text-xs bg-transparent pr-3 mt-3" type="date" defaultValue={data.startTime.toString()} />
                             }
 
                             {/* attr: other attributes are shown in both TaskPage and ProjectPage */}
                             <textarea
                                 id="task-input-task"
                                 className={
-                                    "border px-3 py-1 " + (isTaskPage ? 'border-light col-span-6' : 'border-gray col-span-5 bg-transparent')
+                                    "border px-3 py-1 " + (isTaskPage ? 'border-light col-span-6' : 'border-gray col-span-8 bg-transparent')
                                 }
                                 defaultValue={data.description}></textarea>
+                            <input id="task-input-startTimeDate" className="
+                                    text-right px-3 py-1 h-fit bg-transparent col-span-3
+                                " type="date"
+                                defaultValue={data.startTime.toString()}
+                            // onKeyDown={numberInputKeyDown} 
+                            />
+                            <input id="task-input-startTimeTime" className="
+                                    text-right px-3 py-1 h-fit bg-transparent col-span-2
+                                " type="time"
+                                defaultValue={data.startTime.toString()}
+                            />
                             <div className="flex items-center h-fit">
                                 <input id="task-input-duration" className="
-                        text-right px-3 py-1 w-20 h-fit bg-transparent
-                    " type="number"
+                                    text-right px-3 py-1 w-20 h-fit bg-transparent
+                                " type="number"
                                     // onKeyDown={numberInputKeyDown} 
                                     defaultValue={data.durationHr ?? 0} />
                                 <span>h</span>
                             </div>
                             <div
-                                className={"flex flex-col w-fit ml-auto h-fit gap-2 " + (isTaskPage ? 'col-span-2' : 'col-span-3')}
+                                className={"flex justify-end w-fit ml-auto h-fit gap-2 col-span-full"}
                             >
                                 <button
                                     onClick={confirmEdit}
@@ -285,25 +299,33 @@ export function TaskBlock(
 
                             {// attr: Project and Date
                                 isTaskPage
-                                    ? <span className="col-span-2">
-                                        <span className="border border-gray px-3 py-1 text-sm font-medium">
+                                    ? <p className="col-span-4">
+                                        <p className="border border-gray px-3 py-1 text-sm font-medium overflow-hidden text-ellipsis max-w-fit">
                                             {data.project.name}
-                                        </span>
-                                    </span>
-                                    : <p className="col-span-2 text-xs py-1">{data.startTime.toString()}</p>
+                                        </p>
+                                    </p>
+                                    : <p className="col-span-2 text-xs py-1">{formatTime(data.startTime)}</p>
                             }
 
-                            {/* attr: other attributes are shown in both TaskPage and ProjectPage */}
-                            <span className="col-span-6"
+                            {/* attr: description */}
+                            <span className="col-span-7"
                                 dangerouslySetInnerHTML={{ __html: data.description }}
                             ></span>
-                            <span className={
-                                "text-right" + (isTaskPage ? '' : ' col-span-2')
-                            }> {data.durationHr + ' h'} </span>
+
+                            {/* attr: time (duration or start-end) */}
+                            {
+                                data.startTime !== null
+                                    ? <span className={taskTimeStyle}>
+                                        {getTimeRange(data.startTime, data.durationHr)}
+                                    </span>
+                                    : <span className={taskTimeStyle}> {data.durationHr + ' h'} </span>
+                            }
+
+                            {/* attr: completion status */}
                             <div
-                                className={"flex justify-end relative col-span-2 "
+                                className={"flex justify-end relative "
                                     + (data.status !== 'COMPLETED' ? 'self-baseline ' : '')
-                                    + (isTaskPage ? "gap-8" : "gap-3")}
+                                    + (isTaskPage ? "gap-8 col-span-2" : "gap-3 col-span-3")}
                             >
                                 <input
                                     onChange={changeCompletion}
@@ -312,7 +334,7 @@ export function TaskBlock(
                                     checked={data.status === 'COMPLETED'}
                                 />
 
-                                { // controls: Menu can be toggled if the Task is not "done"
+                                { // controls: Menu can be toggled if the Task is not "COMPLETED"
                                     data.status !== 'COMPLETED' &&
                                     <>
                                         <img

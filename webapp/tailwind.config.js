@@ -4,7 +4,7 @@ export default {
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
-    extend: {      
+    extend: {
       colors: {
         dark: '#101010',
         light: '#EEEEEE',
@@ -15,12 +15,19 @@ export default {
         secondary: '#023047'
       },
       fontFamily: {
-      'jomhuria': ['Jomhuria']
-     },
-     spacing: {
-      '100': '28rem',
-    }
-  },
+        'jomhuria': ['Jomhuria']
+      },
+      maxHeight: {
+        '65': '65vh',
+        '75': '75vh',
+      },
+      gridTemplateColumns: {
+        '16': 'repeat(16, minmax(0, 1fr))',
+      },
+      spacing: {
+        '100': '28rem',
+      }
+    },
   },
   plugins: [],
 }

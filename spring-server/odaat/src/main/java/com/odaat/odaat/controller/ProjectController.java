@@ -10,6 +10,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,6 +32,7 @@ import com.odaat.odaat.service.SecurityService;
 
 @RestController
 @RequestMapping("/api/project")
+@Validated
 public class ProjectController {
 
     @Autowired
@@ -75,7 +77,8 @@ public class ProjectController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateProject(@PathVariable Integer id, @Valid @RequestBody ProjectRequest projectRequest, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
+        // TODO: Improve validation
+        if (bindingResult.hasErrors() || projectRequest.getName().length() > 32) {
             return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         }
 

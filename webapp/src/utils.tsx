@@ -33,14 +33,49 @@ export function getValue(id: string): string | null {
     return null;
 }
 
+export function combineDateAndTimeInput(dateId: string, timeId: string, fallback: Date): Date {
+    let [date, time] = [getValue(dateId), getValue(timeId)]
+    
+    if(!date){
+        const [month, day, year] = fallback.toLocaleDateString().split('/');
+        date = year + '-' + month.padStart(2, '0') + '-' + day.padStart(2, '0');
+    }
+    if(!time){
+        let [hrMinSec, amPm] = fallback.toLocaleTimeString().split(' ');
+        let [hr, min, sec] = hrMinSec.split(':')
+        hr = String(amPm === 'PM' ? (Number)(hr) + 12 : hr).padStart(2, '0');
+        time = [hr, min, sec].join(':')
+    }
+    
+    return new Date(`${date}T${time}`);
+}
+
 // Cast it to a number, or return null
 export function numberOrNull(input: string){
     if(input && input.length > 0) return (Number)(input)
     return null
 }
 
-// Convert date to String
-export function dateToString(date: Date){
-    return date.toISOString().split('T')[0]
+// Convert date to a formatted string
+export function formatTime(date: Date, mode?: string): string{
+    
+    if(!date) return '';
+    const ds = new Date(date).toString().split(' ');
+    const [year, month, day] = [ds[3], ds[1], ds[2]]
+    return mode && mode === 'full' ? year + '-' + month + '-' + day : month + '/' + day;
+}
+
+// Return HH:mm from a Date
+export function getHHmm(d: Date): string {
+    const [hr, min] = [d.getHours(), d.getMinutes()];
+    return (hr < 10 ? '0' + hr : hr) + ':' + (min < 10 ? '0' + min : min);
+}
+
+// Generate a range [e.g. 10:00 - 11:00] from startTime [e.g. 2024-06-15 10:00] and durationHr [e.g. 1]
+export function getTimeRange(date: Date, durationHr: number): string{
+    if(!date) return '';
+    const dateDate = new Date(date); // input date might be a string parsed from JSON.
+
+    return getHHmm(dateDate) + ' - ' + getHHmm(new Date(dateDate.getTime() + (durationHr * 3600 * 1000)))
 }
 

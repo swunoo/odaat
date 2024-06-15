@@ -3,7 +3,7 @@ import Navbar from "./Navbar";
 import calendarIcon from '../assets/images/calendar.svg';
 
 import { useState } from "react";
-import { dateToString, MILLIS_A_DAY } from "../utils";
+import { formatTime, MILLIS_A_DAY } from "../utils";
 import { SvgChevronLeft, SvgChevronRight } from "./common";
 import { NewProjectModal } from "./Projects";
 import { TaskWrapper } from "./TaskWrapper";
@@ -73,7 +73,7 @@ function TaskContainer(
                     <img src={calendarIcon} alt="Change Date" />
                     <h3 className="
                         text-dark text-lg font-medium
-                    ">{dateToString(date).replace(/-/g, ' ')}</h3>
+                    ">{formatTime(date, 'full')}</h3>
                     <div className="flex gap-3">
                         <SvgChevronLeft clickHandler={()=>prevDay()}/>
                         <SvgChevronRight clickHandler={()=>nextDay()}/>
@@ -82,7 +82,7 @@ function TaskContainer(
                 {/* <AddButton label="New Task" clickHandler={addTask} /> */}
             </nav>
             <main className="
-                bg-white h-96 px-5 overflow-scroll
+                bg-white max-h-65 min-h-96 2xl:max-h-75 px-5 overflow-scroll
             ">
                 <TaskWrapper date={date} addProject={addProject} newProjTitle={newProjTitle} />
             </main>

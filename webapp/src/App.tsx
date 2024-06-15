@@ -7,6 +7,15 @@ function App() {
 
   const appStyle = 'bg-primary min-h-screen'
 
+  Date.prototype.toJSON = function () {
+    var timezoneOffsetInHours = -(this.getTimezoneOffset() / 60);
+    var correctedDate = new Date(this.getFullYear(), this.getMonth(), 
+        this.getDate(), this.getHours(), this.getMinutes(), this.getSeconds(), 
+        this.getMilliseconds());
+    correctedDate.setHours(this.getHours() + timezoneOffsetInHours);
+    return correctedDate.toISOString().replace('Z', '');
+  }
+
   return (
     <BrowserRouter>
       <div className={appStyle}>

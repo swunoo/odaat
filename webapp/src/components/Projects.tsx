@@ -6,7 +6,7 @@ import arrowIcon from '../assets/images/arrow.svg';
 import menuIcon from '../assets/images/menu.svg';
 
 import { PROJECT_API, ProjectData } from "../conf";
-import { menuBtnStyle, numberOrNull } from "../utils";
+import { formatTime, menuBtnStyle, numberOrNull } from "../utils";
 import { TaskWrapper } from "./TaskWrapper";
 
 /* Projects Page */
@@ -105,7 +105,7 @@ export default function Projects() {
                 <h2 className="text-lg capitalize">Projects</h2>
                 <NewProjButton clickHandler={addProject} />
             </header>
-            <main className="grid grid-cols-2 gap-10 py-5 h-100 overflow-scroll">
+            <main className="grid grid-cols-2 gap-10 py-5 max-h-65 2xl:max-h-75 overflow-scroll">
                 {projects.map((proj, i) => (
                     <ProjectBlock
                         data={proj}
@@ -165,10 +165,10 @@ function ProjectBlock(
                     {
                         data.endTime
                             ? <p className="text-gray">
-                                {data.endTime.toString()}
+                                {formatTime(data.endTime)}
                             </p>
                             : <p className="text-red-500">
-                                {data.dueTime?.toString()}
+                                {formatTime(data.dueTime)}
                             </p>
                     }
                 </div>
@@ -219,7 +219,7 @@ export function NewProjectModal(
 
         const url = PROJECT_API + (data ? `/update/${data.id}` : '/add');
         const method = data ? 'PUT' : 'POST';
-        
+
         // API: UPDATE PROJECT OF A GIVEN TITLE
         // API: CREATE A PROJECT
         fetch(url, {
@@ -260,15 +260,13 @@ export function NewProjectModal(
             ">
 
                 <label className={label}>Category</label>
-                <input className={input} name="categoryId" value={1}></input>
+                <input className={input} name="categoryId" defaultValue={1}></input>
 
                 <label className={label}>Title</label>
                 {
-                    data
-                        ? <input className={input + ' border-none'} type="text" name="name" defaultValue={data.name} />
-                        : <input
-                            className={input} type="text" name="name"
-                        />
+                    <input
+                        className={input} type="text" name="name" defaultValue={data?.name ?? ''} maxLength={32}
+                    />
                 }
 
                 <label className={label}>Due</label>
@@ -276,7 +274,7 @@ export function NewProjectModal(
                     className={input}
                     type="datetime-local"
                     name="dueTime"
-                    defaultValue={data ? data.endTime.toString() : ''}
+                    defaultValue={data?.endTime?.toString() ?? ''}
                 />
 
                 <label className={label}>Time Est.</label>
@@ -284,15 +282,15 @@ export function NewProjectModal(
                     className={input}
                     type="number" step={0.1}
                     name="estimatedHr"
-                    defaultValue={data ? data.estimatedHr : 1}
+                    defaultValue={data?.estimatedHr ?? 1}
                 />
 
-                <label className={label}>Time Est.</label>
+                <label className={label}>Daily Est.</label>
                 <input
                     className={input}
                     type="number" step={0.1}
                     name="dailyHr"
-                    defaultValue={data ? data.estimatedHr : 1}
+                    defaultValue={data?.estimatedHr ?? 1}
                 />
 
                 <label className={label}>Priority</label>
