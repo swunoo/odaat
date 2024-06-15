@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Uzer {
+public class Uzer extends BaseModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,11 +39,5 @@ public class Uzer {
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
-
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
 
 }

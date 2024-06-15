@@ -72,7 +72,7 @@ export default function Projects() {
         const newProjects = [...projects]
 
         if (editedProject !== null) {
-            
+
             newProjects[editedProject] = proj
             setEditedProject(null)
 
@@ -168,16 +168,16 @@ function ProjectBlock(
                                 {data.endTime.toString()}
                             </p>
                             : <p className="text-red-500">
-                                {data.dueTime.toString()}
+                                {data.dueTime?.toString()}
                             </p>
                     }
                 </div>
             </div>
             <div className="bg-light px-10">
                 <p className="py-5" dangerouslySetInnerHTML={
-                    {__html: data.description}
+                    { __html: data.description }
                 }></p>
-                <hr className="border-gray"/>
+                <hr className="border-gray" />
                 <button
                     onClick={() => setShowTasks(!showTasks)}
                     className="flex gap-5 py-5">
@@ -206,64 +206,41 @@ export function NewProjectModal(
         e.preventDefault();
 
         // 1. Build a Project with data from NewProject modal's form
-        const confirmedProj: any = {}
+        const newData: any = {}
         const form = e.target as HTMLFormElement;
         const formData = new FormData(form);
         formData.forEach((val, key) => {
-            confirmedProj[key] = val;
+            newData[key] = val;
         })
+        newData.status = 'CREATED'
 
         // Cast the duration into a double value
-        confirmedProj['duration'] = numberOrNull(confirmedProj['duration'])
+        // newData['duration'] = numberOrNull(newData['duration'])
 
-        // Append the endTime attribute
-
-        // 2A. Send a PUT request for project updates
-        if (data) {
-            // API: UPDATE PROJECT OF A GIVEN TITLE
-            const currProject = { ...data };
-            confirmedProj.title = currProject.name // title is immutable
-            confirmedProj.endTime = currProject.endTime ?? null
-
-            fetch(PROJECT_API + '/update', {
-                method: 'PUT',
-                body: JSON.stringify(confirmedProj),
-                headers: {
-                    "Content-Type": "application/json"
+        const url = PROJECT_API + (data ? `/update/${data.id}` : '/add');
+        const method = data ? 'PUT' : 'POST';
+        
+        // API: UPDATE PROJECT OF A GIVEN TITLE
+        // API: CREATE A PROJECT
+        fetch(url, {
+            method: method,
+            body: JSON.stringify(newData),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+            .then(res => {
+                if (res.ok) {
+                    return res.json()
                 }
-            })
-                .then(res => {
-                    if (res.ok) {
-                        projectSetter(confirmedProj)
-                    }
-                    else {
-                        console.log(res.text());
-                        alert("Unable to update")
-                    }
-                }).catch(err => console.log(err))
-
-        // 2B. Send a POST request for project creations
-        } else {
-            confirmedProj.endTime = null
-
-            // API: CREATE A PROJECT
-            fetch(PROJECT_API + '/add', {
-                method: 'POST',
-                body: JSON.stringify(confirmedProj),
-                headers: {
-                    "Content-Type": "application/json"
+                else {
+                    console.log(res.text());
+                    throw new Error()
                 }
+            }).then(project => {
+                projectSetter(project)
             })
-                .then(res => {
-                    if (res.ok) {
-                        projectSetter(confirmedProj)
-                    }
-                    else {
-                        console.log(res.text());
-                        alert("Unable to create. Title must be unique.")
-                    }
-                }).catch(err => console.log(err))
-        }
+            .catch(err => console.log(err))
     }
 
     // Styles
@@ -282,29 +259,40 @@ export function NewProjectModal(
                 bg-white p-10 rounded-lg 
             ">
 
+                <label className={label}>Category</label>
+                <input className={input} name="categoryId" value={1}></input>
+
                 <label className={label}>Title</label>
                 {
                     data
-                        ? <input className={input + ' border-none'} type="text" name="title" value={data.name} disabled />
+                        ? <input className={input + ' border-none'} type="text" name="name" defaultValue={data.name} />
                         : <input
-                            className={input} type="text" name="title" required
+                            className={input} type="text" name="name"
                         />
                 }
+
+                <label className={label}>Due</label>
+                <input
+                    className={input}
+                    type="datetime-local"
+                    name="dueTime"
+                    defaultValue={data ? data.endTime.toString() : ''}
+                />
 
                 <label className={label}>Time Est.</label>
                 <input
                     className={input}
                     type="number" step={0.1}
-                    name="duration"
+                    name="estimatedHr"
                     defaultValue={data ? data.estimatedHr : 1}
                 />
 
-                <label className={label}>Due</label>
+                <label className={label}>Time Est.</label>
                 <input
                     className={input}
-                    type="date"
-                    name="due"
-                    defaultValue={data ? data.endTime.toString() : '2025-01-01'}
+                    type="number" step={0.1}
+                    name="dailyHr"
+                    defaultValue={data ? data.estimatedHr : 1}
                 />
 
                 <label className={label}>Priority</label>
@@ -312,7 +300,7 @@ export function NewProjectModal(
                     className={input + " capitalize"}
                     name="priority"
                 >   {
-                        ['low', 'medium', 'high'].map((p, idx) => (
+                        ['LOWEST', 'LOW', 'MEDIUM', 'HIGH', 'HIGHEST'].map((p, idx) => (
                             <option key={idx} value={p}>{p}</option>
                         ))
                     }
