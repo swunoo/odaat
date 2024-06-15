@@ -119,7 +119,7 @@ export default function Projects() {
 }
 
 /* Container of Each Project */
-function ProjectBlock(
+export function ProjectBlock(
     { data, editor, remover }:
         { data: ProjectData, editor: () => void, remover: () => void }
 ) {
