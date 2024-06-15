@@ -7,8 +7,8 @@ import { combineDateAndTimeInput, formatTime, getTimeRange, getValue, menuBtnSty
 import { NewButton, NewTaskButton } from "./common"
 
 export function TaskWrapper(
-    { project, date, addProject, newProjTitle }
-        : { project?: ProjectData, date?: Date, addProject?: () => void, newProjTitle?: string }
+    { project, date, addProject, newProj }
+        : { project?: ProjectData, date?: Date, addProject?: () => void, newProj?: ProjectData }
 ) {
 
     const [tasks, setTasks] = useState<TaskData[]>([])
@@ -41,9 +41,9 @@ export function TaskWrapper(
     }, [])
 
     // TODO:
-    // useEffect(() => {
-    //     if(newProjTitle) setProjectList([...projectList, newProjTitle])
-    // }, [newProjTitle])
+    useEffect(() => {
+        if(newProj) setProjectList([...projectList, newProj])
+    }, [newProj])
 
     const initTask: TaskData = {
         id: 0,
@@ -140,7 +140,7 @@ export function TaskBlock(
         setData(initData)
     }, [initData])
 
-    // When the "Done" checkbox is toggled, status is updated
+    // When the "COMPLETED" checkbox is toggled, status is updated
     const changeCompletion = () => {
         const newStatus = data.status === 'COMPLETED' ? 'PLANNED' : 'COMPLETED'
         // API: UPDATE THE STATUS OF A TASK
@@ -198,7 +198,12 @@ export function TaskBlock(
                 }
             }).then(task => {
                 // Add project name to task, as the response includes only the projectId
-                task.project.name = projects?.find(proj => proj.id === task.project.id)?.name
+                if(projects){
+                    const projData = projects.find(proj => proj.id === task.project.id);
+                    task.project.name = projData ? projData.name : 'New Project'
+                } else {
+                    task.project.name = initData.project.name
+                }
 
                 // If we are on the Task page and the task is still on the same date, the task is shown on the page.
                 // Otherwise, that task is not displayed

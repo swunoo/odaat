@@ -15,11 +15,11 @@ export default function Tasks(){
     // Whether to show the NewProject modal
     const [showNewProj, setShowNewProj] = useState(false)
     // To render newly added project titles after adding NewProject on TaskPage
-    const [newProjTitle, setNewProjTitle] = useState<string | undefined>(undefined)
+    const [newProj, setnewProj] = useState<ProjectData | undefined>(undefined)
 
     // After adding a new project, it is reflected in TaskWrapper
     const onProjectCreate = (p: ProjectData) => {
-        setNewProjTitle(p.name)
+        setnewProj(p)
         setShowNewProj(false)
     }
 
@@ -34,15 +34,15 @@ export default function Tasks(){
             }
 
             <Navbar active="tasks"/>
-            <TaskContainer newProjTitle={newProjTitle} setShowNewProj={setShowNewProj} />
+            <TaskContainer newProj={newProj} setShowNewProj={setShowNewProj} />
         </div>
     )
 }
 
 /* Container for the header and each Task */
-function TaskContainer(
-    {newProjTitle, setShowNewProj}
-    : {newProjTitle?: string, setShowNewProj: (s: boolean)=>void}
+export function TaskContainer(
+    {newProj, setShowNewProj}
+    : {newProj?: ProjectData, setShowNewProj: (s: boolean)=>void}
 ){
 
     // Date of the Tasks to display
@@ -79,12 +79,11 @@ function TaskContainer(
                         <SvgChevronRight clickHandler={()=>nextDay()}/>
                     </div>
                 </div>
-                {/* <AddButton label="New Task" clickHandler={addTask} /> */}
             </nav>
             <main className="
                 bg-white max-h-65 min-h-96 2xl:max-h-75 px-5 overflow-scroll
             ">
-                <TaskWrapper date={date} addProject={addProject} newProjTitle={newProjTitle} />
+                <TaskWrapper date={date} addProject={addProject} newProj={newProj} />
             </main>
         </div>
     )

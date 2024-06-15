@@ -6,7 +6,7 @@ import arrowIcon from '../assets/images/arrow.svg';
 import menuIcon from '../assets/images/menu.svg';
 
 import { PROJECT_API, ProjectData } from "../conf";
-import { formatTime, menuBtnStyle, numberOrNull } from "../utils";
+import { formatTime, menuBtnStyle } from "../utils";
 import { TaskWrapper } from "./TaskWrapper";
 
 /* Projects Page */
