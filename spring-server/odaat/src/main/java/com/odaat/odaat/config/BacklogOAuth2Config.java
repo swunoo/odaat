@@ -32,4 +32,5 @@ public class BacklogOAuth2Config {
     public String getIssues(){ return appRoot + "/api/v2/issues"; }
     
     public String getOwnUser(){ return appRoot + "/api/v2/users/myself"; }
+
 }
