@@ -20,10 +20,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.odaat.odaat.dto.request.CategoryRequest;
+import com.odaat.odaat.dto.ProjectIdAndName;
 import com.odaat.odaat.dto.request.ProjectRequest;
-import com.odaat.odaat.dto.response.CategoryResponse;
-import com.odaat.odaat.dto.response.ProjectIdAndName;
 import com.odaat.odaat.dto.response.ProjectResponse;
 import com.odaat.odaat.model.Category;
 import com.odaat.odaat.model.Project;

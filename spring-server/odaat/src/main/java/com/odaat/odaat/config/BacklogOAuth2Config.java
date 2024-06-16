@@ -26,4 +26,10 @@ public class BacklogOAuth2Config {
 
     @Value("${backlog.oauth2.redirect-uri}")
     private String redirectUri;
+
+    public String getProjects(){ return appRoot + "/api/v2/projects"; }
+
+    public String getIssues(){ return appRoot + "/api/v2/issues"; }
+    
+    public String getOwnUser(){ return appRoot + "/api/v2/users/myself"; }
 }

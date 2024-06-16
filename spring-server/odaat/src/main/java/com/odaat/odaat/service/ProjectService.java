@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.odaat.odaat.dto.ProjectIdAndName;
 import com.odaat.odaat.model.Project;
 import com.odaat.odaat.repository.ProjectRepository;
 import com.odaat.odaat.repository.TaskRepository;
@@ -38,5 +39,10 @@ public class ProjectService {
 
     public boolean existsById(Integer id) {
         return projectRepository.existsById(id);
+    }
+
+    // Sync external projects into the database
+    public void syncProjects(List<ProjectIdAndName> externalProjects){
+        System.out.println(externalProjects);
     }
 }
