@@ -7,11 +7,11 @@ spring.datasource.username=
 spring.datasource.password=
 
 # Backlog OAuth2
-backlog.oauth.client-id=
-backlog.oauth.client-secret=
-backlog.oauth.authorization-uri=
-backlog.oauth.token-uri=
-backlog.oauth.redirect-uri=
+backlog.oauth2.client-id=
+backlog.oauth2.client-secret=
+backlog.oauth2.authorization-uri=
+backlog.oauth2.token-uri=
+backlog.oauth2.redirect-uri=
 
 # JDBC and Hibernate
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
