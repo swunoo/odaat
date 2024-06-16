@@ -28,6 +28,7 @@ import com.odaat.odaat.model.Project;
 import com.odaat.odaat.model.Task;
 import com.odaat.odaat.model.enums.TaskStatus;
 import com.odaat.odaat.service.AuthService;
+import com.odaat.odaat.service.SyncService;
 import com.odaat.odaat.service.TaskService;
 
 @RestController
@@ -40,6 +41,8 @@ public class TaskController {
     private TaskService taskService;
     @Autowired
     private AuthService authService;
+    @Autowired
+    private SyncController syncController;
 
     @GetMapping("/get")
     public List<TaskResponse> getAllTasks(
@@ -104,6 +107,12 @@ public class TaskController {
             Task task = taskOptional.get();
             task.setStatus(status);
             task = taskService.save(task);
+
+            // If the task is from an external app, it is synced if applicable.
+            if(task.getSyncId() != null){
+                syncController.syncTask(task);
+            }
+
             return ResponseEntity.ok(convertToDto(task));
         }
     }

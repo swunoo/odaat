@@ -12,6 +12,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +24,9 @@ import com.odaat.odaat.config.BacklogOAuth2Config;
 import com.odaat.odaat.dto.BacklogIssue;
 import com.odaat.odaat.dto.ProjectIdAndName;
 import com.odaat.odaat.model.AccessToken;
+import com.odaat.odaat.model.Task;
 import com.odaat.odaat.model.enums.Priority;
+import com.odaat.odaat.model.enums.TaskStatus;
 import com.odaat.odaat.service.AuthService;
 import com.odaat.odaat.service.ProjectService;
 import com.odaat.odaat.service.SyncService;
@@ -243,6 +246,47 @@ public class SyncController {
         Map<String, Object> userData = (Map<String, Object>) JsonUtil.deserializeJson(responseString);
         
         return String.valueOf(userData.get("id"));
+    }
+
+    public void syncTask(Task task){
+
+        // Return if invalid
+        AccessToken tokenObject = authService.getTokenObject();
+        if(tokenObject == null || !tokenObject.isValid() || !task.getStatus().equals(TaskStatus.COMPLETED) || task.getSyncId() == null){
+            return;
+        }
+
+        // Calculate actualHours
+        List<Task> tasksFromIssue = taskService.getTasksByProjectIdAndSyncId(task.getProject().getId(), task.getSyncId());
+        Double actualHours = 0.0;
+        for(Task t : tasksFromIssue){
+            if(t.getStatus().equals(TaskStatus.COMPLETED)){
+                actualHours += t.getDurationHr();
+            }
+        }
+        // Send PATCH request
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.setBearerAuth(tokenObject.getToken());
+
+        String body = "actualHours=" + actualHours;
+        HttpEntity<String> entity = new HttpEntity<>(body, headers);
+        String url = backlog.getIssues() + "/" + task.getSyncId();
+
+        try {
+            ResponseEntity<String> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.PATCH,
+                    entity,
+                    String.class
+            );
+
+            System.out.println("Patched actualHours");
+            System.out.println(response.getBody());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
