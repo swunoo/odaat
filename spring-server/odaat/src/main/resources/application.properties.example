@@ -1,21 +1,10 @@
 spring.application.name=odaat
 server.port=9000
 
-# Database connection settings
-spring.datasource.url=jdbc:mysql://localhost:3306/odaat
-spring.datasource.username=odaat
-spring.datasource.password=odaat
-
-# JDBC driver class name
-spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
-
-# Hibernate settings
-# spring.jpa.show-sql=true
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
-
-# Flyway settings
-flyway.enabled=true
-flyway.baseline-on-migrate=true
+# Database Connection
+spring.datasource.url=
+spring.datasource.username=
+spring.datasource.password=
 
 # Backlog OAuth2
 backlog.oauth.client-id=
@@ -23,3 +12,12 @@ backlog.oauth.client-secret=
 backlog.oauth.authorization-uri=
 backlog.oauth.token-uri=
 backlog.oauth.redirect-uri=
+
+# JDBC and Hibernate
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+# spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
+
+# Flyway
+flyway.enabled=true
+flyway.baseline-on-migrate=true
