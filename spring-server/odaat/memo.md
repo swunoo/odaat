@@ -14,3 +14,8 @@ BE  - /sync/backlog endpoint is called
     - When updated -> Check the task and if it has an issue, update actualHours in the issue.
 FE  - If the sync was successful, refresh the page
     - Otherwise, show an error
+
+# TODOs
+
+- Request Validation
+- API versioning
