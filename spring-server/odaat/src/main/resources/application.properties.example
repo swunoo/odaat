@@ -16,3 +16,10 @@ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
 # Flyway settings
 flyway.enabled=true
 flyway.baseline-on-migrate=true
+
+# Backlog OAuth2
+backlog.oauth.client-id=
+backlog.oauth.client-secret=
+backlog.oauth.authorization-uri=
+backlog.oauth.token-uri=
+backlog.oauth.redirect-uri=

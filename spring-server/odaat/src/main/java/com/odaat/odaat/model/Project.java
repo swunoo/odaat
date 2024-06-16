@@ -2,12 +2,11 @@ package com.odaat.odaat.model;
 
 import java.time.LocalDateTime;
 
-import javax.validation.constraints.Max;
-
 import org.hibernate.annotations.SQLRestriction;
 
 import com.odaat.odaat.model.enums.Priority;
 import com.odaat.odaat.model.enums.ProjectStatus;
+import com.odaat.odaat.model.enums.Source;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -45,6 +44,8 @@ public class Project extends BaseModel {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
+    private Integer syncId;
+
     private String name;
     private String description;
 
@@ -53,6 +54,9 @@ public class Project extends BaseModel {
 
     @Enumerated(EnumType.STRING)
     private Priority priority;
+
+    @Enumerated(EnumType.STRING)
+    private Source source;
 
     private LocalDateTime startTime;
     private LocalDateTime endTime;
@@ -68,8 +72,9 @@ public class Project extends BaseModel {
 
     @PrePersist
     @PreUpdate
-    public void resetIsDeleted() {
+    public void onCreateUpdate(){
         this.isDeleted = false;
+        if(this.source == null) this.source = Source.NATIVE;
     }
 
 }
