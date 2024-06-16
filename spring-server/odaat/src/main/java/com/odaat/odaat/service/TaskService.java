@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.odaat.odaat.dto.BacklogIssue;
 import com.odaat.odaat.model.Task;
 import com.odaat.odaat.repository.TaskRepository;
 
@@ -42,5 +43,9 @@ public class TaskService {
 
     public void deleteAllByProjectId(Integer projectId) {
         taskRepository.deleteAllByProjectId(projectId);
+    }
+
+    public void syncTasks(List<BacklogIssue> issues){
+        System.out.println(issues);
     }
 }

@@ -17,5 +17,8 @@ FE  - If the sync was successful, refresh the page
 
 # TODOs
 
+- Auth
 - Request Validation
 - API versioning
+- Scalability
+- Security
