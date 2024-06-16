@@ -120,7 +120,7 @@ public class SyncController {
         return ResponseEntity.ok().build();
     }
 
-    private ResponseEntity<?> refreshTokenAndSyncWithBacklog(AccessToken tokenObject) throws Exception {
+    public ResponseEntity<?> refreshTokenAndSyncWithBacklog(AccessToken tokenObject) throws Exception {
 
         RestTemplate restTemplate = new RestTemplate();
         Map<String, String> tokenRequest = new HashMap<>();
