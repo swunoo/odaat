@@ -27,7 +27,7 @@ import com.odaat.odaat.dto.response.TaskResponse;
 import com.odaat.odaat.model.Project;
 import com.odaat.odaat.model.Task;
 import com.odaat.odaat.model.enums.TaskStatus;
-import com.odaat.odaat.service.SecurityService;
+import com.odaat.odaat.service.AuthService;
 import com.odaat.odaat.service.TaskService;
 
 @RestController
@@ -39,7 +39,7 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
     @Autowired
-    private SecurityService securityService;
+    private AuthService authService;
 
     @GetMapping("/get")
     public List<TaskResponse> getAllTasks(
@@ -129,7 +129,7 @@ public class TaskController {
 
         Task task = new Task();
         BeanUtils.copyProperties(taskRequest, task);
-        task.setUzer(securityService.getCurrentUser());
+        task.setUzer(authService.getCurrentUser());
         Project project = new Project();
         project.setId(taskRequest.getProjectId());
         task.setProject(project);

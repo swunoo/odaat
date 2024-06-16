@@ -32,7 +32,7 @@ import com.odaat.odaat.model.Category;
 import com.odaat.odaat.model.Category;
 import com.odaat.odaat.model.Uzer;
 import com.odaat.odaat.service.CategoryService;
-import com.odaat.odaat.service.SecurityService;
+import com.odaat.odaat.service.AuthService;
 import com.odaat.odaat.utils.MockUtil;
 
 class CategoryControllerTest {
@@ -43,7 +43,7 @@ class CategoryControllerTest {
     private CategoryService categoryService;
 
     @Mock
-    private SecurityService securityService;
+    private AuthService authService;
 
     @InjectMocks
     private CategoryController categoryController;

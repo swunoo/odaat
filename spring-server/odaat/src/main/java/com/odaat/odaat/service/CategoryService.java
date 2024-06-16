@@ -34,4 +34,9 @@ public class CategoryService {
     public boolean existsById(Integer id) {
         return categoryRepository.existsById(id);
     }
+
+    // TODO: Save this DEFAULT in memory, and avoid calling database each time.
+    public Category getDefaultCategory(){
+        return categoryRepository.findById(1).orElse(new Category());
+    }
 }

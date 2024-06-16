@@ -2,6 +2,7 @@ package com.odaat.odaat.service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.odaat.odaat.dto.BacklogIssue;
+import com.odaat.odaat.model.Project;
 import com.odaat.odaat.model.Task;
+import com.odaat.odaat.model.enums.TaskStatus;
 import com.odaat.odaat.repository.TaskRepository;
 
 @Service
@@ -33,6 +36,10 @@ public class TaskService {
         return taskRepository.save(task);
     }
 
+    public List<Task> saveAll(List<Task> tasks) {
+        return taskRepository.saveAll(tasks);
+    }
+
     public void deleteById(Integer id) {
         taskRepository.deleteById(id);
     }
@@ -45,7 +52,8 @@ public class TaskService {
         taskRepository.deleteAllByProjectId(projectId);
     }
 
-    public void syncTasks(List<BacklogIssue> issues){
-        System.out.println(issues);
+    public List<Task> getTasksByProjectIdAndSyncId(Integer projectId, Integer syncId){
+        return taskRepository.findByProjectIdAndSyncId(projectId, syncId);
     }
+
 }

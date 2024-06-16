@@ -26,6 +26,7 @@ import com.odaat.odaat.model.AccessToken;
 import com.odaat.odaat.model.enums.Priority;
 import com.odaat.odaat.service.AuthService;
 import com.odaat.odaat.service.ProjectService;
+import com.odaat.odaat.service.SyncService;
 import com.odaat.odaat.service.TaskService;
 import com.odaat.odaat.utils.JsonUtil;
 
@@ -40,6 +41,8 @@ public class SyncController {
     ProjectService projectService;
     @Autowired
     TaskService taskService;
+    @Autowired
+    SyncService syncService;
 
     // Reduce 100 seconds from expires_in
     // for the time elasped between receiving the response and storing the data
@@ -52,6 +55,7 @@ public class SyncController {
             // If we already have the token, try accessing with it.
             AccessToken tokenObject = authService.getTokenObject();
             if (tokenObject != null) {
+                System.out.println("FOUND TOKEN");
                 if (tokenObject.isValid())
                     return syncWithBacklog(tokenObject);
                 else
@@ -76,7 +80,10 @@ public class SyncController {
     }
 
     @GetMapping("/callback")
-    public ResponseEntity<?> callback(@RequestParam("code") String code, @RequestParam("state") String state) {
+    public ResponseEntity<?> callback(@RequestParam("code") String code, @RequestParam("state") String state) throws Exception {
+
+        System.out.println("CODE");
+        System.out.println(code);
 
         RestTemplate restTemplate = new RestTemplate();
         Map<String, String> tokenRequest = new HashMap<>();
@@ -87,13 +94,21 @@ public class SyncController {
         tokenRequest.put("grant_type", "authorization_code");
 
         String tokenUri = "https://nulab-exam.backlog.jp/api/v2/oauth2/token";
-        Map<String, String> tokenResponse = restTemplate
-                .postForObject(tokenUri, tokenRequest, Map.class);
+        Object tokenResponseObject = restTemplate
+                .postForObject(tokenUri, tokenRequest, Object.class);
 
-        String accessToken = tokenResponse.get("access_token");
-        String refreshToken = tokenResponse.get("refresh_token");
-        int expiresIn = Integer.valueOf(tokenResponse.get("expires_in")); // TODO: NumberFormatException
+        Map<String, Object> tokenResponse = (Map<String, Object>) tokenResponseObject;
+
+        System.out.println(tokenResponse);
+
+        String accessToken = tokenResponse.get("access_token").toString();
+        String refreshToken = tokenResponse.get("refresh_token").toString();
+        int expiresIn = Integer.valueOf(tokenResponse.get("expires_in").toString()); // TODO: NumberFormatException
         Instant expiryTime = Instant.now().plusSeconds(expiresIn - PAD_SECONDS);
+
+        System.out.println(accessToken);
+        System.out.println(refreshToken);
+        System.out.println(expiryTime);
 
         String backlogUserId = getUserId(accessToken);
 
@@ -111,10 +126,13 @@ public class SyncController {
         tokenRequest.put("client_secret", backlog.getClientSecret());
         tokenRequest.put("refresh_token", tokenObject.getRefreshToken());
 
-        Map<String, String> tokenResponse = restTemplate.postForObject(
+        String tokenResponseString = restTemplate.postForObject(
                 backlog.getAppRoot() + backlog.getTokenUri(),
                 tokenRequest,
-                Map.class);
+                String.class);
+
+        Map<String, String> tokenResponse = (Map<String, String>) JsonUtil.deserializeJson(tokenResponseString);
+
 
         String accessToken = tokenResponse.get("access_token");
         String refreshToken = tokenResponse.get("refresh_token");
@@ -127,6 +145,9 @@ public class SyncController {
     }
 
     public ResponseEntity<?> syncWithBacklog(AccessToken tokenObject) throws Exception {
+
+        System.out.println("GOT TOKEN");
+        System.out.println(tokenObject.getToken());
 
         String token = tokenObject.getToken();
 
@@ -153,7 +174,7 @@ public class SyncController {
                 .map(p -> new ProjectIdAndName(Integer.valueOf(p.get("id")), p.get("name")))
                 .collect(Collectors.toList());
 
-        projectService.syncProjects(idAndNames);
+        syncService.syncProjects(idAndNames);
 
         // 2. Sync issues
         response = restTemplate.exchange(
@@ -201,12 +222,12 @@ public class SyncController {
                 .filter(issue -> issue != null)
                 .collect(Collectors.toList());
 
-        taskService.syncTasks(backlogIssues);
+            syncService.syncTasks(backlogIssues);
 
         return ResponseEntity.ok().build();
     }
 
-    private String getUserId(String token) {
+    private String getUserId(String token) throws Exception {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
@@ -216,12 +237,12 @@ public class SyncController {
                 backlog.getOwnUser(),
                 HttpMethod.GET,
                 entity,
-                new ParameterizedTypeReference<Map<String, String>>() {
-                });
+                String.class);
 
-        Map<String, String> userData = (Map<String, String>) response.getBody();
-
-        return userData.get("id");
+        String responseString = (String) response.getBody();
+        Map<String, Object> userData = (Map<String, Object>) JsonUtil.deserializeJson(responseString);
+        
+        return String.valueOf(userData.get("id"));
     }
 
 }

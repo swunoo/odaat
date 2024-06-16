@@ -28,7 +28,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.odaat.odaat.dto.request.UzerNameUpdateRequest;
 import com.odaat.odaat.model.Uzer;
-import com.odaat.odaat.service.SecurityService;
+import com.odaat.odaat.service.AuthService;
 import com.odaat.odaat.service.UzerService;
 import com.odaat.odaat.utils.MockUtil;
 
@@ -40,7 +40,7 @@ class UzerControllerTest {
     private UzerService uzerService;
 
     @Mock
-    private SecurityService securityService;
+    private AuthService authService;
 
     @InjectMocks
     private UzerController uzerController;
