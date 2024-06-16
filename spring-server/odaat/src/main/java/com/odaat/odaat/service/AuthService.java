@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.odaat.odaat.model.AccessToken;
+import com.odaat.odaat.model.Uzer;
 
 @Service
 public class AuthService {
@@ -29,6 +30,13 @@ public class AuthService {
 
     public AccessToken getTokenObject(){
         return backlogAccess.get(getCurrentUserId());
+    }
+
+    public Uzer getCurrentUser() {
+        Uzer mockUzer = new Uzer();
+        mockUzer.setId(1);
+        mockUzer.setName("Test User");
+        return mockUzer;
     }
 
 }

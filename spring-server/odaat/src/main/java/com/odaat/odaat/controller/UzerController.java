@@ -24,7 +24,7 @@ import com.odaat.odaat.dto.response.CategoryResponse;
 import com.odaat.odaat.dto.response.UzerResponse;
 import com.odaat.odaat.model.Category;
 import com.odaat.odaat.model.Uzer;
-import com.odaat.odaat.service.SecurityService;
+import com.odaat.odaat.service.AuthService;
 import com.odaat.odaat.service.UzerService;
 
 @RestController
@@ -34,7 +34,7 @@ public class UzerController {
     @Autowired
     private UzerService uzerService;
     @Autowired
-    private SecurityService securityService;
+    private AuthService authService;
 
     @GetMapping
     public List<UzerResponse> getAllUzers() {

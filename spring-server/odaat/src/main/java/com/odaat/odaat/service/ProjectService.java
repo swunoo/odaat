@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.odaat.odaat.dto.ProjectIdAndName;
 import com.odaat.odaat.model.Project;
+import com.odaat.odaat.model.enums.Source;
 import com.odaat.odaat.repository.ProjectRepository;
-import com.odaat.odaat.repository.TaskRepository;
 
 @Service
 public class ProjectService {
@@ -41,8 +41,8 @@ public class ProjectService {
         return projectRepository.existsById(id);
     }
 
-    // Sync external projects into the database
-    public void syncProjects(List<ProjectIdAndName> externalProjects){
-        System.out.println(externalProjects);
+    public Optional<Project> getProjectBySyncId(Integer id){
+        return projectRepository.getBySyncId(id);
     }
+
 }

@@ -28,6 +28,12 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
         @Param("dayEnd") LocalDateTime dayEnd
     );
 
+    @Query("SELECT t FROM Task t WHERE t.project.id = :projectId AND t.syncId = :syncId ORDER BY t.startTime DESC")
+    List<Task> findByProjectIdAndSyncId(
+        @Param("projectId") Integer projectId,
+        @Param("syncId") Integer syncId
+    );
+
     @Modifying
     @Transactional
     @Query("DELETE FROM Task t WHERE t.project.id = :projectId")

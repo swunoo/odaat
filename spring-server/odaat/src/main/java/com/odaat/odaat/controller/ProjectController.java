@@ -26,7 +26,7 @@ import com.odaat.odaat.dto.response.ProjectResponse;
 import com.odaat.odaat.model.Category;
 import com.odaat.odaat.model.Project;
 import com.odaat.odaat.service.ProjectService;
-import com.odaat.odaat.service.SecurityService;
+import com.odaat.odaat.service.AuthService;
 
 @RestController
 @RequestMapping("/api/project")
@@ -36,7 +36,7 @@ public class ProjectController {
     @Autowired
     private ProjectService projectService;
     @Autowired
-    private SecurityService securityService;
+    private AuthService authService;
 
     @GetMapping("/get")
     public List<ProjectResponse> getAllProjects() {
@@ -110,7 +110,7 @@ public class ProjectController {
         Category category = new Category();
         category.setId(projectRequest.getCategoryId());
         project.setCategory(category);
-        project.setUzer(securityService.getCurrentUser());
+        project.setUzer(authService.getCurrentUser());
 
         return project;
     }

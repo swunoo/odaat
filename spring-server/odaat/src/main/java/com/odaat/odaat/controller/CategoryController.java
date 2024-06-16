@@ -22,7 +22,7 @@ import com.odaat.odaat.dto.request.CategoryRequest;
 import com.odaat.odaat.dto.response.CategoryResponse;
 import com.odaat.odaat.model.Category;
 import com.odaat.odaat.service.CategoryService;
-import com.odaat.odaat.service.SecurityService;
+import com.odaat.odaat.service.AuthService;
 
 @RestController
 @RequestMapping("/api/category")
@@ -31,7 +31,7 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
     @Autowired
-    private SecurityService securityService;
+    private AuthService authService;
 
     @GetMapping("/get")
     public List<CategoryResponse> getAllCategories() {
@@ -92,7 +92,7 @@ public class CategoryController {
 
     public Category convertToEntity(CategoryRequest categoryRequest) {
         Category category = new Category();
-        category.setUzer(securityService.getCurrentUser());
+        category.setUzer(authService.getCurrentUser());
         category.setName(categoryRequest.getName());
         return category;
     }

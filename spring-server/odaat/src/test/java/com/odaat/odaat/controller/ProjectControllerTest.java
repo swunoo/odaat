@@ -29,7 +29,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.odaat.odaat.dto.request.ProjectRequest;
 import com.odaat.odaat.model.Project;
 import com.odaat.odaat.service.ProjectService;
-import com.odaat.odaat.service.SecurityService;
+import com.odaat.odaat.service.AuthService;
 import com.odaat.odaat.utils.MockUtil;
 
 class ProjectControllerTest {
@@ -40,7 +40,7 @@ class ProjectControllerTest {
     private ProjectService projectService;
 
     @Mock
-    private SecurityService securityService;
+    private AuthService authService;
     
     @InjectMocks
     private ProjectController projectController;
