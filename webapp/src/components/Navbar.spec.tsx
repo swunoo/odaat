@@ -1,6 +1,5 @@
-// src/__tests__/Navbar.test.tsx
 import { render } from '@testing-library/react';
-import Navbar from '../components/Navbar';
+import Navbar, { activeStyle } from '../components/Navbar';
 
 describe('Navbar', () => {
   test('renders the logo and navigation links correctly', () => {
@@ -17,8 +16,7 @@ describe('Navbar', () => {
     const activeLink = getByText('tasks');
     const inactiveLink = getByText('projects');
 
-    expect(activeLink).toHaveClass('bg-secondary text-white font-medium');
-    expect(inactiveLink).not.toHaveClass('bg-secondary text-white font-medium');
+    expect(activeLink).toHaveClass(activeStyle);
+    expect(inactiveLink).not.toHaveClass(activeStyle);
   });
-
 });

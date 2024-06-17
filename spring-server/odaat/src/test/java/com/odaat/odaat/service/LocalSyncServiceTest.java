@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.odaat.odaat.dto.BacklogIssue;
@@ -27,7 +26,8 @@ import com.odaat.odaat.model.Uzer;
 import com.odaat.odaat.model.enums.Priority;
 import com.odaat.odaat.model.enums.TaskStatus;
 
-public class SyncServiceTest {
+@ExtendWith(MockitoExtension.class)
+public class LocalSyncServiceTest {
 
     @Mock
     private AuthService authService;
@@ -42,17 +42,43 @@ public class SyncServiceTest {
     private TaskService taskService;
     
     @InjectMocks
-    private SyncService syncService;
-    
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-        when(authService.getCurrentUser()).thenReturn(new Uzer());
-        when(categoryService.getDefaultCategory()).thenReturn(new Category());
+    private LocalSyncService localSync;
+        
+    @Test
+    void testUpdateLocalProjects_existingProject() {
+        ProjectIdAndName externalProject = new ProjectIdAndName();
+        externalProject.setId(1);
+        externalProject.setName("External Project");
+        
+        Project existingProject = new Project();
+        existingProject.setSyncId(1);
+        existingProject.setName("Old Project Name");
+        
+        when(projectService.getProjectBySyncId(externalProject.getId())).thenReturn(Optional.of(existingProject));
+        
+        localSync.updateLocalProjects(List.of(externalProject));
+        
+        assertEquals("External Project", existingProject.getName());
+        verify(projectService).save(existingProject);
     }
     
     @Test
-    void testSyncTasks() {
+    void testUpdateLocalProjects_newProject() {
+        ProjectIdAndName externalProject = new ProjectIdAndName();
+        externalProject.setId(2);
+        externalProject.setName("New Project");
+        
+        when(projectService.getProjectBySyncId(externalProject.getId())).thenReturn(Optional.empty());
+        when(authService.getCurrentUser()).thenReturn(new Uzer());
+        when(categoryService.getDefaultCategory()).thenReturn(new Category());
+        
+        localSync.updateLocalProjects(List.of(externalProject));
+        
+        verify(projectService).save(any(Project.class));
+    }
+    
+    @Test
+    void testUpdateLocalTasks() {
         BacklogIssue issue = new BacklogIssue(1, 1, "Issue Summary", Priority.MEDIUM, 1.0);
         
         Project project = new Project();
@@ -73,40 +99,9 @@ public class SyncServiceTest {
         when(projectService.getProjectBySyncId(issue.getProjectId())).thenReturn(Optional.of(project));
         when(taskService.getTasksByProjectIdAndSyncId(project.getId(), issue.getId())).thenReturn(List.of(task1, task2, task3));
         
-        syncService.syncTasks(List.of(issue));
+        localSync.updateLocalTasks(List.of(issue));
         
         verify(taskService, times(2)).save(any(Task.class));
         verify(taskService, never()).saveAll(any());
-    }
-    
-    @Test
-    void testSyncProjects_existingProject() {
-        ProjectIdAndName externalProject = new ProjectIdAndName();
-        externalProject.setId(1);
-        externalProject.setName("External Project");
-        
-        Project existingProject = new Project();
-        existingProject.setSyncId(1);
-        existingProject.setName("Old Project Name");
-        
-        when(projectService.getProjectBySyncId(externalProject.getId())).thenReturn(Optional.of(existingProject));
-        
-        syncService.syncProjects(List.of(externalProject));
-        
-        assertEquals("External Project", existingProject.getName());
-        verify(projectService).save(existingProject);
-    }
-    
-    @Test
-    void testSyncProjects_newProject() {
-        ProjectIdAndName externalProject = new ProjectIdAndName();
-        externalProject.setId(2);
-        externalProject.setName("New Project");
-        
-        when(projectService.getProjectBySyncId(externalProject.getId())).thenReturn(Optional.empty());
-        
-        syncService.syncProjects(List.of(externalProject));
-        
-        verify(projectService).save(any(Project.class));
     }
 }

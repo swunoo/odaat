@@ -24,8 +24,16 @@ public class AuthService {
         return 1;
     }
 
-    public void addToken(String userId, String access, String refresh, Instant expiry){
-        backlogAccess.put(getCurrentUserId(), new AccessToken(userId, access, refresh, expiry));
+    public void initToken(Integer localId, AccessToken token){
+        backlogAccess.put(localId, token);
+    }
+
+    public void addToken(Integer localId, String externalId, String access, String refresh, Instant expiry){
+        backlogAccess.put(localId, new AccessToken(externalId, access, refresh, expiry));
+    }
+
+    public void removeToken(){
+        backlogAccess.remove(getCurrentUserId());
     }
 
     public AccessToken getTokenObject(){

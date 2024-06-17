@@ -21,11 +21,10 @@ public class BacklogOAuth2Config {
     @Value("${backlog.oauth2.authorization-uri}")
     private String authorizationUri;
 
-    @Value("${backlog.oauth2.token-uri}")
-    private String tokenUri;
-
     @Value("${backlog.oauth2.redirect-uri}")
     private String redirectUri;
+
+    public String getTokenUri() { return appRoot + "/api/v2/oauth2/token"; }
 
     public String getProjects(){ return appRoot + "/api/v2/projects"; }
 

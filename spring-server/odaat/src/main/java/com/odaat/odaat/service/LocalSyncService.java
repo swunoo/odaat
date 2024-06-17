@@ -14,16 +14,43 @@ import com.odaat.odaat.model.Task;
 import com.odaat.odaat.model.enums.Source;
 import com.odaat.odaat.model.enums.TaskStatus;
 
+/* Update local data according to external data. */
 @Service
-public class SyncService {
+public class LocalSyncService {
     @Autowired AuthService authService;
     @Autowired CategoryService categoryService;
     @Autowired ProjectService projectService;
     @Autowired TaskService taskService;
 
+    // Task duration is assumed to be 2 hours by default
     private double DEFAULT_TASK_DURATION = 2.0;
 
-    public void syncTasks(List<BacklogIssue> issues){
+    // Sync external projects into the database
+    public void updateLocalProjects(List<ProjectIdAndName> externalProjects){
+        Optional<Project> project;
+        for(ProjectIdAndName externalProject : externalProjects){
+            project = projectService.getProjectBySyncId(externalProject.getId());
+            // If project exists, we check the name and update if the name has changed.
+            if(project.isPresent()){
+                Project existingProject = project.get();
+                if(existingProject.getName() == null || !existingProject.getName().equals(externalProject.getName())){
+                    existingProject.setName(externalProject.getName());
+                    projectService.save(existingProject);
+                }
+
+            // If project doesn't exist, we create it and save it.
+            } else {
+                Project newProject = new Project();
+                newProject.setUzer(authService.getCurrentUser());
+                newProject.setSyncId(externalProject.getId());
+                newProject.setSource(Source.BACKLOG);
+                newProject.setCategory(categoryService.getDefaultCategory());
+                projectService.save(newProject);
+            }
+        }
+    }
+
+    public void updateLocalTasks(List<BacklogIssue> issues){
 
         Project project;
         List<Task> tasks;
@@ -63,31 +90,6 @@ public class SyncService {
                     newTasks.add(task);
                 }
                 taskService.saveAll(newTasks);
-            }
-        }
-    }
-
-       // Sync external projects into the database
-    public void syncProjects(List<ProjectIdAndName> externalProjects){
-        Optional<Project> project;
-        for(ProjectIdAndName externalProject : externalProjects){
-            project = projectService.getProjectBySyncId(externalProject.getId());
-            // If project exists, we check the name and update if the name has changed.
-            if(project.isPresent()){
-                Project existingProject = project.get();
-                if(existingProject.getName() == null || !existingProject.getName().equals(externalProject.getName())){
-                    existingProject.setName(externalProject.getName());
-                    projectService.save(existingProject);
-                }
-
-            // If project doesn't exist, we create it and save it.
-            } else {
-                Project newProject = new Project();
-                newProject.setUzer(authService.getCurrentUser());
-                newProject.setSyncId(externalProject.getId());
-                newProject.setSource(Source.BACKLOG);
-                newProject.setCategory(categoryService.getDefaultCategory());
-                projectService.save(newProject);
             }
         }
     }

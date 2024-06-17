@@ -1,6 +1,6 @@
 import { FormEvent, useEffect, useState } from "react";
 import Navbar from "./Navbar";
-import { NewProjButton } from "./common";
+import { NewProjButton, VoidFunc } from "./common";
 
 import arrowIcon from '../assets/images/arrow.svg';
 import menuIcon from '../assets/images/menu.svg';
@@ -108,6 +108,7 @@ export default function Projects() {
             <main className="grid grid-cols-2 gap-10 py-5 max-h-65 2xl:max-h-75 overflow-scroll">
                 {projects.map((proj, i) => (
                     <ProjectBlock
+                        key={proj.id}
                         data={proj}
                         editor={() => editProject(i)}
                         remover={() => removeProject(i)}
@@ -121,7 +122,7 @@ export default function Projects() {
 /* Container of Each Project */
 export function ProjectBlock(
     { data, editor, remover }:
-        { data: ProjectData, editor: () => void, remover: () => void }
+        { data: ProjectData, editor: VoidFunc, remover: VoidFunc }
 ) {
 
     // Expand or collapse Tasks data
@@ -130,7 +131,7 @@ export function ProjectBlock(
     const [showMenu, setShowMenu] = useState(false)
 
     return (
-        <div key={data.id}>
+        <div>
             <div className="bg-white px-10 py-5 relative">
                 <img
                     onClick={() => setShowMenu(!showMenu)}
@@ -198,7 +199,7 @@ export function ProjectBlock(
 /* Modal to CREATE/UPDATE Projects */
 export function NewProjectModal(
     { data, cancelHandler, projectSetter }
-        : { data: ProjectData | null, cancelHandler: () => void, projectSetter: (p: ProjectData) => void }
+        : { data: ProjectData | null, cancelHandler: VoidFunc, projectSetter: (p: ProjectData) => void }
 ) {
 
     // When "Confirm" button from NewProject modal is clicked, data is saved

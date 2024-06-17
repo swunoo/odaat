@@ -14,15 +14,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.odaat.odaat.model.Uzer;
 import com.odaat.odaat.repository.UzerRepository;
 
+@ExtendWith(MockitoExtension.class)
 class UzerServiceTest {
 
     @Mock
@@ -30,11 +31,6 @@ class UzerServiceTest {
 
     @InjectMocks
     private UzerService uzerService;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     void testFindAll() {

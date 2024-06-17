@@ -28,7 +28,8 @@ import com.odaat.odaat.model.Project;
 import com.odaat.odaat.model.Task;
 import com.odaat.odaat.model.enums.TaskStatus;
 import com.odaat.odaat.service.AuthService;
-import com.odaat.odaat.service.SyncService;
+import com.odaat.odaat.service.BacklogSyncService;
+import com.odaat.odaat.service.LocalSyncService;
 import com.odaat.odaat.service.TaskService;
 
 @RestController
@@ -42,7 +43,7 @@ public class TaskController {
     @Autowired
     private AuthService authService;
     @Autowired
-    private SyncController syncController;
+    private BacklogSyncService backlogSync;
 
     @GetMapping("/get")
     public List<TaskResponse> getAllTasks(
@@ -110,7 +111,12 @@ public class TaskController {
 
             // If the task is from an external app, it is synced if applicable.
             if(task.getSyncId() != null){
-                syncController.syncTask(task);
+                try {
+                    backlogSync.syncTaskToBacklog(task);
+                } catch (Exception e) {
+                    System.out.println("Couldn't sync task to Backlog.");
+                    e.printStackTrace();
+                }
             }
 
             return ResponseEntity.ok(convertToDto(task));

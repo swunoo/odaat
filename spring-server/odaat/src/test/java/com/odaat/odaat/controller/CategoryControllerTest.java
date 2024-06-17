@@ -13,15 +13,16 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -29,12 +30,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.odaat.odaat.dto.request.CategoryRequest;
 import com.odaat.odaat.model.Category;
-import com.odaat.odaat.model.Category;
-import com.odaat.odaat.model.Uzer;
-import com.odaat.odaat.service.CategoryService;
 import com.odaat.odaat.service.AuthService;
+import com.odaat.odaat.service.CategoryService;
 import com.odaat.odaat.utils.MockUtil;
 
+@ExtendWith(MockitoExtension.class)
 class CategoryControllerTest {
 
     private MockMvc mockMvc;
@@ -52,7 +52,6 @@ class CategoryControllerTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(categoryController).build();
         objectMapper.findAndRegisterModules();
     }
