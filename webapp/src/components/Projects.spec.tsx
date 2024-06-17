@@ -2,10 +2,6 @@ import { render, fireEvent, act } from '@testing-library/react';
 import Projects, { ProjectBlock, NewProjectModal } from './Projects';
 import { ProjectData } from '../conf';
 
-jest.mock('../conf', () => ({
-    PROJECT_API: '/api/projects',
-}));
-
 // Mock projects data
 const mockDate = new Date();
 const mockProjects: ProjectData[] = [
@@ -90,7 +86,7 @@ describe('Projects Component', () => {
         expect(getByText('Project 2')).toBeInTheDocument();
     });
 
-    test('opens and closes NewProjectModal', async () => {
+    test('open and close NewProjectModal', async () => {
         const { findByText, getByText, queryByText } = rendered;
 
         // Wait for projects to be loaded
@@ -116,7 +112,7 @@ describe('ProjectBlock Component', () => {
     let rendered: any;
 
     beforeEach(() => {
-        rendered = render(<ProjectBlock data={mockProjects[0]} editor={() => { }} remover={() => { }} />);
+        rendered = render(<ProjectBlock data={mockProjects[0]} editor={() => {}} remover={() => {}} />);
     });
 
     test('renders project block correctly', () => {
@@ -135,7 +131,7 @@ describe('NewProjectModal Component', () => {
     const mockProjectSetter = jest.fn();
 
     beforeEach(() => {
-        rendered = render(<NewProjectModal data={mockProjects[0]} cancelHandler={() => { }} projectSetter={mockProjectSetter} />);
+        rendered = render(<NewProjectModal data={mockProjects[0]} cancelHandler={() => {}} projectSetter={mockProjectSetter} />);
     });
 
     test('renders modal correctly', () => {

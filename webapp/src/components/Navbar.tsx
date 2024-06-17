@@ -2,10 +2,11 @@ import logo from '../assets/images/logo.png';
 
 type NavProps = {active: string}
 
+export const baseStyle = 'uppercase text-sm w-20 py-1 text-center';
+export const activeStyle = ' bg-secondary text-white font-medium';
+
 export default function Navbar({active}: NavProps){
 
-    const baseStyle = 'uppercase text-sm w-20 py-1 text-center';
-    const activeStyle = ' bg-secondary text-white font-medium';
     const linkStyle = (link: string, idx: number) => 
         baseStyle 
         + (idx === 0 ? ' rounded-l-lg' : ' rounded-r-lg  hover:bg-secondary hover:text-white') 

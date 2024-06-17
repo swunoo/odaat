@@ -34,6 +34,12 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
         @Param("syncId") Integer syncId
     );
 
+    @Query("SELECT SUM(t.durationHr) FROM Task t WHERE t.status = 'COMPLETED' AND t.projectId = :projectId AND t.syncId = :syncId")
+    Double getTotalHoursSpent(
+        @Param("projectId") Integer projectId,
+        @Param("syncId") Integer syncId
+    );
+
     @Modifying
     @Transactional
     @Query("DELETE FROM Task t WHERE t.project.id = :projectId")

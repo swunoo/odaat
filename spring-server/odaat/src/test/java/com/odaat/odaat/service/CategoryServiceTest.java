@@ -14,15 +14,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.odaat.odaat.model.Category;
 import com.odaat.odaat.repository.CategoryRepository;
 
+@ExtendWith(MockitoExtension.class)
 class CategoryServiceTest {
 
     @Mock
@@ -30,11 +31,6 @@ class CategoryServiceTest {
 
     @InjectMocks
     private CategoryService categoryService;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     void testFindAll() {

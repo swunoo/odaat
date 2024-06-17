@@ -56,4 +56,8 @@ public class TaskService {
         return taskRepository.findByProjectIdAndSyncId(projectId, syncId);
     }
 
+    public Double getTotalHoursSpent(Integer projectId, Integer syncId){
+        return taskRepository.getTotalHoursSpent(projectId, syncId);
+    }
+
 }

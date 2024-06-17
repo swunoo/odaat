@@ -13,20 +13,20 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.odaat.odaat.model.Task;
 import com.odaat.odaat.repository.TaskRepository;
 import com.odaat.odaat.utils.MockUtil;
 
+@ExtendWith(MockitoExtension.class)
 class TaskServiceTest {
 
     @Mock
@@ -34,11 +34,6 @@ class TaskServiceTest {
 
     @InjectMocks
     private TaskService taskService;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     void testFindByProject() {

@@ -4,11 +4,11 @@ import { useEffect, useState } from "react"
 import menuIcon from '../assets/images/menu.svg'
 import { PROJECT_API, ProjectData, TASK_API, TaskData, TaskRequest } from "../conf"
 import { combineDateAndTimeInput, formatTime, getTimeRange, getValue, menuBtnStyle } from "../utils"
-import { NewButton, NewTaskButton } from "./common"
+import { NewButton, NewTaskButton, VoidFunc } from "./common"
 
 export function TaskWrapper(
     { project, date, addProject, newProj }
-        : { project?: ProjectData, date?: Date, addProject?: () => void, newProj?: ProjectData }
+        : { project?: ProjectData, date?: Date, addProject?: VoidFunc, newProj?: ProjectData }
 ) {
 
     const [tasks, setTasks] = useState<TaskData[]>([])
@@ -99,6 +99,7 @@ export function TaskWrapper(
                 {
                     tasks.map((t, idx) => (
                         <TaskBlock
+                            key={t.id}
                             initData={t}
                             remover={() => removeTask(idx)}
                             taskSetter={(task) => changeTask(idx, task)}
@@ -123,7 +124,7 @@ export function TaskWrapper(
 /* Component of Each Task */
 export function TaskBlock(
     { initData, projects, addProject, remover, taskSetter, isTaskPage }:
-        { initData: TaskData, projects?: ProjectData[], addProject?: () => void, remover: () => void, taskSetter: (task: TaskData) => void, isTaskPage: boolean }) {
+        { initData: TaskData, projects?: ProjectData[], addProject?: VoidFunc, remover: VoidFunc, taskSetter: (task: TaskData) => void, isTaskPage: boolean }) {
 
     // Data of the Task
     const [data, setData] = useState<TaskData>(initData)
@@ -222,7 +223,6 @@ export function TaskBlock(
 
     return (
         <div
-            key={data.id}
             className={
                 "border-b border-light py-3 grid grid-cols-16 gap-5" +
                 (data.status === 'COMPLETED' ? ' bg-light opacity-50 -mx-5 px-5' : '')
@@ -305,9 +305,9 @@ export function TaskBlock(
                             {// attr: Project and Date
                                 isTaskPage
                                     ? <p className="col-span-4">
-                                        <p className="border border-gray px-3 py-1 text-sm font-medium overflow-hidden text-ellipsis max-w-fit">
+                                        <span className="border border-gray block px-3 py-1 text-sm font-medium overflow-hidden text-ellipsis max-w-fit">
                                             {data.project.name}
-                                        </p>
+                                        </span>
                                     </p>
                                     : <p className="col-span-2 text-xs py-1">{formatTime(data.startTime)}</p>
                             }

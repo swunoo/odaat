@@ -4,8 +4,10 @@ import java.time.Instant;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class AccessToken {
 
@@ -14,8 +16,8 @@ public class AccessToken {
     String refreshToken;
     Instant expiresAt;
 
-    public boolean isValid(){
-        return this.expiresAt.isAfter(Instant.now());
+    public boolean isExpired(){
+        return this.expiresAt.isBefore(Instant.now());
     }
 
     public void refreshData(String token, String refreshToken, Instant expiresAt){

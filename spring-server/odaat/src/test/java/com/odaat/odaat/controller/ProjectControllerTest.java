@@ -18,9 +18,10 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -28,10 +29,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.odaat.odaat.dto.request.ProjectRequest;
 import com.odaat.odaat.model.Project;
-import com.odaat.odaat.service.ProjectService;
 import com.odaat.odaat.service.AuthService;
+import com.odaat.odaat.service.ProjectService;
 import com.odaat.odaat.utils.MockUtil;
 
+@ExtendWith(MockitoExtension.class)
 class ProjectControllerTest {
 
     private MockMvc mockMvc;
@@ -49,7 +51,6 @@ class ProjectControllerTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(projectController).build();
         objectMapper.findAndRegisterModules();
     }
