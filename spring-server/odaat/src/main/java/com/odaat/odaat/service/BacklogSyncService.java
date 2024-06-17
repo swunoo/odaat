@@ -1,5 +1,6 @@
 package com.odaat.odaat.service;
 
+import java.net.http.HttpClient;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -178,9 +180,11 @@ public class BacklogSyncService {
 
             localSync.updateLocalTasks(backlogIssues);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(Map.of("message", "success"));
     }
 
+    // KADAI: PATCH request doesn't work, although it worked on Postman.
+    // org.springframework.web.client.ResourceAccessException: I/O error on PATCH request for {URL}: Invalid HTTP method: PATCH
     public void syncTaskToBacklog(Task task) throws Exception {
 
         // Return if either backlog or the task is unsynced.
