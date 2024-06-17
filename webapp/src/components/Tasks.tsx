@@ -13,14 +13,14 @@ import { ProjectData } from "../conf";
 export default function Tasks(){
 
     // Whether to show the NewProject modal
-    const [showNewProj, setShowNewProj] = useState(false)
+    const [showNewProj, setShowNewProj] = useState(false);
     // To render newly added project titles after adding NewProject on TaskPage
-    const [newProj, setnewProj] = useState<ProjectData | undefined>(undefined)
+    const [newProj, setnewProj] = useState<ProjectData | undefined>(undefined);
 
     // After adding a new project, it is reflected in TaskWrapper
     const onProjectCreate = (p: ProjectData) => {
-        setnewProj(p)
-        setShowNewProj(false)
+        setnewProj(p);
+        setShowNewProj(false);
     }
 
     return (

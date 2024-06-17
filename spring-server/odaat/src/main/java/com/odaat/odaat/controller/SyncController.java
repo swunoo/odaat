@@ -35,7 +35,7 @@ public class SyncController {
      * @return a ResponseEntity object containing the result of the synchronization
      *         process or a RedirectView.
      */
-    @GetMapping("/sync/backlog")
+    @GetMapping("/api/sync/backlog/on")
     public ResponseEntity<?> syncWithBacklog() {
 
         try {
@@ -68,10 +68,10 @@ public class SyncController {
         }
     }
 
-    @GetMapping("/unsync/backlog")
+    @GetMapping("/api/sync/backlog/off")
     public ResponseEntity<?> unsyncWithBacklog() {
         authService.removeToken();
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(Map.of("message", "success"));
     }
 
     /**
@@ -102,7 +102,8 @@ public class SyncController {
             // 3. Send the request and update currentToken via the service
             backlogSync.getTokenAndSave(tokenRequest, currentToken);
 
-            return ResponseEntity.ok().build();
+            // KADAI: How to auto-close this blank page?
+            return ResponseEntity.ok().body(Map.of("message", "Login successful. Please close this tab."));
 
         } catch (Exception e) {
             e.printStackTrace();
