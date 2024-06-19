@@ -183,8 +183,6 @@ public class BacklogSyncService {
         return ResponseEntity.ok().body(Map.of("message", "success"));
     }
 
-    // KADAI: PATCH request doesn't work, although it worked on Postman.
-    // org.springframework.web.client.ResourceAccessException: I/O error on PATCH request for {URL}: Invalid HTTP method: PATCH
     public void syncTaskToBacklog(Task task) throws Exception {
 
         // Return if either backlog or the task is unsynced.
