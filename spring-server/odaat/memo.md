@@ -15,10 +15,14 @@ BE  - /sync/backlog endpoint is called
 FE  - If the sync was successful, refresh the page
     - Otherwise, show an error
 
+## Issues
+- updating issue through PATCH doesn't work.
+org.springframework.web.client.ResourceAccessException: I/O error on PATCH request for {URL}: Invalid HTTP method: PATCH
+
+
 # TODOs
 
 - Auth
 - Request Validation
 - API versioning
 - Scalability
-- Security
