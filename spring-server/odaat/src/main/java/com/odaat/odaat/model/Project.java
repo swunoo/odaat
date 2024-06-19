@@ -41,7 +41,7 @@ public class Project extends BaseModel {
     private Uzer uzer;
 
     @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
+    @JoinColumn(name = "category_id", nullable = true)
     private Category category;
 
     private Integer syncId;

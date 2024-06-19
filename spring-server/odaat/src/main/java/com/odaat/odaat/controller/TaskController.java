@@ -27,7 +27,9 @@ import com.odaat.odaat.dto.response.TaskResponse;
 import com.odaat.odaat.model.Project;
 import com.odaat.odaat.model.Task;
 import com.odaat.odaat.model.enums.TaskStatus;
-import com.odaat.odaat.service.SecurityService;
+import com.odaat.odaat.service.AuthService;
+import com.odaat.odaat.service.BacklogSyncService;
+import com.odaat.odaat.service.LocalSyncService;
 import com.odaat.odaat.service.TaskService;
 
 @RestController
@@ -39,7 +41,9 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
     @Autowired
-    private SecurityService securityService;
+    private AuthService authService;
+    @Autowired
+    private BacklogSyncService backlogSync;
 
     @GetMapping("/get")
     public List<TaskResponse> getAllTasks(
@@ -104,6 +108,17 @@ public class TaskController {
             Task task = taskOptional.get();
             task.setStatus(status);
             task = taskService.save(task);
+
+            // If the task is from an external app, it is synced if applicable.
+            if(task.getSyncId() != null){
+                try {
+                    backlogSync.syncTaskToBacklog(task);
+                } catch (Exception e) {
+                    System.out.println("Couldn't sync task to Backlog.");
+                    e.printStackTrace();
+                }
+            }
+
             return ResponseEntity.ok(convertToDto(task));
         }
     }
@@ -129,7 +144,7 @@ public class TaskController {
 
         Task task = new Task();
         BeanUtils.copyProperties(taskRequest, task);
-        task.setUzer(securityService.getCurrentUser());
+        task.setUzer(authService.getCurrentUser());
         Project project = new Project();
         project.setId(taskRequest.getProjectId());
         task.setProject(project);

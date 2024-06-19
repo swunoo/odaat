@@ -1,10 +1,13 @@
 import plusIcon from '../assets/images/plus.svg'
 
-/** Components */
+/* Types */
+export type VoidFunc = () => void;
+
+/* Components */
 
 export function NewProjButton(
     {clickHandler}:
-    {clickHandler: ()=>void}
+    {clickHandler: VoidFunc}
 ){
     return (
         <button
@@ -17,7 +20,7 @@ export function NewProjButton(
 
 export function NewTaskButton(
     {clickHandler}:
-    {clickHandler: ()=>void}
+    {clickHandler: VoidFunc}
 ){
     return (
         <button
@@ -30,7 +33,7 @@ export function NewTaskButton(
 
 export function NewButton(
     {label, clickHandler}:
-    {label: string, clickHandler: ()=>void}
+    {label: string, clickHandler: VoidFunc}
 ){
     return (
         <button
@@ -45,7 +48,7 @@ export function NewButton(
 const svgBtnStyle = "bg-secondary fill-primary hover:bg-primary hover:fill-secondary rounded cursor-pointer"
 
 export function SvgChevronLeft(
-    {clickHandler}: {clickHandler: ()=>void}
+    {clickHandler}: {clickHandler: VoidFunc}
 ){
     return (
         <div onClick={clickHandler} className={svgBtnStyle}>
@@ -55,11 +58,19 @@ export function SvgChevronLeft(
 }
 
 export function SvgChevronRight(
-    {clickHandler}: {clickHandler: ()=>void}
+    {clickHandler}: {clickHandler: VoidFunc}
 ){
     return (
         <div onClick={clickHandler} className={svgBtnStyle}>
             <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/></svg>
         </div>
+    )
+}
+
+export function LoadingVeil(){
+    return (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50">
+        <div className="loader"></div>
+      </div>
     )
 }

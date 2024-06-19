@@ -65,17 +65,20 @@ global.fetch = jest.fn((url) => {
 
 describe('TaskWrapper Component', () => {
     let rendered: any;
+
+    // Render the TaskWrapper component before each test
     beforeEach(() => {
-        rendered = render(<TaskWrapper project={mockProject} date={new Date()} addProject={() => { }} newProj={mockProject} />);
+        rendered = render(<TaskWrapper project={mockProject} date={new Date()} addProject={() => {}} newProj={mockProject} />);
     });
 
+    // Test to check if TaskWrapper component renders correctly
     test('renders TaskWrapper component', async () => {
         const { getByText } = rendered;
         await waitFor(() => expect(getByText('Test Task')).toBeInTheDocument());
     });
 
+    // Test to check if a new task can be added
     test('adds a new task', async () => {
-
         const { getByText, getAllByText } = rendered;
 
         await waitFor(() => expect(getByText('Test Task')).toBeInTheDocument());
@@ -84,6 +87,7 @@ describe('TaskWrapper Component', () => {
         expect(getAllByText('Task Name')).toHaveLength(1); // One new task should be added
     });
 
+    // Test to check if a task can be deleted
     test('deletes a task', async () => {
         const { getByText, getByAltText, queryByText } = rendered;
 
@@ -97,20 +101,21 @@ describe('TaskWrapper Component', () => {
 });
 
 describe('TaskBlock Component', () => {
-
     let rendered: any;
+
+    // Render the TaskBlock component before each test
     beforeEach(() => {
         const taskSetter = jest.fn();
         const remover = jest.fn();
         jest.clearAllMocks();
-        rendered = render(<TaskBlock initData={mockTask} projects={[mockProject]} addProject={() => { }} remover={remover} taskSetter={taskSetter} isTaskPage={true} />);
+        rendered = render(<TaskBlock initData={mockTask} projects={[mockProject]} addProject={() => {}} remover={remover} taskSetter={taskSetter} isTaskPage={true} />);
     });
 
+    // Test to check if a task can be edited
     test('edits a task', async () => {
-
         const { getByText, getByAltText, getByDisplayValue, queryByText } = rendered;
 
-        expect(getByText('Test Task')).toBeInTheDocument()
+        expect(getByText('Test Task')).toBeInTheDocument();
 
         fireEvent.click(getByAltText('Menu'));
         fireEvent.click(getByText('Edit'));
@@ -118,11 +123,12 @@ describe('TaskBlock Component', () => {
         fireEvent.click(getByText('Confirm'));
 
         await waitFor(() => {
-            expect(getByText('Updated Task')).toBeInTheDocument()
-            expect(queryByText('Test Task')).not.toBeInTheDocument()
+            expect(getByText('Updated Task')).toBeInTheDocument();
+            expect(queryByText('Test Task')).not.toBeInTheDocument();
         });
     });
 
+    // Test to check if task completion status can be toggled
     test('toggles task completion status', async () => {
         const { getByRole } = rendered;
         fireEvent.click(getByRole('checkbox'));

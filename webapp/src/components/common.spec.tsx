@@ -1,4 +1,3 @@
-// components.test.js
 import { render, fireEvent } from '@testing-library/react';
 import {
   NewProjButton,

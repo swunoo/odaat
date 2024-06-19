@@ -1,6 +1,7 @@
 export const ROOT = 'http://localhost:9000/api'
 export const TASK_API = ROOT + '/task'
 export const PROJECT_API = ROOT + '/project'
+export const BACKLOG_API = ROOT + '/sync/backlog'
 
 export type Priority = 'LOWEST' | 'LOW' | 'MEDIUM' | 'HIGH' | 'HIGHEST';
 
