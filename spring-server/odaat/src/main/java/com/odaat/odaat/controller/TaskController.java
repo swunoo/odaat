@@ -35,7 +35,7 @@ import com.odaat.odaat.service.TaskService;
 
 @RestController
 @RequestMapping("/api/task")
-@CrossOrigin
+// @CrossOrigin // Delete if it's still working fine.
 public class TaskController {
 
     // TODO: return only tasks for the user
