@@ -8,6 +8,7 @@ import menuIcon from '../assets/images/menu.svg';
 import { PROJECT_API, ProjectData } from "../conf";
 import { formatTime, menuBtnStyle } from "../utils";
 import { TaskWrapper } from "./TaskWrapper";
+import { useCookies } from "react-cookie";
 
 /* Projects Page */
 export default function Projects() {
@@ -19,11 +20,13 @@ export default function Projects() {
     // Index of the currently-being-edited project
     const [editedProject, setEditedProject] = useState<number | null>(null)
 
+    const [cookies] = useCookies(['XSRF-TOKEN']);
+
     // Fetch all projects
     useEffect(() => {
         // API: QUERY ALL PROJECTS
         fetch(PROJECT_API + '/get', {
-            method: 'GET'
+            method: 'GET', credentials: 'include',
         })
             .then(res => res.json())
             .then(data => {
@@ -41,7 +44,8 @@ export default function Projects() {
     const removeProject = (idx: number) => {
         // API: DELETE PROJECT OF A GIVEN TITLE
         fetch(PROJECT_API + '/delete/' + projects[idx]['id'], {
-            method: 'DELETE'
+            method: 'DELETE', credentials: 'include',
+            headers: { 'X-XSRF-TOKEN': cookies['XSRF-TOKEN'] } 
         })
             .then(res => {
                 if (res.ok) {
@@ -202,6 +206,8 @@ export function NewProjectModal(
         : { data: ProjectData | null, cancelHandler: VoidFunc, projectSetter: (p: ProjectData) => void }
 ) {
 
+    const [cookies] = useCookies(['XSRF-TOKEN']);
+
     // When "Confirm" button from NewProject modal is clicked, data is saved
     const confirmAddingProject = (e: FormEvent) => {
         e.preventDefault();
@@ -224,10 +230,11 @@ export function NewProjectModal(
         // API: UPDATE PROJECT OF A GIVEN TITLE
         // API: CREATE A PROJECT
         fetch(url, {
-            method: method,
+            method: method, credentials: 'include',
             body: JSON.stringify(newData),
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                'X-XSRF-TOKEN': cookies['XSRF-TOKEN']
             }
         })
             .then(res => {
