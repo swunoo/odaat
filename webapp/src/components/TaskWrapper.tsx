@@ -14,9 +14,6 @@ export function TaskWrapper(
 
     const [cookies] = useCookies(['XSRF-TOKEN']); // <.>
 
-    console.log("COOKIES:");
-    console.log(cookies);
-
     const [tasks, setTasks] = useState<TaskData[]>([])
 
     const [projectList, setProjectList] = useState<ProjectData[]>([])
@@ -134,11 +131,6 @@ export function TaskBlock(
         { initData: TaskData, projects?: ProjectData[], addProject?: VoidFunc, remover: VoidFunc, taskSetter: (task: TaskData) => void, isTaskPage: boolean }) {
 
     const [cookies] = useCookies(['XSRF-TOKEN']); // <.>
-
-    console.log("COOKIES:");
-    console.log(cookies);
-    
-    
 
     // Data of the Task
     const [data, setData] = useState<TaskData>(initData)
