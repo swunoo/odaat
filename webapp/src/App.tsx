@@ -29,7 +29,7 @@ function App() {
                 <Route path="/home" element={<Homepapge />} />
                 <Route path="/tasks" element={<Tasks />} />
                 <Route path="/projects" element={<Projects />} />
-                <Route path="/" element={<Tasks />} />
+                <Route path="/" element={<Homepapge />} />
               </Routes>
           </div>
         </BrowserRouter>

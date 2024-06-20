@@ -23,6 +23,16 @@ public class AuthController {
         this.registration = registrations.findByRegistrationId("okta");
     }
 
+    @GetMapping("/tmp/public")
+    public ResponseEntity<?> publicRoute(@AuthenticationPrincipal OAuth2User user){
+
+        if (user == null) {
+            return new ResponseEntity<>("NO", HttpStatus.OK);
+        }
+        
+        return new ResponseEntity<>("YES", HttpStatus.OK);
+    }
+
     @GetMapping("/api/user")
     public ResponseEntity<?> getUser(@AuthenticationPrincipal OAuth2User user) {
         if (user == null) {
@@ -32,16 +42,18 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/api/logout")
+    @GetMapping("/api/logout")
     public ResponseEntity<?> logout(HttpServletRequest request,
                                     @AuthenticationPrincipal(expression = "idToken") OidcIdToken idToken) {
+
         // send logout URL to client so they can initiate logout
-        String logoutUrl = this.registration.getProviderDetails()
-                .getConfigurationMetadata().get("end_session_endpoint").toString();
+        StringBuilder logoutUrl = new StringBuilder();
+        String issuerUri = this.registration.getProviderDetails().getIssuerUri();
+        logoutUrl.append(issuerUri.endsWith("/") ? issuerUri + "v2/logout" : issuerUri + "/v2/logout");
+        logoutUrl.append("?client_id=").append(this.registration.getClientId());
 
         Map<String, String> logoutDetails = new HashMap<>();
-        logoutDetails.put("logoutUrl", logoutUrl);
-        logoutDetails.put("idToken", idToken.getTokenValue());
+        logoutDetails.put("logoutUrl", logoutUrl.toString());
         request.getSession(false).invalidate();
         return ResponseEntity.ok().body(logoutDetails);
     }

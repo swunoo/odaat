@@ -13,6 +13,7 @@
   "dependencies": {
     "playwright": "^1.44.0",
     "react": "^18.2.0",
+    "react-cookie": "^7.1.4",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.23.0",
     "swagger-typescript-api": "^13.0.3",

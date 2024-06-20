@@ -5,11 +5,17 @@ import menuIcon from '../assets/images/menu.svg'
 import { PROJECT_API, ProjectData, TASK_API, TaskData, TaskRequest } from "../conf"
 import { combineDateAndTimeInput, formatTime, getTimeRange, getValue, menuBtnStyle } from "../utils"
 import { NewButton, NewTaskButton, VoidFunc } from "./common"
+import { useCookies } from "react-cookie"
 
 export function TaskWrapper(
     { project, date, addProject, newProj }
         : { project?: ProjectData, date?: Date, addProject?: VoidFunc, newProj?: ProjectData }
 ) {
+
+    const [cookies] = useCookies(['XSRF-TOKEN']); // <.>
+
+    console.log("COOKIES:");
+    console.log(cookies);
 
     const [tasks, setTasks] = useState<TaskData[]>([])
 
@@ -22,7 +28,7 @@ export function TaskWrapper(
         if (date) taskQuery += '&date=' + date.toISOString().split('T')[0];
 
         fetch(taskQuery, {
-            method: 'GET'
+            method: 'GET', credentials: 'include'
         })
             .then(res => res.json())
             .then(data => setTasks(data))
@@ -33,7 +39,7 @@ export function TaskWrapper(
     useEffect(() => {
         // API: GET ALL PROJECTS
         fetch(PROJECT_API + '/getIdName', {
-            method: 'GET'
+            method: 'GET', credentials: 'include'
         })
             .then(res => res.json())
             .then(data => setProjectList(data))
@@ -80,7 +86,8 @@ export function TaskWrapper(
 
         // API: DELETE A TASK
         fetch(TASK_API + '/delete/' + taskId, {
-            method: 'DELETE'
+            method: 'DELETE', credentials: 'include',
+            headers: { 'X-XSRF-TOKEN': cookies['XSRF-TOKEN'] } 
         })
             .then(res => {
                 if (res.ok) {
@@ -126,6 +133,13 @@ export function TaskBlock(
     { initData, projects, addProject, remover, taskSetter, isTaskPage }:
         { initData: TaskData, projects?: ProjectData[], addProject?: VoidFunc, remover: VoidFunc, taskSetter: (task: TaskData) => void, isTaskPage: boolean }) {
 
+    const [cookies] = useCookies(['XSRF-TOKEN']); // <.>
+
+    console.log("COOKIES:");
+    console.log(cookies);
+    
+    
+
     // Data of the Task
     const [data, setData] = useState<TaskData>(initData)
     // Whether to show Task menu
@@ -146,7 +160,8 @@ export function TaskBlock(
         const newStatus = data.status === 'COMPLETED' ? 'PLANNED' : 'COMPLETED'
         // API: UPDATE THE STATUS OF A TASK
         fetch(TASK_API + '/updateStatus/' + data.id + '?status=' + newStatus, {
-            method: 'PUT'
+            method: 'PUT', credentials: 'include',
+            headers: { 'X-XSRF-TOKEN': cookies['XSRF-TOKEN'] } 
         })
             .then(res => {
                 if (res.ok) {
@@ -185,8 +200,10 @@ export function TaskBlock(
         fetch(url, {
             method: method,
             body: JSON.stringify(newData),
+            credentials: 'include',
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                'X-XSRF-TOKEN': cookies['XSRF-TOKEN']
             }
         })
             .then(res => {

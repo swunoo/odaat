@@ -1,6 +1,103 @@
+import { useEffect, useState } from 'react'
 import logo from './assets/images/logo.png'
+import { PROJECT_API } from './conf';
+import { useCookies } from 'react-cookie';
 
-export function Homepapge(){
+export function Homepapge() {
+
+    const [authenticated, setAuthenticated] = useState(false);
+
+    const [cookies] = useCookies(['XSRF-TOKEN']);
+
+
+    const priv = 'http://localhost:9000/api/user';
+
+    useEffect(() => {
+        fetch('http://localhost:9000/tmp/public', {
+            method: 'GET',
+            credentials: 'include'
+        })
+            .then(res => res.text())
+            .then(data => {
+                console.log(data);
+                if (data === 'NO') setAuthenticated(false)
+                else {
+                    setAuthenticated(true)
+
+                    fetch(priv, {
+                        method: 'GET',
+                        credentials: 'include'
+                    })
+                        .then(res => res.json())
+                        .then(data => console.log(data))
+                        .catch(err => console.log(err))
+
+                }
+
+            })
+            .catch(err => console.log(err))
+    }, [])
+
+
+    // useEffect(() => {
+    //     console.log("connecting");
+
+    //     // fetch('http://localhost:9000/tmp/public')
+    //     //     .then(res => res.json())
+    //     //     .then(res => console.log(res))
+    //     //     .catch(err => console.error(err))
+
+    //     if(!authenticated){
+    //         // login
+    //         let port = (window.location.port ? ':' + window.location.port : '');
+    //         console.log(port);
+    //         if (port === ':5173') {
+    //           port = ':9000';
+    //         }
+    //         // window.location.href = `//${window.location.hostname}:9000/getIdName`;
+    //         window.location.href = priv;
+    //     }
+
+    //     else {
+    //         // fetch data
+
+    //         fetch(priv, {
+    //             method: 'GET',
+    //             credentials: 'include'
+    //         })
+    //             .then(res => res.json())
+    //             .then(data => console.log(data))
+    //             .catch(err => console.log(err))
+    //     }
+
+
+    // }, [authenticated]);
+
+    // const logout = () => {
+    //     fetch('http://localhost:9000/api/logout', {
+    //       method: 'POST', credentials: 'include',
+    //       headers: { 'X-XSRF-TOKEN': cookies['XSRF-TOKEN'] } // <.>
+    //     })
+    //       .then(res => res.json())
+    //       .then(response => {
+    //         window.location.href = `${response.logoutUrl}&returnTo=${window.location.origin}`;
+    //       });
+    //   }
+
+    const login = () => {
+        window.location.href = priv;
+    }
+
+    const logout = () => {
+        fetch('http://localhost:9000/api/logout', {
+            method: 'GET', credentials: 'include'
+        })
+            .then(res => res.json())
+            .then(response => {
+                window.location.href = response.logoutUrl + `&returnTo=${window.location.origin}`;
+            });
+    }
+
     return (
         <div className="
             h-screen w-screen bg-accent2 py-10
@@ -12,6 +109,11 @@ export function Homepapge(){
             <div className="relative  my-10 ">
                 <div className=" absolute top-4 border-t border-light w-screen"></div>
                 <div className="flex justify-center h-fit">
+                    <h1>{authenticated}</h1>
+                    {authenticated
+                        ? <button onClick={logout}>Logout</button>
+                        : <button onClick={login}>Login</button>
+                    }
                     <h3 className="
                         text-lg text-secondary
                         relative w-fit
