@@ -86,6 +86,9 @@ public class SyncController {
     @GetMapping("/callback")
     public ResponseEntity<?> callback(@RequestParam("code") String code, @RequestParam("state") String state) {
 
+        System.out.println("CALLBACK");
+        System.out.println(code);
+
         try {
             // 1. Build the request to fetch token
             Map<String, String> tokenRequest = new HashMap<>();

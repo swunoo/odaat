@@ -22,7 +22,8 @@ org.springframework.web.client.ResourceAccessException: I/O error on PATCH reque
 # Auth
 
 - Login/Logout from React using auth0 is working.
-- OPTIONS requests still showing CORS errors, although GET requests work fine.
+- OPTIONS requests still showing CORS errors, although GET requests work fine. > Adding "Allowed Headers" resolved it.
+- Cannot handle /callback from Backlog API yet -> Maybe try to change the flow to receive code from the frontend
 
 # TODOs
 

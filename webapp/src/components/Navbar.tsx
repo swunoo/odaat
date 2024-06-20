@@ -24,7 +24,7 @@ export default function Navbar({active}: NavProps){
         // API: SYNC/UNSYNC WITH BACKLOG
         const action = syncContext?.sync ? '/off' : '/on';
         fetch(BACKLOG_API + action, {
-            method: 'GET'
+            method: 'GET', credentials: 'include'
         })
         .then(res => { 
             if(res.status < 400) return res.json()
@@ -36,9 +36,11 @@ export default function Navbar({active}: NavProps){
                 setTimeout(() => {
                     if(++poll_count >= MAX_POLL){
                         poll_count = 0;
-                        throw Error ('Poll Limit Exceeded')
+                        loadingContext?.setLoading(false);
+                        console.log("CANNOT SYNC");
+                    } else {
+                        syncWithBacklog();
                     }
-                    syncWithBacklog();
                 }, 3000);
 
             } else {

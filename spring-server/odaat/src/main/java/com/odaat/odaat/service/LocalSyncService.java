@@ -43,6 +43,7 @@ public class LocalSyncService {
                 Project newProject = new Project();
                 newProject.setUzer(authService.getCurrentUser());
                 newProject.setSyncId(externalProject.getId());
+                newProject.setName(externalProject.getName());
                 newProject.setSource(Source.BACKLOG);
                 newProject.setCategory(categoryService.getDefaultCategory());
                 projectService.save(newProject);

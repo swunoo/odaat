@@ -17,7 +17,7 @@ public class AccessToken {
     Instant expiresAt;
 
     public boolean isExpired(){
-        return this.expiresAt.isBefore(Instant.now());
+        return this.expiresAt == null || this.expiresAt.isBefore(Instant.now());
     }
 
     public void refreshData(String token, String refreshToken, Instant expiresAt){
