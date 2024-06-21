@@ -2,9 +2,10 @@ import { BrowserRouter, Route, Routes } from "react-router-dom"
 import Projects from "./components/Projects"
 import Tasks from "./components/Tasks"
 import { Homepapge } from "./Homepage"
-import { createContext, useState } from "react"
+import { createContext, useEffect, useState } from "react"
 import { LoadingVeil } from "./components/common"
 import { About } from "./About"
+import { PUBLIC_API } from "./conf"
 
 export interface SyncContextType { sync: boolean, setSync: (value: boolean) => void; }
 export interface AuthContextType { authenticated: boolean, setAuthenticated: (value: boolean) => void; }
@@ -21,6 +22,21 @@ function App() {
   const [ sync, setSync ] = useState<boolean>(false);
   const [ authenticated, setAuthenticated ] = useState<boolean>(false);
   const [ loading, setLoading ] = useState<boolean>(false);
+
+  useEffect(() => {
+    fetch(PUBLIC_API, {
+        method: 'GET',
+        credentials: 'include'
+    })
+        .then(res => res.text())
+        .then(data => {
+            console.log(data);
+            if (data === '') setAuthenticated(false)
+            else { setAuthenticated(true) }
+
+        })
+        .catch(err => console.log(err))
+}, [])
 
 
   return (

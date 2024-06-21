@@ -6,9 +6,12 @@ import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
@@ -31,7 +34,7 @@ public class SecurityConfig {
             .cors(Customizer.withDefaults())
             .authorizeHttpRequests((authz) -> authz
                 .requestMatchers(HttpMethod.OPTIONS).permitAll()
-                .requestMatchers("/public", "/callback").permitAll()
+                .requestMatchers("/api/user", "/api/callback").permitAll()
                 .anyRequest().authenticated()
             )
             .csrf((csrf) -> csrf
@@ -40,8 +43,15 @@ public class SecurityConfig {
             )
             .addFilterAfter(new CookieCsrfFilter(), BasicAuthenticationFilter.class)
             .addFilterAfter(new SpaWebFilter(), BasicAuthenticationFilter.class)
-            .oauth2Login();
+            .oauth2Login(Customizer.withDefaults());
         return http.build();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        return (request, response, accessDeniedException) -> {
+            System.out.println("Access Denied: " + accessDeniedException.getMessage());
+        };
     }
 
     @Bean

@@ -19,22 +19,6 @@ export default function Navbar({ active }: NavProps) {
     const loadingContext = useContext(LoadingContext);
     const auth = useContext(AuthContext);
 
-    useEffect(() => {
-        fetch(PUBLIC_API, {
-            method: 'GET',
-            credentials: 'include'
-        })
-            .then(res => res.text())
-            .then(data => {
-                console.log(data);
-                if (data === '') auth?.setAuthenticated(false)
-                else { auth?.setAuthenticated(true) }
-
-            })
-            .catch(err => console.log(err))
-    }, [])
-
-
     const login = () => {
         window.location.href = USER_API;
     }

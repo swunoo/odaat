@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.odaat.odaat.config.BacklogOAuth2Config;
@@ -16,7 +17,7 @@ import com.odaat.odaat.model.AccessToken;
 import com.odaat.odaat.service.AuthService;
 import com.odaat.odaat.service.BacklogSyncService;
 
-@Controller
+@RestController
 public class SyncController {
 
     @Autowired
@@ -45,11 +46,17 @@ public class SyncController {
             // If we already have the token, try accessing with it
             if (tokenObject != null) {
 
-                 // If expired, refresh the token first
-                if (tokenObject.isExpired()) backlogSync.refreshToken(tokenObject);
-
                 // Sync data
-                return backlogSync.syncWithBacklog(tokenObject);
+                if(!tokenObject.isExpired()){
+                    return backlogSync.syncWithBacklog(tokenObject);
+                }
+
+                 // If expired, refresh the token first
+                if (tokenObject.getRefreshToken() != null){
+                    backlogSync.refreshToken(tokenObject);
+                    backlogSync.syncWithBacklog(tokenObject);
+                } 
+
             }
 
             // If we don't have the token yet, the user is redirected for OAuth2
@@ -83,7 +90,7 @@ public class SyncController {
      *         process
      * @throws Exception if an error occurs during the callback process
      */
-    @GetMapping("/callback")
+    @GetMapping("/api/callback")
     public ResponseEntity<?> callback(@RequestParam("code") String code, @RequestParam("state") String state) {
 
         System.out.println("CALLBACK");
