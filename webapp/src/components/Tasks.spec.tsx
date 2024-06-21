@@ -3,6 +3,7 @@ import { ProjectData } from '../conf';
 import { MILLIS_A_DAY, formatTime } from '../utils';
 import Tasks, { TaskContainer } from './Tasks';
 import { VoidFunc } from './common';
+import { AuthContext } from '../App';
 
 // Mock data, components, and assets
 const mockDate = new Date();
@@ -31,6 +32,11 @@ jest.mock('./common', () => ({
   SvgChevronRight: ({clickHandler}: { clickHandler: VoidFunc }) => <button onClick={clickHandler}>Right</button>
 }));
 
+// Mocking navbar component
+jest.mock('./Navbar', () => ({
+  Navbar: ({active}: {active: string}) => <div>{active}</div>
+}));
+
 // Mocking the TaskWrapper component
 jest.mock('./TaskWrapper', () => ({
   TaskWrapper: ({date, addProject, newProj}: any) => (
@@ -55,14 +61,11 @@ describe('Tasks Component', () => {
 
   // Render the Tasks component before each test
   beforeEach(() => {
-    rendered = render(<Tasks />);
-  });
-
-  // Test to check if the Navbar renders correctly
-  test('renders Navbar', () => {
-    const { getByText } = rendered;
-    expect(getByText('projects')).toBeInTheDocument();
-    expect(getByText('tasks')).toBeInTheDocument();
+    rendered = render(
+      <AuthContext.Provider value={ { authenticated: true, setAuthenticated: () => {}} }>
+        <Tasks />
+      </AuthContext.Provider>
+    );
   });
 
   // Test to check if NewProjectModal is displayed when setShowNewProj is called
@@ -103,7 +106,11 @@ describe('TaskContainer', () => {
   // Render the TaskContainer component before each test
   beforeEach(() => {
     setShowNewProj = jest.fn();
-    rendered = render(<TaskContainer newProj={mockProject} setShowNewProj={setShowNewProj} />);
+    rendered = render(
+        <AuthContext.Provider value={ { authenticated: true, setAuthenticated: () => {}} }>
+          <TaskContainer newProj={mockProject} setShowNewProj={setShowNewProj} />
+        </AuthContext.Provider>
+      );
   });
 
   // Test to check if TaskContainer renders correctly with all elements

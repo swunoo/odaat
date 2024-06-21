@@ -1,4 +1,4 @@
-import Navbar from "./Navbar";
+import { Navbar } from "./Navbar";
 
 import calendarIcon from '../assets/images/calendar.svg';
 
@@ -9,7 +9,6 @@ import { SvgChevronLeft, SvgChevronRight } from "./common";
 import { NewProjectModal } from "./Projects";
 import { TaskWrapper } from "./TaskWrapper";
 import { AuthContext } from "../App";
-import { Homepapge } from "../Homepage";
 import { About } from "../About";
 
 /* Tasks Page */

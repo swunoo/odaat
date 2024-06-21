@@ -1,8 +1,8 @@
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import logo from '../assets/images/logo.png';
 import backlogLogo from '../assets/images/backlog-logo.png'
 import { AuthContext, LoadingContext, SyncContext } from '../App';
-import { BACKLOG_API, LOGOUT_API, PUBLIC_API, USER_API } from '../conf';
+import { BACKLOG_API, LOGOUT_API, USER_API } from '../conf';
 import { Button } from './common';
 
 type NavProps = { active: string }
@@ -13,7 +13,7 @@ export const activeStyle = ' bg-secondary text-white font-medium';
 const MAX_POLL = 5;
 let poll_count = 0;
 
-export default function Navbar({ active }: NavProps) {
+export function Navbar({ active }: NavProps) {
 
     const syncContext = useContext(SyncContext);
     const loadingContext = useContext(LoadingContext);
