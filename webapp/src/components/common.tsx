@@ -5,6 +5,18 @@ export type VoidFunc = () => void;
 
 /* Components */
 
+export function Button(
+    {label, clickHandler}:
+    {label: string, clickHandler: VoidFunc}
+){
+   return (<button
+    onClick={clickHandler}
+    className="
+        bg-accent2 px-5 py-1 rounded text-sm hover:bg-secondary hover:text-white
+    ">{label}</button> 
+    )
+}
+
 export function NewProjButton(
     {clickHandler}:
     {clickHandler: VoidFunc}

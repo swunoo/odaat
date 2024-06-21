@@ -2,12 +2,15 @@ import Navbar from "./Navbar";
 
 import calendarIcon from '../assets/images/calendar.svg';
 
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { ProjectData } from "../conf";
 import { formatTime, MILLIS_A_DAY } from "../utils";
 import { SvgChevronLeft, SvgChevronRight } from "./common";
 import { NewProjectModal } from "./Projects";
 import { TaskWrapper } from "./TaskWrapper";
-import { ProjectData } from "../conf";
+import { AuthContext } from "../App";
+import { Homepapge } from "../Homepage";
+import { About } from "../About";
 
 /* Tasks Page */
 export default function Tasks(){
@@ -16,6 +19,8 @@ export default function Tasks(){
     const [showNewProj, setShowNewProj] = useState(false);
     // To render newly added project titles after adding NewProject on TaskPage
     const [newProj, setnewProj] = useState<ProjectData | undefined>(undefined);
+    // Whether the user is authenticated
+    const auth = useContext(AuthContext);
 
     // After adding a new project, it is reflected in TaskWrapper
     const onProjectCreate = (p: ProjectData) => {
@@ -34,7 +39,10 @@ export default function Tasks(){
             }
 
             <Navbar active="tasks"/>
-            <TaskContainer newProj={newProj} setShowNewProj={setShowNewProj} />
+            {  auth?.authenticated
+               ? <TaskContainer newProj={newProj} setShowNewProj={setShowNewProj} />
+               : <About />
+            }
         </div>
     )
 }

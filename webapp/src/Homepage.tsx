@@ -7,9 +7,6 @@ export function Homepapge() {
 
     const [authenticated, setAuthenticated] = useState(false);
 
-    const [cookies] = useCookies(['XSRF-TOKEN']);
-
-
     const priv = 'http://localhost:9000/api/user';
 
     useEffect(() => {
@@ -21,68 +18,11 @@ export function Homepapge() {
             .then(data => {
                 console.log(data);
                 if (data === 'NO') setAuthenticated(false)
-                else {
-                    setAuthenticated(true)
-
-                    fetch(priv, {
-                        method: 'GET',
-                        credentials: 'include'
-                    })
-                        .then(res => res.json())
-                        .then(data => console.log(data))
-                        .catch(err => console.log(err))
-
-                }
+                else { setAuthenticated(true) }
 
             })
             .catch(err => console.log(err))
     }, [])
-
-
-    // useEffect(() => {
-    //     console.log("connecting");
-
-    //     // fetch('http://localhost:9000/tmp/public')
-    //     //     .then(res => res.json())
-    //     //     .then(res => console.log(res))
-    //     //     .catch(err => console.error(err))
-
-    //     if(!authenticated){
-    //         // login
-    //         let port = (window.location.port ? ':' + window.location.port : '');
-    //         console.log(port);
-    //         if (port === ':5173') {
-    //           port = ':9000';
-    //         }
-    //         // window.location.href = `//${window.location.hostname}:9000/getIdName`;
-    //         window.location.href = priv;
-    //     }
-
-    //     else {
-    //         // fetch data
-
-    //         fetch(priv, {
-    //             method: 'GET',
-    //             credentials: 'include'
-    //         })
-    //             .then(res => res.json())
-    //             .then(data => console.log(data))
-    //             .catch(err => console.log(err))
-    //     }
-
-
-    // }, [authenticated]);
-
-    // const logout = () => {
-    //     fetch('http://localhost:9000/api/logout', {
-    //       method: 'POST', credentials: 'include',
-    //       headers: { 'X-XSRF-TOKEN': cookies['XSRF-TOKEN'] } // <.>
-    //     })
-    //       .then(res => res.json())
-    //       .then(response => {
-    //         window.location.href = `${response.logoutUrl}&returnTo=${window.location.origin}`;
-    //       });
-    //   }
 
     const login = () => {
         window.location.href = priv;

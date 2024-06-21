@@ -31,7 +31,7 @@ public class SecurityConfig {
             .cors(Customizer.withDefaults())
             .authorizeHttpRequests((authz) -> authz
                 .requestMatchers(HttpMethod.OPTIONS).permitAll()
-                .requestMatchers("/tmp/public", "/callback").permitAll()
+                .requestMatchers("/public", "/callback").permitAll()
                 .anyRequest().authenticated()
             )
             .csrf((csrf) -> csrf
