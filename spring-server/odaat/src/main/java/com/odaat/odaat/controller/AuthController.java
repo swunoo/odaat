@@ -23,16 +23,6 @@ public class AuthController {
         this.registration = registrations.findByRegistrationId("okta");
     }
 
-    @GetMapping("/public")
-    public ResponseEntity<?> publicRoute(@AuthenticationPrincipal OAuth2User user){
-
-        if (user == null) {
-            return new ResponseEntity<>("NO", HttpStatus.OK);
-        }
-        
-        return new ResponseEntity<>("YES", HttpStatus.OK);
-    }
-
     @GetMapping("/api/user")
     public ResponseEntity<?> getUser(@AuthenticationPrincipal OAuth2User user) {
         if (user == null) {

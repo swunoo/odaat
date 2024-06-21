@@ -33,8 +33,6 @@ public class UzerController {
 
     @Autowired
     private UzerService uzerService;
-    @Autowired
-    private AuthService authService;
 
     @GetMapping
     public List<UzerResponse> getAllUzers() {
