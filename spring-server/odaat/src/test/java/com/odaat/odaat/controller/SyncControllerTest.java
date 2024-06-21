@@ -57,6 +57,7 @@ public class SyncControllerTest {
         expiredToken = new AccessToken();
         expiredToken.setToken("expiredToken");
         expiredToken.setUserId("userId");
+        expiredToken.setRefreshToken("refreshToken");
         expiredToken.setExpiresAt(Instant.now().minusSeconds(3600)); // expired 1 hour ago
     }
 
@@ -81,7 +82,7 @@ public class SyncControllerTest {
 
         verify(backlogSyncService, times(1)).refreshToken(expiredToken);
         verify(backlogSyncService, times(1)).syncWithBacklog(expiredToken);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(HttpStatus.FOUND, response.getStatusCode());
     }
 
     @Test

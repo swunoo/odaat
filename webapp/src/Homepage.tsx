@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react'
 import logo from './assets/images/logo.png'
-import { PROJECT_API } from './conf';
-import { useCookies } from 'react-cookie';
 
 export function Homepapge() {
 
