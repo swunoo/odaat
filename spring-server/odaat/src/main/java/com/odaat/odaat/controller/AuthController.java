@@ -23,7 +23,7 @@ public class AuthController {
         this.registration = registrations.findByRegistrationId("okta");
     }
 
-    @GetMapping("/tmp/public")
+    @GetMapping("/public")
     public ResponseEntity<?> publicRoute(@AuthenticationPrincipal OAuth2User user){
 
         if (user == null) {
