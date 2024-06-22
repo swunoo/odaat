@@ -18,13 +18,12 @@ services:
 
   backend:
     build:
-      context: ./server/odaat-server
+      context: ./spring-server/odaat
       dockerfile: Dockerfile
     depends_on:
       - mysql
     environment:
-      SLICK_DBS_DEFAULT_DB_URL: "jdbc:mysql://mysql:3306/odaat?user=odaat&password=odaat&autoReconnect=true&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC"
-      APPLICATION_SECRET: "5Cp@z8W7QYeT2s#v!1*LxG@4UF9R6t$P5Cp@z8W7QY"
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/odaat
     ports:
       - "9000:9000"
     networks:

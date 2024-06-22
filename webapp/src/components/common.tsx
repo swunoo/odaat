@@ -129,7 +129,7 @@ export function Carousel({ images }: { images: string[] }) {
 
         </div>
     );
-};
+}
 
 export function Footer(){
     return (

@@ -1,5 +1,5 @@
 import { test, Page, expect } from '@playwright/test';
-import { formatTime, getDateFormatted, MILLIS_A_DAY } from '../utils';
+import { formatTime, getDateFormatted } from '../utils';
 
 // Helper function to login
 async function login(page: Page) {

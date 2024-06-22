@@ -36,15 +36,12 @@ export function getValue(id: string): string | null {
 export function combineDateAndTimeInput(dateId: string, timeId: string, fallback: Date): Date {
     let [date, time] = [getValue(dateId), getValue(timeId)]
 
-    console.log(fallback);
-    
-    
     if(!date){
         const [month, day, year] = new Date(fallback).toLocaleDateString().split('/');
         date = year + '-' + month.padStart(2, '0') + '-' + day.padStart(2, '0');
     }
     if(!time){
-        let [hrMinSec, amPm] = new Date(fallback).toLocaleTimeString().split(' ');
+        const [hrMinSec, amPm] = new Date(fallback).toLocaleTimeString().split(' ');
         let [hr, min, sec] = hrMinSec.split(':')
         hr = String(amPm === 'PM' ? (Number)(hr) + 12 : hr).padStart(2, '0');
         time = [hr, min, sec].join(':')
