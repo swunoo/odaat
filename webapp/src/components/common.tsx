@@ -102,16 +102,16 @@ export function Carousel({ images }: { images: string[] }) {
     };
 
     return (
-        <div className="flex max-w-xl m-auto items-center my-5">
+        <div className="flex gap-10 m-auto max-w-xl 2xl:max-w-5xl items-center my-5">
             <SvgChevronLeft clickHandler={prevSlide} />
-            <div className="relative w-full max-w-lg mx-auto">
-                <div className="overflow-hidden relative h-64 rounded-lg">
+            <div className="relative w-full mx-auto">
+                <div className="overflow-hidden relative h-60 2xl:h-600 rounded-lg">
                     {images.map((image, index) => (
                         <img
                             key={index}
                             src={image}
                             alt={`Slide ${index}`}
-                            className={`absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-in-out transform ${index === currentIndex ? 'translate-x-0' : 'translate-x-full'}`}
+                            className={`absolute inset-0 w-full h-fit m-auto shadow-lg rounded object-cover transition-transform duration-500 ease-in-out transform ${index === currentIndex ? 'translate-x-0' : 'translate-x-full'}`}
                             style={{ transform: `translateX(${(index - currentIndex) * 100}%)` }}
                         />
                     ))}

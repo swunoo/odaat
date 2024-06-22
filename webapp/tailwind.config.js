@@ -21,6 +21,9 @@ export default {
         '65': '65vh',
         '75': '75vh',
       },
+      height: {
+        '600': '60vh'
+      },
       gridTemplateColumns: {
         '16': 'repeat(16, minmax(0, 1fr))',
       },
