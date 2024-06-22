@@ -1,5 +1,3 @@
-import { Navbar } from "./Navbar"
-
 import logo from '../assets/images/logo.png';
 import projects_create from '../assets/images/cover/projects_create.png'
 import projects_sync from '../assets/images/cover/projects_sync.png'

@@ -43,7 +43,6 @@ export function TaskWrapper(
             .catch(err => console.log(err))
     }, [])
 
-    // TODO:
     useEffect(() => {
         if(newProj) setProjectList([...projectList, newProj])
     }, [newProj])

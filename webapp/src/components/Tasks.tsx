@@ -2,14 +2,12 @@ import { Navbar } from "./Navbar";
 
 import calendarIcon from '../assets/images/calendar.svg';
 
-import { ChangeEvent, useContext, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { ProjectData } from "../conf";
 import { formatTime, MILLIS_A_DAY } from "../utils";
 import { SvgChevronLeft, SvgChevronRight } from "./common";
 import { NewProjectModal } from "./Projects";
 import { TaskWrapper } from "./TaskWrapper";
-import { AuthContext } from "../App";
-import { About } from "./About";
 
 /* Tasks Page */
 export default function Tasks(){
@@ -18,8 +16,6 @@ export default function Tasks(){
     const [showNewProj, setShowNewProj] = useState(false);
     // To render newly added project titles after adding NewProject on TaskPage
     const [newProj, setnewProj] = useState<ProjectData | undefined>(undefined);
-    // Whether the user is authenticated
-    const auth = useContext(AuthContext);
 
     // After adding a new project, it is reflected in TaskWrapper
     const onProjectCreate = (p: ProjectData) => {
@@ -92,8 +88,8 @@ export function TaskContainer(
                         text-dark text-lg font-medium
                     ">{formatTime(date, 'full')}</h3>
                     <div className="flex gap-3">
-                        <SvgChevronLeft clickHandler={()=>prevDay()}/>
-                        <SvgChevronRight clickHandler={()=>nextDay()}/>
+                        <SvgChevronLeft clickHandler={()=>prevDay()} />
+                        <SvgChevronRight clickHandler={()=>nextDay()} />
                     </div>
                 </div>
             </nav>
