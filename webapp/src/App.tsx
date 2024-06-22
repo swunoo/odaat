@@ -4,7 +4,7 @@ import Tasks from "./components/Tasks"
 import { Homepapge } from "./Homepage"
 import { createContext, useEffect, useState } from "react"
 import { LoadingVeil } from "./components/common"
-import { About } from "./About"
+import { About } from "./components/About"
 import { PUBLIC_API } from "./conf"
 
 export interface SyncContextType { sync: boolean, setSync: (value: boolean) => void; }
@@ -45,18 +45,18 @@ function App() {
       <SyncContext.Provider value={ { sync, setSync } }>
         {loading && <LoadingVeil />}
         <BrowserRouter>
-          <div className={appStyle}>
-            { authenticated ?
-              <Routes>
-                <Route path="/home" element={<Homepapge />} />
-                <Route path="/tasks" element={<Tasks />} />
-                <Route path="/projects" element={<Projects />} />
-                <Route path="/" element={<Tasks />} />
-              </Routes>
-              :
-              <About />
-            }
-          </div>
+          { authenticated ?
+            <div className={appStyle}>
+                <Routes>
+                  <Route path="/home" element={<Homepapge />} />
+                  <Route path="/tasks" element={<Tasks />} />
+                  <Route path="/projects" element={<Projects />} />
+                  <Route path="/" element={<Tasks />} />
+                </Routes>
+            </div>
+            :
+            <About />
+          }
         </BrowserRouter>
       </SyncContext.Provider>
     </AuthContext.Provider>

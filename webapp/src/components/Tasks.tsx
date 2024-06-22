@@ -9,7 +9,7 @@ import { SvgChevronLeft, SvgChevronRight } from "./common";
 import { NewProjectModal } from "./Projects";
 import { TaskWrapper } from "./TaskWrapper";
 import { AuthContext } from "../App";
-import { About } from "../About";
+import { About } from "./About";
 
 /* Tasks Page */
 export default function Tasks(){
