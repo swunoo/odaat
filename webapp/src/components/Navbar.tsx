@@ -4,6 +4,7 @@ import backlogLogo from '../assets/images/backlog-logo.png'
 import { AuthContext, LoadingContext, SyncContext } from '../App';
 import { BACKLOG_API, LOGOUT_API, USER_API } from '../conf';
 import { Button } from './common';
+import { useCookies } from 'react-cookie';
 
 type NavProps = { active: string }
 
@@ -19,13 +20,16 @@ export function Navbar({ active }: NavProps) {
     const loadingContext = useContext(LoadingContext);
     const auth = useContext(AuthContext);
 
+    const [cookies] = useCookies(['XSRF-TOKEN']);
+
     const login = () => {
         window.location.href = USER_API;
     }
 
     const logout = () => {
         fetch(LOGOUT_API, {
-            method: 'GET', credentials: 'include'
+            method: 'POST', credentials: 'include',
+            headers: { 'X-XSRF-TOKEN': cookies['XSRF-TOKEN'] } 
         })
             .then(res => res.json())
             .then(response => {

@@ -110,7 +110,7 @@ export default function Projects() {
                 <h2 className="text-lg capitalize">Projects</h2>
                 <NewProjButton clickHandler={addProject} />
             </header>
-            <main className="grid grid-cols-2 gap-10 py-5 max-h-65 2xl:max-h-75 overflow-scroll">
+            <main className="grid grid-cols-3 gap-10 py-5 max-h-65 2xl:max-h-75 overflow-scroll">
                 {projects.map((proj, i) => (
                     <ProjectBlock
                         key={proj.id}
@@ -268,8 +268,11 @@ export function NewProjectModal(
                 bg-white p-10 rounded-lg 
             ">
 
-                <label className={label}>Category</label>
-                <input className={input} name="categoryId" defaultValue={1}></input>
+                {/* TODO: Category management is yet to be added on the frontend. */}
+                <div className="hidden">
+                    <label className={label}>Category</label>
+                    <input className={input} name="categoryId" defaultValue={1}></input>
+                </div>
 
                 <label className={label}>Title</label>
                 {
@@ -315,7 +318,7 @@ export function NewProjectModal(
 
                 <label className={label}>Description</label>
                 <textarea
-                    rows={6}
+                    rows={3}
                     name="description"
                     className={input + ' col-span-4'}
                     defaultValue={data ? data.description : ''}></textarea>

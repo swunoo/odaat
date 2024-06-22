@@ -2,7 +2,7 @@ import { Navbar } from "./Navbar";
 
 import calendarIcon from '../assets/images/calendar.svg';
 
-import { useContext, useState } from "react";
+import { ChangeEvent, useContext, useRef, useState } from "react";
 import { ProjectData } from "../conf";
 import { formatTime, MILLIS_A_DAY } from "../utils";
 import { SvgChevronLeft, SvgChevronRight } from "./common";
@@ -38,10 +38,7 @@ export default function Tasks(){
             }
 
             <Navbar active="tasks"/>
-            {  auth?.authenticated
-               ? <TaskContainer newProj={newProj} setShowNewProj={setShowNewProj} />
-               : <About />
-            }
+            <TaskContainer newProj={newProj} setShowNewProj={setShowNewProj} />
         </div>
     )
 }
@@ -55,19 +52,29 @@ export function TaskContainer(
     // Date of the Tasks to display
     const [date, setDate] = useState(new Date())
 
+    // Datepicker calendar icon at the top
+    const dateInputRef = useRef<HTMLInputElement>(null);
+
     // When "Add Project" button is clicked, show NewProject modal
     const addProject = () => {
         setShowNewProj(true)
     }
 
     // When the left chevron is clicked, decrement the date
-    const prevDay = () => {
-        setDate(new Date(date.getTime() - MILLIS_A_DAY))
-    }
+    const prevDay = () => setDate(new Date(date.getTime() - MILLIS_A_DAY))
 
     // When the right chevron is clicked, increment the date
-    const nextDay = () => {
-        setDate(new Date(date.getTime() + MILLIS_A_DAY))
+    const nextDay = () => setDate(new Date(date.getTime() + MILLIS_A_DAY))
+
+    // Open date picker when the calendar icon is clicked
+    const openDatePicker = () => dateInputRef.current?.showPicker()
+
+    // Set the date when a new date is chosen from the calendar icon
+    const dateChanged = () => {
+        const newDate = dateInputRef.current?.value;
+        if(newDate){
+            setDate(new Date(newDate));
+        }
     }
 
     return (
@@ -77,7 +84,10 @@ export function TaskContainer(
                 flex justify-between px-5 py-3 bg-accent2
             ">
                 <div className="flex gap-8 items-center">
-                    <img src={calendarIcon} alt="Change Date" />
+
+                    <img className="cursor-pointer" onClick={openDatePicker} src={calendarIcon} alt="Change Date" />
+                    <input className="hidden" type="date" ref={dateInputRef} onChange={dateChanged} />
+
                     <h3 className="
                         text-dark text-lg font-medium
                     ">{formatTime(date, 'full')}</h3>

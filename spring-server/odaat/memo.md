@@ -30,3 +30,5 @@ org.springframework.web.client.ResourceAccessException: I/O error on PATCH reque
 - Request Validation
 - API versioning
 - Scalability
+- Responsiveness
+- JavaScript's datetime mess
