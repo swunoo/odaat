@@ -34,18 +34,19 @@ org.springframework.web.client.ResourceAccessException: I/O error on PATCH reque
 - JavaScript's datetime mess
 
 ### For Robustness and Scalability
-- Validate Requests
-- Version APIs
+- Refactor the code <---
 
 ### For Maintainability
-- Expand unit tests
-- Add specifications and end-to-end tests <---
+- Expand unit tests <--- DONE
+- Add specifications and end-to-end tests <--- DONE
 
 ### For Compatibility
-- Containerize the application
+- Containerize the application <--- DONE, should be checked again after refactorings
 
-### New Features
+### Further Features
 - Make the webapp more responsive
+- Validate Requests
+- Version APIs
 
 ### Further Learning
 - Scalability
