@@ -57,7 +57,9 @@ public class TaskController {
             @RequestParam(value = "projectId", required = false) Integer projectId,
             @RequestParam(value = "date", required = false) LocalDate date) {
 
-        return taskService.findAll(projectId, date).stream()
+        String userId = authService.getCurrentUserId();
+
+        return taskService.findAll(projectId, date, userId).stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }

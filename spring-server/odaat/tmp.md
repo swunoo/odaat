@@ -1,1 +1,0 @@
-- Close the blank page after backlog's oauth2 login.

@@ -48,14 +48,16 @@ public class ProjectController {
 
     @GetMapping("/get") // Get all
     public List<ProjectResponse> getAllProjects() {
-        return projectService.findAll().stream()
+        String userId = authService.getCurrentUserId();
+        return projectService.findAll(userId).stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
     
     @GetMapping("/getIdName") // Get all Ids and Names
     public List<ProjectIdAndName> getProjectIdAndNames() {
-        return projectService.findAll().stream()
+        String userId = authService.getCurrentUserId();
+        return projectService.findAll(userId).stream()
                 .map(project -> new ProjectIdAndName(project.getId(), project.getName()))
                 .collect(Collectors.toList());
     }
@@ -99,7 +101,12 @@ public class ProjectController {
     }
 
     @DeleteMapping("/delete/{id}") // Delete
-    public ResponseEntity<Void> deleteProject(@PathVariable Integer id) {
+    public ResponseEntity<?> deleteProject(@PathVariable Integer id) {
+        // At least one project must remain.
+        String userId = authService.getCurrentUserId();
+        if(projectService.countProjects(userId) < 1){
+            return ResponseEntity.badRequest().build();
+        }
         projectService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

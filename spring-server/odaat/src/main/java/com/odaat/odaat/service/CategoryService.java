@@ -1,12 +1,17 @@
 package com.odaat.odaat.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.odaat.odaat.model.Category;
+import com.odaat.odaat.model.Project;
+import com.odaat.odaat.model.Uzer;
+import com.odaat.odaat.model.enums.Priority;
+import com.odaat.odaat.model.enums.ProjectStatus;
 import com.odaat.odaat.repository.CategoryRepository;
 
 /*
@@ -18,11 +23,8 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    @Autowired
-    private AuthService authService;
-
-    public List<Category> findAll() {
-        return categoryRepository.findAll();
+    public List<Category> findAll(String userId) {
+        return categoryRepository.findByUzerId(userId);
     }
 
     public Optional<Category> findById(Integer id) {
@@ -33,6 +35,10 @@ public class CategoryService {
         return categoryRepository.save(category);
     }
 
+    public Integer countCategories(String userId){
+        return categoryRepository.countByUserId(userId);
+    }
+
     public void deleteById(Integer id) {
         categoryRepository.deleteById(id);
     }
@@ -41,15 +47,21 @@ public class CategoryService {
         return categoryRepository.existsById(id);
     }
 
-    // Categories are not yet supported by the client, so a default is used.
-    public Category getDefaultCategory(){
-        String currUserId = authService.getCurrentUserId();
-        Optional<Category> category = categoryRepository.findByUzerId(currUserId);
-        if(category.isPresent()) return category.get();
+    public Category saveDefault(Uzer uzer) {
+        Category category = new Category();
+        category.setUzer(uzer);
+        category.setName("Default");
+        return categoryRepository.save(category);
+    }
 
-        Category defaultCategory = new Category();
-        defaultCategory.setName("Default");
-        defaultCategory.setUzer(authService.getCurrentUser());
-        return categoryRepository.save(defaultCategory);
+    // Categories are not yet supported by the client, so a default is used.
+    public Category getDefaultCategory(String currUserId) {
+        List<Category> categories = categoryRepository.findByUzerId(currUserId);
+
+        if(categories == null || categories.isEmpty()){
+            throw new NoSuchElementException("No category found");
+        }
+
+        return categories.get(0);
     }
 }

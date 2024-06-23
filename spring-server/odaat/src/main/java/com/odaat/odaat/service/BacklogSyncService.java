@@ -47,7 +47,7 @@ public class BacklogSyncService {
     public void getTokenAndSave(Map<String, String> requestBody, BacklogAuth currentToken) throws Exception {
 
             // 1. Make token request
-            Object tokenResponseObject = restTemplate.postForObject(backlog.getTokenUri(), requestBody, Object.class);
+            Object tokenResponseObject = restTemplate.postForObject(backlog.getTokenApi(), requestBody, Object.class);
 
             // 2. Parse access token for required data (access token, refresh token, expiry)
             Map<String, Object> tokenResponse = (Map<String, Object>) tokenResponseObject;
@@ -75,7 +75,7 @@ public class BacklogSyncService {
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
         ResponseEntity<?> response = restTemplate.exchange(
-                backlog.getOwnUser(),
+                backlog.getOwnUserApi(),
                 HttpMethod.GET,
                 entity,
                 String.class);
@@ -117,7 +117,7 @@ public class BacklogSyncService {
 
         // 1. Sync Projects
         response = restTemplate.exchange(
-                backlog.getProjects(),
+                backlog.getProjectsApi(),
                 HttpMethod.GET,
                 entity,
                 new ParameterizedTypeReference<List<Map<String, String>>>() {});
@@ -133,7 +133,7 @@ public class BacklogSyncService {
 
         // 2. Sync issues
         response = restTemplate.exchange(
-                backlog.getIssues(),
+                backlog.getIssuesApi(),
                 HttpMethod.GET,
                 entity,
                 String.class);
@@ -209,7 +209,7 @@ public class BacklogSyncService {
 
         String body = "actualHours=" + actualHours;
         HttpEntity<String> entity = new HttpEntity<>(body, headers);
-        String url = backlog.getIssues() + "/" + task.getSyncId();
+        String url = backlog.getIssuesApi() + "/" + task.getSyncId();
 
         try {
             restTemplate.exchange(

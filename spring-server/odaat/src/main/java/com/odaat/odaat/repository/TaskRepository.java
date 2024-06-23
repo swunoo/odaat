@@ -30,18 +30,16 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
         @Param("userId") String userId
     );
 
-    @Query("SELECT t FROM Task t WHERE t.project.id = :projectId AND t.syncId = :syncId AND t.uzer.id = :userId ORDER BY t.startTime DESC")
+    @Query("SELECT t FROM Task t WHERE t.project.id = :projectId AND t.syncId = :syncId ORDER BY t.startTime DESC")
     List<Task> findByProjectIdAndSyncId(
         @Param("projectId") Integer projectId,
-        @Param("syncId") Integer syncId,
-        @Param("userId") String userId
+        @Param("syncId") Integer syncId
     );
 
-    @Query("SELECT SUM(t.durationHr) FROM Task t WHERE t.status = 'COMPLETED' AND t.project.id = :projectId AND t.syncId = :syncId AND t.uzer.id = :userId")
+    @Query("SELECT SUM(t.durationHr) FROM Task t WHERE t.status = 'COMPLETED' AND t.project.id = :projectId AND t.syncId = :syncId")
     Double getTotalHoursSpent(
         @Param("projectId") Integer projectId,
-        @Param("syncId") Integer syncId,
-        @Param("userId") String userId
+        @Param("syncId") Integer syncId
     );
 
     @Modifying

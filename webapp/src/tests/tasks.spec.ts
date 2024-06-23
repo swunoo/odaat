@@ -22,6 +22,18 @@ test.describe('Tests for the Tasks page', () => {
 
         // Perform login
         await login(page);
+
+        // Add a project
+        await page.goto('/projects');
+        await page.click('text=New Project');
+        await expect(page.locator('text=Confirm')).toBeVisible();
+        await expect(page.locator('text=Cancel')).toBeVisible();
+
+        const mockProjectName = 'Mock' + Date.now();
+        const mockProjectDescription = 'Lorem Ipsum'
+        await page.fill('input[name="name"]', mockProjectName);
+        await page.fill('textarea[name="description"]', mockProjectDescription);
+        await page.click('text=Confirm');
     });
 
     test('Navigation buttons shown and work', async () => {

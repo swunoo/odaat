@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.odaat.odaat.model.BacklogAuth;
+import com.odaat.odaat.model.Category;
 import com.odaat.odaat.model.Uzer;
 
 @Service
@@ -18,6 +19,10 @@ public class AuthService {
 
     @Autowired
     private UzerService uzerService;
+    @Autowired
+    private CategoryService categoryService;
+    @Autowired
+    private ProjectService projectService;
 
     // BacklogAuth data for each user
     Map<String, BacklogAuth> backlogAccess;
@@ -33,14 +38,29 @@ public class AuthService {
         Optional<Uzer> uzer = uzerService.findById(currUserId);
         if(uzer.isPresent()) return uzer.get();
 
-        Uzer newUzer = new Uzer();
-        newUzer.setId(currUserId);
-        return uzerService.save(newUzer);
+        return createNewUzer(currUserId);
     }
 
     public String getCurrentUserId(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return auth.getName();
+        String originalName = auth.getName();
+        String cleanedName = originalName.replaceAll("\\|", "_"); // Cleaned special characters
+        return cleanedName;
+    }
+
+    private Uzer createNewUzer(String id){
+        // Create a new uzer based on user id
+        Uzer newUzer = new Uzer();
+        newUzer.setId(id);
+        uzerService.save(newUzer);
+
+        // Add a default category
+        Category newCategory = categoryService.saveDefault(newUzer);
+
+        // Add a default project
+        projectService.saveDefault(newUzer, newCategory);
+
+        return newUzer;
     }
 
     public void initToken(String userId, BacklogAuth token){

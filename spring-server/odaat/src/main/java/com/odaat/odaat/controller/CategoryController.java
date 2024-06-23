@@ -45,7 +45,8 @@ public class CategoryController {
 
     @GetMapping("/get") // Get all
     public List<CategoryResponse> getAllCategories() {
-        return categoryService.findAll().stream()
+        String userId = authService.getCurrentUserId();
+        return categoryService.findAll(userId).stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
@@ -91,6 +92,11 @@ public class CategoryController {
 
     @DeleteMapping("/delete/{id}") // Delete
     public ResponseEntity<Void> deleteCategory(@PathVariable Integer id) {
+        // At least one category must remain.
+        String userId = authService.getCurrentUserId();
+        if(categoryService.countCategories(userId) < 1){
+            return ResponseEntity.badRequest().build();
+        }
         categoryService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

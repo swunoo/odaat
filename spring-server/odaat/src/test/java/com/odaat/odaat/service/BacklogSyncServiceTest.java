@@ -73,7 +73,7 @@ public class BacklogSyncServiceTest {
         Map<String, Object> userData = Map.of("id", 123);
 
         // Mock the backlog.getOwnUser() to return the specific URL
-        when(backlog.getOwnUser()).thenReturn(url);
+        when(backlog.getOwnUserApi()).thenReturn(url);
 
         // Mock the RestTemplate exchange method to return the JSON response
         HttpHeaders headers = new HttpHeaders();
@@ -110,7 +110,7 @@ public class BacklogSyncServiceTest {
         tokenResponse.put("expires_in", 3600);
 
         when(restTemplate.postForObject(anyString(), any(), any(Class.class))).thenReturn(tokenResponse);
-        when(backlog.getTokenUri()).thenReturn("https://api.example.com/oauth/token");
+        when(backlog.getTokenApi()).thenReturn("https://api.example.com/oauth/token");
 
         doAnswer(invocation -> {
             return "123"; // Mocking getUserId method to return "123"
@@ -162,8 +162,8 @@ public class BacklogSyncServiceTest {
         String issuesResponse = "[{\"id\": \"1\", \"projectId\": \"1\", \"summary\": \"Issue1\", \"status\": {\"name\": \"Open\"}, \"assignee\": {\"id\": \"userId\"}, \"priority\": {\"id\": 2}, \"estimatedHours\": \"10\", \"actualHours\": \"5\"}]";
         ResponseEntity<String> issuesEntity = ResponseEntity.ok(issuesResponse);
 
-        when(backlog.getProjects()).thenReturn("https://api.example.com/projects");
-        when(backlog.getIssues()).thenReturn("https://api.example.com/issues");
+        when(backlog.getProjectsApi()).thenReturn("https://api.example.com/projects");
+        when(backlog.getIssuesApi()).thenReturn("https://api.example.com/issues");
         when(restTemplate.exchange(eq("https://api.example.com/projects"), eq(HttpMethod.GET), eq(entity), any(ParameterizedTypeReference.class)))
                 .thenReturn(projectsEntity);
         when(restTemplate.exchange(eq("https://api.example.com/issues"), eq(HttpMethod.GET), eq(entity), eq(String.class)))

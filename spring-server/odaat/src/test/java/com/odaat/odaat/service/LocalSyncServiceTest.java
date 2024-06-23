@@ -54,7 +54,8 @@ public class LocalSyncServiceTest {
         existingProject.setSyncId(1);
         existingProject.setName("Old Project Name");
         
-        when(projectService.getProjectBySyncId(externalProject.getId())).thenReturn(Optional.of(existingProject));
+        when(authService.getCurrentUserId()).thenReturn("1");
+        when(projectService.getProjectBySyncId(externalProject.getId(), "1")).thenReturn(Optional.of(existingProject));
         
         localSync.updateLocalProjects(List.of(externalProject));
         
@@ -64,13 +65,17 @@ public class LocalSyncServiceTest {
     
     @Test
     void testUpdateLocalProjects_newProject() {
+        Uzer uzer = new Uzer();
+        uzer.setId("1");
+        
         ProjectIdAndName externalProject = new ProjectIdAndName();
         externalProject.setId(2);
         externalProject.setName("New Project");
-        
-        when(projectService.getProjectBySyncId(externalProject.getId())).thenReturn(Optional.empty());
-        when(authService.getCurrentUser()).thenReturn(new Uzer());
-        when(categoryService.getDefaultCategory()).thenReturn(new Category());
+
+        when(authService.getCurrentUserId()).thenReturn("1");
+        when(projectService.getProjectBySyncId(externalProject.getId(), "1")).thenReturn(Optional.empty());
+        when(authService.getCurrentUser()).thenReturn(uzer);
+        when(categoryService.getDefaultCategory("1")).thenReturn(new Category());
         
         localSync.updateLocalProjects(List.of(externalProject));
         
@@ -96,7 +101,8 @@ public class LocalSyncServiceTest {
         task3.setDurationHr(1.0);
         task3.setStatus(TaskStatus.PLANNED);
         
-        when(projectService.getProjectBySyncId(issue.getProjectId())).thenReturn(Optional.of(project));
+        when(authService.getCurrentUserId()).thenReturn("1");
+        when(projectService.getProjectBySyncId(issue.getProjectId(), "1")).thenReturn(Optional.of(project));
         when(taskService.getTasksByProjectIdAndSyncId(project.getId(), issue.getId())).thenReturn(List.of(task1, task2, task3));
         
         localSync.updateLocalTasks(List.of(issue));
