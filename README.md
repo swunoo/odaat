@@ -1,5 +1,7 @@
 # ODAAT - Personal Task Management Tool
 
+![Logo](./webapp/src/assets/images/logo.png)
+
 <section>
     <img style="height:18px;" src="./readme_images/scala.png" />
     <span style="">&nbsp; Scala &nbsp; &nbsp; &nbsp; </span>
