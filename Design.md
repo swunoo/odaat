@@ -1,12 +1,3 @@
-# Design (V1.0, 2024/06/08)
-
-- Usually, basic design documents, detailed design documents, screen design documents, etc. are created.
-- However, to speed up development for this project, I will only make brief documentation for UI, API, and Database designs.
-
-## UI Design
-- Designs for three main screens are as follows.
-- These are just to visualize the idea with the details subject to change.
-
 *Design available upon request*
 
 ## API Design
@@ -31,7 +22,6 @@
 | P05 | PUT | /updateStatus/:id?{status} |  | 200 Project, 400 |
 | P07 | DELETE | /delete/:id |  | 200, 400 |
 | Bg01 | GET | /sync |  | 200, 403 |
-
 
 ### Entities
 | Endpoint ID | Entity | Prefix |
