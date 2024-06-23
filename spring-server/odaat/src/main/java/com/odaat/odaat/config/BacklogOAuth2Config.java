@@ -5,6 +5,10 @@ import org.springframework.stereotype.Component;
 
 import lombok.Data;
 
+/*
+ * Hold configuration data for communicating with Backlog.
+ * Reference: https://developer.nulab.com/docs/backlog/
+ */
 @Data
 @Component
 public class BacklogOAuth2Config {
@@ -23,10 +27,6 @@ public class BacklogOAuth2Config {
     @Value("${backlog.oauth2.redirect-uri}")
     private String redirectUri;
 
-    /*
-      Backlog APIs used in this project.
-      Ref: https://developer.nulab.com/docs/backlog/
-     */
     public String getTokenApi() { return appRoot + "/api/v2/oauth2/token"; }
     public String getProjectsApi() { return appRoot + "/api/v2/projects"; }
     public String getIssuesApi() { return appRoot + "/api/v2/issues"; }

@@ -1,13 +1,14 @@
 ![Logo](./readme_images/demo/logo.png)
 
 ---
-# Odaat Version 1.0.0 | 2024 June 23
+# Odaat Version 1.0.0 | 2024 June 24
 ---
 
 **[日本語]**
 
 ## 目次
 - 概要
+- アプリケーション
 - 機能
 - 技術
 - デザイン
@@ -15,10 +16,18 @@
 - 追加開発
 
 ## 概要
+- このプロジェクトは、現在の開発スキルを示すために作成されました。
+- フロントエンドはTypeScript（React）、バックエンドはJava（Spring）を使用したフルスタックプロジェクトです。
+- フルタイムの仕事やその他の責任があるため、最も慣れている技術スタックを選び、迅速に進めて多くのことを行えるようにしました。
+- 2024年6月7日から2024年6月24日までの間に、約80時間の作業を費やしました。
+- 改善の余地はありますが、このアプリケーションは機能的で、テスト可能で、保守も容易です。
+- もっと時間があれば、**追加開発** セクションで言及した課題に取り組みたいと思います。
+
+## アプリケーション
 - 個人向けの管理アプリケーションで、**プロジェクト**、**タスク**、**日常のToDo** を整理できます。
 - **プロジェクト** は長期間の仕事や繰り返し行う活動です。プロフェッショナルや個人の業務を含みます。例えば、*"マーケティングキャンペーンの作成"*, *"アプリの開発"*, *"毎日の運動"* などがあります。
-- **タスク** はプロジェクトの完了に向けて一回の作業で行える小さな作業です。例えば、*"キービジュアルのデザイン"*, *"ユニットテストの作成"*, *"散歩に行く"* などがあります。
-- 持続的な改善の哲学から、このアプリケーションは **"Odaat"**、つまり **"一日一日"** と名付けられました。
+- **タスク** はプロジェクトの完了に向けて一回の作業で行える小さな作業です。例えば、*"キービジュアルのデザイン"*, *"テストの作成"*, *"散歩に行く"* などがあります。
+- 持続的な改善の哲学から、このアプリケーションは **"Odaat"**、つまり *"One-day-at-a-time (一日一日)"* と名付けられました。
 
 ## 機能
 - ユーザーはメールとパスワード、またはGoogleアカウントでログイン／サインアップ／ログアウトできます。
@@ -36,12 +45,12 @@
 ![同期](./readme_images/demo/projects_sync.png)
 
 ## 技術
-- バックエンド: **Java** (Spring Boot, Spring Security, Spring Data)
-- フロントエンド: **TypeScript** (React)
-- UI: TailwindCSS
-- テスト: JUnit, Jest, Playwright
-- データベース: MySQL
-- その他: Docker, Flyway, auth0
+- バックエンド:    **Java** (Spring Boot, Spring Security, Spring Data)
+- フロントエンド:  **TypeScript** (React)
+- UI:            TailwindCSS
+- テスト:         JUnit, Jest, Playwright
+- データベース:    MySQL
+- その他:         Docker, Flyway, auth0
 
 ## セットアップ
 ### 必要条件
@@ -57,7 +66,7 @@
 - Webアプリケーションは `localhost:5173` でアクセスできます。
 
 ### テスト
-- 単体テストや統合テストは `./run-test.sh` で実行できます（もし 'permission denied' の場合は `chmod +x ./run-dev.sh` で権限を与えます）。
+- 単体テストや統合テストは `./run-test.sh` で実行できます。
 
 ## 追加開発
 ### フロントエンド
@@ -85,12 +94,21 @@
 
 ## Table of Contents
 - About
+- Application
 - Functionalities
 - Technologies
 - Setup
 - Further Development
 
 ## About
+- This project is built to show my development skills at the moment.
+- It is a full stack project, with TypeScript (React) for the frontend and Java (Spring) for the backend.
+- As I have a full time job and other responsibilities besides this, I chose the most familiar tech stack so that I could move fast and do more things.
+- It took around 80 hours of work, which I spent from 2024 June 7 to 2024 June 24.
+- Although there is still room for improvement, the application is functional, testable, and maintainable.
+- If I had more time, I would work on the issues mentioned in the **Further Development** section.
+
+## Application
 - A personal management application that can be used to organize your work into **projects**, **tasks**, and **daily todos**.
 - "Projects" are long term work, or repetitive activities. They can include both professional and personal work. Some examples would be *"Create a Marketing Campaign"*, *"Build MyApp"*, or *"Excersise Daily"*.
 - "Tasks" are small chunks of work that can be done in one sitting towards the completion of a certain project. Some examples would be *"Design the Key Visual"*, *"Write Unit Tests"*, or *"Go for a Walk"*.
@@ -133,7 +151,7 @@
 - Web application can be accessed on `localhost:5173`.
 
 ### Testing
-- Unit and integration tests can be executed with `./run-test.sh` (if 'permission denied', give permissions with `chmod +x ./run-dev.sh`).
+- Unit and integration tests can be executed with `./run-test.sh`.
 
 ## Further Development
 ### Frontend

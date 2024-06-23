@@ -8,8 +8,8 @@ import { Carousel, Footer } from "./common"
 import { USER_API } from "../conf"
 
 /*
-    About Page  "/"
-    - Shown when the user is unauthenticated.
+    # About Page
+    Shown at "/" when the user is unauthenticated.
 */
 export function About() {
 

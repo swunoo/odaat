@@ -44,7 +44,7 @@ public class Project extends BaseModel {
     @JoinColumn(name = "category_id", nullable = true)
     private Category category;
 
-    private Integer syncId;
+    private Integer syncId; // Id of the external project (e.g. Backlog's project id)
 
     private String name;
     private String description;
