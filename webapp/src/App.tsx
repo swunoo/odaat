@@ -16,7 +16,7 @@ export const LoadingContext = createContext<LoadingContextType | undefined>(unde
 
 export default function App() {
 
-  const appStyle = 'bg-primary min-h-screen'
+  const appStyle = 'bg-primary min-h-screen max-h-screen'
 
   const [ sync, setSync ] = useState<boolean>(false);
   const [ authenticated, setAuthenticated ] = useState<boolean>(false);

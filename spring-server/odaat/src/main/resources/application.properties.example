@@ -1,0 +1,32 @@
+spring.application.name=odaat
+server.port=9000
+
+# Okta
+okta.oauth2.issuer=
+okta.oauth2.client-id=
+okta.oauth2.client-secret=
+
+# Database Connection
+spring.datasource.url=
+spring.datasource.username=
+spring.datasource.password=
+
+# Client Application
+client.url=http://localhost:5173
+
+# Backlog OAuth2
+backlog.app.root=
+backlog.oauth2.client-id=
+backlog.oauth2.client-secret=
+backlog.oauth2.redirect-uri=
+backlog.oauth2.authorization-uri=/OAuth2AccessRequest.action
+backlog.oauth2.token-uri=/api/v2/oauth2/token
+
+# JDBC and Hibernate
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+# spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
+
+# Flyway
+flyway.enabled=true
+flyway.baseline-on-migrate=true

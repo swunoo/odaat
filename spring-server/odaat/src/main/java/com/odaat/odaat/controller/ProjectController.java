@@ -72,7 +72,7 @@ public class ProjectController {
         }
     }
 
-    @PostMapping("add") // Create
+    @PostMapping("/add") // Create
     public ResponseEntity<?> createProject(@Valid @RequestBody ProjectRequest projectRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
