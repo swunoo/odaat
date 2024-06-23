@@ -32,15 +32,19 @@ class ProjectServiceTest {
     @Mock
     private TaskService taskService;
 
+    @Mock
+    private AuthService authService;
+
     @InjectMocks
     private ProjectService projectService;
 
     @Test
     void testFindAll() {
         Project project = new Project();
+        when(authService.getCurrentUserId()).thenReturn("1");
         when(projectRepository.findAll()).thenReturn(Collections.singletonList(project));
 
-        List<Project> projects = projectService.findAll();
+        List<Project> projects = projectService.findAll("1");
         assertEquals(1, projects.size());
         verify(projectRepository, times(1)).findAll();
     }

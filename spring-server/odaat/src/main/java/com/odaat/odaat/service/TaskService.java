@@ -19,12 +19,8 @@ public class TaskService {
 
     @Autowired
     private TaskRepository taskRepository;
-
-    @Autowired
-    private AuthService authService;
     
-    public List<Task> findAll(Integer projectId, LocalDate date){
-        String currentUserId = authService.getCurrentUserId();
+    public List<Task> findAll(Integer projectId, LocalDate date, String currentUserId){
         if(date != null){
             return taskRepository.findByDate(date.atTime(LocalTime.MIN), date.atTime(LocalTime.MAX), currentUserId);
         }
@@ -56,11 +52,11 @@ public class TaskService {
     }
 
     public List<Task> getTasksByProjectIdAndSyncId(Integer projectId, Integer syncId){
-        return taskRepository.findByProjectIdAndSyncId(projectId, syncId, authService.getCurrentUserId());
+        return taskRepository.findByProjectIdAndSyncId(projectId, syncId);
     }
 
     public Double getTotalHoursSpent(Integer projectId, Integer syncId){
-        return taskRepository.getTotalHoursSpent(projectId, syncId, authService.getCurrentUserId());
+        return taskRepository.getTotalHoursSpent(projectId, syncId);
     }
 
 }

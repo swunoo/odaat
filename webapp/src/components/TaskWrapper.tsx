@@ -61,6 +61,10 @@ export function TaskWrapper(
 
     // When "Add Task" button is clicked, init a new Task
     const addTask = () => {
+        if(!initTask.project) {
+            alert('Please add a project first.')
+            return;
+        }
         setTasks([...tasks, initTask])
     }
 
@@ -97,7 +101,7 @@ export function TaskWrapper(
     }
 
     return (
-        <div className="">
+        <div className={project ? "overflow-scroll" : ""}>
             <div>
                 {
                     tasks.map((t, idx) => (

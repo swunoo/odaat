@@ -59,13 +59,14 @@ class CategoryControllerTest {
     @Test
     void testGetAllCategories() throws Exception {
         Category category = MockUtil.mockInstance(Category.class);
-        when(categoryService.findAll()).thenReturn(List.of(category));
+        when(categoryService.findAll("1")).thenReturn(List.of(category));
+        when(authService.getCurrentUserId()).thenReturn("1");
 
         mockMvc.perform(get("/api/category/get"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name").value(category.getName()));
 
-        verify(categoryService, times(1)).findAll();
+        verify(categoryService, times(1)).findAll("1");
     }
 
     @Test

@@ -57,12 +57,14 @@ class ProjectControllerTest {
 
     @Test
     void testGetAllProjects() throws Exception {
-        when(projectService.findAll()).thenReturn(Collections.singletonList(new Project()));
+        when(authService.getCurrentUserId()).thenReturn("1");
+
+        when(projectService.findAll("1")).thenReturn(Collections.singletonList(new Project()));
 
         mockMvc.perform(get("/api/project/get"))
                 .andExpect(status().isOk());
 
-        verify(projectService, times(1)).findAll();
+        verify(projectService, times(1)).findAll("1");
     }
 
     @Test

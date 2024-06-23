@@ -1,9 +1,12 @@
 package com.odaat.odaat.controller;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,6 +68,9 @@ public class SyncController {
     AuthService authService;
     @Autowired
     BacklogSyncService backlogSync;
+
+    @Value("${client.url}")
+    private String clientApplicationUrl;
 
     @GetMapping("/api/sync/backlog/on")
     public ResponseEntity<?> syncWithBacklog() {
@@ -139,9 +145,11 @@ public class SyncController {
             // 3. Send the request and update currentToken via the service
             backlogSync.getTokenAndSave(tokenRequest, currentToken);
 
-            return new ResponseEntity<>(new RedirectView("/"), HttpStatus.OK);
-            
-            // return ResponseEntity.ok().body(Map.of("message", "Login successful. Please close this tab."));
+            // 4. Close the browser tab
+            String html = "<html><body><script type=\"text/javascript\">window.close();</script></body></html>";
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Type", "text/html");
+            return new ResponseEntity<>(html, headers, HttpStatus.OK);
 
         } catch (Exception e) {
             e.printStackTrace();

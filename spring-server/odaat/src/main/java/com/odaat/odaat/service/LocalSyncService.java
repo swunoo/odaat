@@ -27,9 +27,10 @@ public class LocalSyncService {
 
     // Sync external projects into the database
     public void updateLocalProjects(List<ProjectIdAndName> externalProjects){
+        String userId = authService.getCurrentUserId();
         Optional<Project> project;
         for(ProjectIdAndName externalProject : externalProjects){
-            project = projectService.getProjectBySyncId(externalProject.getId());
+            project = projectService.getProjectBySyncId(externalProject.getId(), userId);
             // If project exists, we check the name and update if the name has changed.
             if(project.isPresent()){
                 Project existingProject = project.get();
@@ -45,7 +46,7 @@ public class LocalSyncService {
                 newProject.setSyncId(externalProject.getId());
                 newProject.setName(externalProject.getName());
                 newProject.setSource(Source.BACKLOG);
-                newProject.setCategory(categoryService.getDefaultCategory());
+                newProject.setCategory(categoryService.getDefaultCategory(userId));
                 projectService.save(newProject);
             }
         }
@@ -54,6 +55,8 @@ public class LocalSyncService {
     // Sync external tasks into the database
     public void updateLocalTasks(List<BacklogIssue> issues){
 
+        String userId = authService.getCurrentUserId();
+
         Project project;
         List<Task> tasks;
         // For each issue,
@@ -61,7 +64,7 @@ public class LocalSyncService {
 
             // Extract its related tasks
             // 1. get the related project
-            project = projectService.getProjectBySyncId(issue.getProjectId()).orElseThrow();
+            project = projectService.getProjectBySyncId(issue.getProjectId(), userId).orElseThrow();
             // 2. use the projectId and issueId to get tasks
             tasks = taskService.getTasksByProjectIdAndSyncId(project.getId(), issue.getId());
             // 3. Adjust the balance between incompleted tasks' hour and issue's hour

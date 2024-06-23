@@ -27,9 +27,9 @@ public class BacklogOAuth2Config {
       Backlog APIs used in this project.
       Ref: https://developer.nulab.com/docs/backlog/
      */
-    private String tokenUri = appRoot + "/api/v2/oauth2/token";
-    private String projects = appRoot + "/api/v2/projects";
-    private String issues = appRoot + "/api/v2/issues";
-    private String ownUser = appRoot + "/api/v2/users/myself";
+    public String getTokenApi() { return appRoot + "/api/v2/oauth2/token"; }
+    public String getProjectsApi() { return appRoot + "/api/v2/projects"; }
+    public String getIssuesApi() { return appRoot + "/api/v2/issues"; }
+    public String getOwnUserApi() { return appRoot + "/api/v2/users/myself"; }
 
 }

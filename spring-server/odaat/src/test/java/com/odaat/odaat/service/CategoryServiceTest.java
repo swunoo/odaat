@@ -35,9 +35,9 @@ class CategoryServiceTest {
     @Test
     void testFindAll() {
         Category category = new Category();
-        when(categoryRepository.findAll()).thenReturn(Collections.singletonList(category));
+        when(categoryRepository.findByUzerId("1")).thenReturn(Collections.singletonList(category));
 
-        List<Category> categories = categoryService.findAll();
+        List<Category> categories = categoryService.findAll("1");
         assertEquals(1, categories.size());
         verify(categoryRepository, times(1)).findAll();
     }

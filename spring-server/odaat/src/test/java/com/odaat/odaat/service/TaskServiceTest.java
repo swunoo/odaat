@@ -45,7 +45,7 @@ class TaskServiceTest {
         when(authService.getCurrentUserId()).thenReturn("1");
         when(taskRepository.findByProjectId(projectId, "1")).thenReturn(List.of(task));
 
-        List<Task> tasks = taskService.findAll(projectId, null);
+        List<Task> tasks = taskService.findAll(projectId, null, "1");
         assertEquals(1, tasks.size());
         verify(taskRepository, times(1)).findByProjectId(projectId, "1");
     }
@@ -59,7 +59,7 @@ class TaskServiceTest {
         when(authService.getCurrentUserId()).thenReturn("1");
         when(taskRepository.findByDate(start, end, "1")).thenReturn(List.of(task));
 
-        List<Task> tasks = taskService.findAll(null, date);
+        List<Task> tasks = taskService.findAll(null, date, "1");
         assertEquals(1, tasks.size());
         verify(taskRepository, times(1)).findByDate(start, end, "1");
     }

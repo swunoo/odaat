@@ -11,7 +11,7 @@ type NavProps = { active: string }
 export const baseStyle = 'uppercase text-sm w-20 py-1 text-center';
 export const activeStyle = ' bg-secondary text-white font-medium';
 
-const MAX_POLL = 5;
+const MAX_POLL = 5, POLL_INTERVAL = 3000;
 let poll_count = 0;
 
 export function Navbar({ active }: NavProps) {
@@ -67,7 +67,7 @@ export function Navbar({ active }: NavProps) {
                         } else {
                             syncWithBacklog();
                         }
-                    }, 3000);
+                    }, POLL_INTERVAL);
 
                 } else {
                     poll_count = 0;

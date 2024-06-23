@@ -61,26 +61,28 @@ class TaskControllerTest {
     void testGetTasksByProject() throws Exception {
         Task task = MockUtil.mockInstance(Task.class);
         Integer projectId = task.getProject().getId();
-        when(taskService.findAll(projectId, null)).thenReturn(List.of(task));
+        when(taskService.findAll(projectId, null, "1")).thenReturn(List.of(task));
+        when(authService.getCurrentUserId()).thenReturn("1");
 
         mockMvc.perform(get("/api/task/get?projectId=" + projectId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].description").value(task.getDescription()));
 
-        verify(taskService, times(1)).findAll(projectId, null);
+        verify(taskService, times(1)).findAll(projectId, null, "1");
     }
 
     @Test
     void testGetTasksByDate() throws Exception {
         Task task = MockUtil.mockInstance(Task.class);
         LocalDate date = task.getStartTime().toLocalDate();
-        when(taskService.findAll(null, date)).thenReturn(List.of(task));
+        when(taskService.findAll(null, date, "1")).thenReturn(List.of(task));
+        when(authService.getCurrentUserId()).thenReturn("1");
 
         mockMvc.perform(get("/api/task/get?date=" + date))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].description").value(task.getDescription()));
 
-        verify(taskService, times(1)).findAll(null, date);
+        verify(taskService, times(1)).findAll(null, date, "1");
     }
 
     @Test
