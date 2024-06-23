@@ -37,7 +37,7 @@ public class Task extends BaseModel {
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 
-    private Integer syncId;
+    private Integer syncId; // Id of the external issue (e.g. Backlog's issue id)
 
     private String description;
 

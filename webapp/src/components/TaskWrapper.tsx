@@ -1,5 +1,3 @@
-/* Methods and component of TaskBlocks, used by both Tasks.tsx and Projects.tsx */
-
 import { useEffect, useState } from "react"
 import menuIcon from '../assets/images/menu.svg'
 import { PROJECT_API, ProjectData, TASK_API, TaskData, TaskRequest } from "../conf"

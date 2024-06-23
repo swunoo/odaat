@@ -6,13 +6,21 @@ import { LoadingVeil } from "./components/common"
 import { About } from "./components/About"
 import { PUBLIC_API } from "./conf"
 
-export interface SyncContextType { sync: boolean, setSync: (value: boolean) => void; }
-export interface AuthContextType { authenticated: boolean, setAuthenticated: (value: boolean) => void; }
-export interface LoadingContextType { loading: boolean, setLoading: (value: boolean) => void; }
+/* Application Contexts */
 
+// Whether the data is synced (with Backlog)
+export interface SyncContextType { sync: boolean, setSync: (value: boolean) => void; }
 export const SyncContext = createContext<SyncContextType | undefined>(undefined);
+
+// Whether the user is authenticated
+export interface AuthContextType { authenticated: boolean, setAuthenticated: (value: boolean) => void; }
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+// Whether the application is in a "Loading" state
+export interface LoadingContextType { loading: boolean, setLoading: (value: boolean) => void; }
 export const LoadingContext = createContext<LoadingContextType | undefined>(undefined);
+
+/* Application Entry Point */
 
 export default function App() {
 

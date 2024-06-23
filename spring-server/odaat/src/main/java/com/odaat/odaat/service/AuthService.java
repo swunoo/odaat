@@ -14,6 +14,7 @@ import com.odaat.odaat.model.BacklogAuth;
 import com.odaat.odaat.model.Category;
 import com.odaat.odaat.model.Uzer;
 
+/* Handle authentication data and access codes */
 @Service
 public class AuthService {
 

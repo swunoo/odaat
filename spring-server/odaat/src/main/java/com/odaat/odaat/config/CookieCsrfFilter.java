@@ -12,7 +12,7 @@ import java.io.IOException;
  /*
    Spring Security 6 doesn't set a XSRF-TOKEN cookie by default.
    So, it is added in this filter.
-   Ref: https://github.com/spring-projects/spring-security/issues/12141#issuecomment-1321345077
+   Reference: https://github.com/spring-projects/spring-security/issues/12141#issuecomment-1321345077
   */
 public class CookieCsrfFilter extends OncePerRequestFilter {
   @Override

@@ -23,9 +23,6 @@ import com.odaat.odaat.model.Uzer;
 import com.odaat.odaat.service.UzerService;
 
 /*
-    #   UNDER DEVELOPMENT.
-    #   USER PROFILES ARE NOT AVAILABLE YET IN v1.0.
-   
    Controller for the "Uzer" entity.
    1. Endpoints
    - Update name, Delete.

@@ -1,3 +1,5 @@
+/* Utility functions and values */
+
 // number of miliseconds in a day
 export const MILLIS_A_DAY = 86400000; 
 
