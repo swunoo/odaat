@@ -12,21 +12,27 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.odaat.odaat.dto.request.CategoryRequest;
 import com.odaat.odaat.dto.request.UzerNameUpdateRequest;
-import com.odaat.odaat.dto.response.CategoryResponse;
 import com.odaat.odaat.dto.response.UzerResponse;
-import com.odaat.odaat.model.Category;
 import com.odaat.odaat.model.Uzer;
-import com.odaat.odaat.service.AuthService;
 import com.odaat.odaat.service.UzerService;
 
+/*
+    #   UNDER DEVELOPMENT.
+    #   USER PROFILES ARE NOT AVAILABLE YET IN v1.0.
+   
+   Controller for the "Uzer" entity.
+   1. Endpoints
+   - Update name, Delete.
+   
+   2. DTO and Entity conversion
+   - Entity -> DTO
+ */
 @RestController
 @RequestMapping("/api/uzer")
 public class UzerController {
@@ -34,25 +40,10 @@ public class UzerController {
     @Autowired
     private UzerService uzerService;
 
-    @GetMapping
-    public List<UzerResponse> getAllUzers() {
-        return uzerService.findAll().stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
-    }
+    /* 1. Endpoints */
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UzerResponse> getUzerById(@PathVariable Integer id) {
-        Optional<Uzer> uzer = uzerService.findById(id);
-        if (!uzer.isPresent()) {
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.ok(convertToDto(uzer.get()));
-        }
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateUzerName(@PathVariable Integer id, @Valid @RequestBody UzerNameUpdateRequest uzerRequest, BindingResult bindingResult) {
+    @PutMapping("/{id}") // Update name
+    public ResponseEntity<?> updateUzerName(@PathVariable String id, @Valid @RequestBody UzerNameUpdateRequest uzerRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         }
@@ -69,14 +60,15 @@ public class UzerController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUzer(@PathVariable Integer id) {
+    @DeleteMapping("/{id}") // Delete
+    public ResponseEntity<Void> deleteUzer(@PathVariable String id) {
         uzerService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
-    // DTO and Entity Conversion
-    public UzerResponse convertToDto(Uzer uzer) {
+    /* 2. DTO and Entity conversion */
+
+    public UzerResponse convertToDto(Uzer uzer) { // Uzer to UzerResponse
         return new UzerResponse(uzer.getName(), uzer.getEmail(), uzer.getCreatedAt());
     }
 }

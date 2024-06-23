@@ -1,14 +1,15 @@
 package com.odaat.odaat.utils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.odaat.odaat.dto.BacklogIssue;
-import com.odaat.odaat.model.enums.Priority;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.core.type.TypeReference;
-
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+/*
+ * Custom simple utility class to parse Json responses from APIs.
+ */
 public class JsonUtil {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 

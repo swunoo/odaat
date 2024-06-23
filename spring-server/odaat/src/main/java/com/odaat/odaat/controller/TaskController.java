@@ -11,7 +11,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,15 +29,19 @@ import com.odaat.odaat.model.Task;
 import com.odaat.odaat.model.enums.TaskStatus;
 import com.odaat.odaat.service.AuthService;
 import com.odaat.odaat.service.BacklogSyncService;
-import com.odaat.odaat.service.LocalSyncService;
 import com.odaat.odaat.service.TaskService;
 
+/*
+   Controller for the "Task" entity.
+   1. Endpoints
+   - Get all, Get One, Create, Update, Update status, Delete.
+   
+   2. DTO and Entity conversion
+   - Entity -> DTO, DTO -> Entity
+ */
 @RestController
 @RequestMapping("/api/task")
-// @CrossOrigin // Delete if it's still working fine.
 public class TaskController {
-
-    // TODO: return only tasks for the user
 
     @Autowired
     private TaskService taskService;
@@ -47,18 +50,19 @@ public class TaskController {
     @Autowired
     private BacklogSyncService backlogSync;
 
-    @GetMapping("/get")
+    /* 1. Endpoints */
+
+    @GetMapping("/get") // Get all by date and/or project
     public List<TaskResponse> getAllTasks(
-        @RequestParam(value = "projectId", required = false) Integer projectId,
-        @RequestParam(value = "date", required = false) LocalDate date
-    ) {
+            @RequestParam(value = "projectId", required = false) Integer projectId,
+            @RequestParam(value = "date", required = false) LocalDate date) {
 
         return taskService.findAll(projectId, date).stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/detail/{id}")
+    @GetMapping("/detail/{id}") // Get one
     public ResponseEntity<TaskResponse> getTaskById(@PathVariable Integer id) {
         Optional<Task> task = taskService.findById(id);
         if (!task.isPresent()) {
@@ -68,26 +72,27 @@ public class TaskController {
         }
     }
 
-    @PostMapping("/add")
+    @PostMapping("/add") // Create
     public ResponseEntity<?> createTask(@Valid @RequestBody TaskRequest taskRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         }
-        
+
         Task task = convertToEntity(taskRequest);
         Task savedTask = taskService.save(task);
         return ResponseEntity.ok(convertToDto(savedTask));
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateTask(@PathVariable Integer id, @Valid @RequestBody TaskRequest taskRequest, BindingResult bindingResult) {
+    @PutMapping("/update/{id}") // Update
+    public ResponseEntity<?> updateTask(@PathVariable Integer id, @Valid @RequestBody TaskRequest taskRequest,
+            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         }
-        
+
         if (!taskService.existsById(id)) {
             return ResponseEntity.badRequest().build();
-            
+
         } else {
             Task task = convertToEntity(taskRequest);
             task.setId(id);
@@ -96,23 +101,22 @@ public class TaskController {
         }
     }
 
-    @PutMapping("/updateStatus/{id}")
+    @PutMapping("/updateStatus/{id}") // Update completion status
     public ResponseEntity<?> updateTask(
-        @PathVariable Integer id, @RequestParam TaskStatus status
-    ) {
+            @PathVariable Integer id, @RequestParam TaskStatus status) {
 
         Optional<Task> taskOptional = taskService.findById(id);
-        
+
         if (taskOptional.isEmpty()) {
             return ResponseEntity.badRequest().build();
-            
+
         } else {
             Task task = taskOptional.get();
             task.setStatus(status);
             task = taskService.save(task);
 
             // If the task is from an external app, it is synced if applicable.
-            if(task.getSyncId() != null){
+            if (task.getSyncId() != null) {
                 try {
                     backlogSync.syncTaskToBacklog(task);
                 } catch (Exception e) {
@@ -125,14 +129,15 @@ public class TaskController {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}") // Delete
     public ResponseEntity<Void> deleteTask(@PathVariable Integer id) {
         taskService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
-    // DTO and Entity Conversion
-    public TaskResponse convertToDto(Task task) {
+    /* 2. DTO and Entity conversion */
+
+    public TaskResponse convertToDto(Task task) { // Task to TaskResponse
         TaskResponse taskResponse = new TaskResponse();
         BeanUtils.copyProperties(task, taskResponse);
         ProjectResponse projectResponse = new ProjectResponse();
@@ -142,8 +147,7 @@ public class TaskController {
         return taskResponse;
     }
 
-    public Task convertToEntity(TaskRequest taskRequest) {
-
+    public Task convertToEntity(TaskRequest taskRequest) { // TaskRequest to Task
         Task task = new Task();
         BeanUtils.copyProperties(taskRequest, task);
         task.setUzer(authService.getCurrentUser());

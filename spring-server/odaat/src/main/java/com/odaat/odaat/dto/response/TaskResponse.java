@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TaskResponse {
-    
     private Integer id;
     private ProjectResponse project;
     private String description;
@@ -23,5 +22,4 @@ public class TaskResponse {
     private Double durationHr;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
 }

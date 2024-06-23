@@ -14,7 +14,7 @@ import com.odaat.odaat.model.Task;
 import com.odaat.odaat.model.enums.Source;
 import com.odaat.odaat.model.enums.TaskStatus;
 
-/* Update local data according to external data. */
+/* Update local data based on the external data. */
 @Service
 public class LocalSyncService {
     @Autowired AuthService authService;
@@ -51,6 +51,7 @@ public class LocalSyncService {
         }
     }
 
+    // Sync external tasks into the database
     public void updateLocalTasks(List<BacklogIssue> issues){
 
         Project project;

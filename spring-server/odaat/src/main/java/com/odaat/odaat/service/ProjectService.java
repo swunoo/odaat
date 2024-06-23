@@ -6,11 +6,12 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.odaat.odaat.dto.ProjectIdAndName;
 import com.odaat.odaat.model.Project;
-import com.odaat.odaat.model.enums.Source;
 import com.odaat.odaat.repository.ProjectRepository;
 
+/*
+    Service layer for the "Project" entity.
+ */
 @Service
 public class ProjectService {
 

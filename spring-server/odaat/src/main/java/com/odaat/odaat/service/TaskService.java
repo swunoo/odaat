@@ -2,30 +2,33 @@ package com.odaat.odaat.service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.odaat.odaat.dto.BacklogIssue;
-import com.odaat.odaat.model.Project;
 import com.odaat.odaat.model.Task;
-import com.odaat.odaat.model.enums.TaskStatus;
 import com.odaat.odaat.repository.TaskRepository;
 
+/*
+    Service layer for the "Task" entity.
+ */
 @Service
 public class TaskService {
 
     @Autowired
     private TaskRepository taskRepository;
+
+    @Autowired
+    private AuthService authService;
     
     public List<Task> findAll(Integer projectId, LocalDate date){
+        String currentUserId = authService.getCurrentUserId();
         if(date != null){
-            return taskRepository.findByDate(date.atTime(LocalTime.MIN), date.atTime(LocalTime.MAX));
+            return taskRepository.findByDate(date.atTime(LocalTime.MIN), date.atTime(LocalTime.MAX), currentUserId);
         }
-        return taskRepository.findByProjectId(projectId);
+        return taskRepository.findByProjectId(projectId, currentUserId);
     }
         
     public Optional<Task> findById(Integer id) {
@@ -53,11 +56,11 @@ public class TaskService {
     }
 
     public List<Task> getTasksByProjectIdAndSyncId(Integer projectId, Integer syncId){
-        return taskRepository.findByProjectIdAndSyncId(projectId, syncId);
+        return taskRepository.findByProjectIdAndSyncId(projectId, syncId, authService.getCurrentUserId());
     }
 
     public Double getTotalHoursSpent(Integer projectId, Integer syncId){
-        return taskRepository.getTotalHoursSpent(projectId, syncId);
+        return taskRepository.getTotalHoursSpent(projectId, syncId, authService.getCurrentUserId());
     }
 
 }

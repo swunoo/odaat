@@ -9,11 +9,17 @@ import org.springframework.stereotype.Service;
 import com.odaat.odaat.model.Category;
 import com.odaat.odaat.repository.CategoryRepository;
 
+/*
+    Service layer for the "Category" entity.
+ */
 @Service
 public class CategoryService {
 
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Autowired
+    private AuthService authService;
 
     public List<Category> findAll() {
         return categoryRepository.findAll();
@@ -35,8 +41,15 @@ public class CategoryService {
         return categoryRepository.existsById(id);
     }
 
-    // TODO: Save this DEFAULT in memory, and avoid calling database each time.
+    // Categories are not yet supported by the client, so a default is used.
     public Category getDefaultCategory(){
-        return categoryRepository.findById(1).orElse(new Category());
+        String currUserId = authService.getCurrentUserId();
+        Optional<Category> category = categoryRepository.findByUzerId(currUserId);
+        if(category.isPresent()) return category.get();
+
+        Category defaultCategory = new Category();
+        defaultCategory.setName("Default");
+        defaultCategory.setUzer(authService.getCurrentUser());
+        return categoryRepository.save(defaultCategory);
     }
 }

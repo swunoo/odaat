@@ -25,7 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.odaat.odaat.config.BacklogOAuth2Config;
-import com.odaat.odaat.model.AccessToken;
+import com.odaat.odaat.model.BacklogAuth;
 import com.odaat.odaat.service.AuthService;
 import com.odaat.odaat.service.BacklogSyncService;
 
@@ -44,17 +44,17 @@ public class SyncControllerTest {
     @InjectMocks
     private SyncController syncController;
 
-    private AccessToken validToken;
-    private AccessToken expiredToken;
+    private BacklogAuth validToken;
+    private BacklogAuth expiredToken;
 
     @BeforeEach
     public void setUp() {
-        validToken = new AccessToken();
+        validToken = new BacklogAuth();
         validToken.setToken("validToken");
         validToken.setUserId("userId");
         validToken.setExpiresAt(Instant.now().plusSeconds(3600)); // valid for 1 hour
 
-        expiredToken = new AccessToken();
+        expiredToken = new BacklogAuth();
         expiredToken.setToken("expiredToken");
         expiredToken.setUserId("userId");
         expiredToken.setRefreshToken("refreshToken");
@@ -82,7 +82,7 @@ public class SyncControllerTest {
 
         verify(backlogSyncService, times(1)).refreshToken(expiredToken);
         verify(backlogSyncService, times(1)).syncWithBacklog(expiredToken);
-        assertEquals(HttpStatus.FOUND, response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
@@ -92,7 +92,7 @@ public class SyncControllerTest {
         when(backlog.getAuthorizationUri()).thenReturn("authorize");
         when(backlog.getClientId()).thenReturn("clientId");
         when(backlog.getRedirectUri()).thenReturn("https://redirect.uri/");
-        when(authService.getCurrentUserId()).thenReturn(123);
+        when(authService.getCurrentUserId()).thenReturn("123");
 
         ResponseEntity<?> response = syncController.syncWithBacklog();
 
@@ -137,13 +137,13 @@ public class SyncControllerTest {
         when(backlog.getClientId()).thenReturn("clientId");
         when(backlog.getClientSecret()).thenReturn("clientSecret");
         when(backlog.getRedirectUri()).thenReturn("https://redirect.uri/");
-        doNothing().when(authService).initToken(eq(Integer.valueOf(state)), any(AccessToken.class));
-        doNothing().when(backlogSyncService).getTokenAndSave(eq(tokenRequest), any(AccessToken.class));
+        doNothing().when(authService).initToken(eq(state), any(BacklogAuth.class));
+        doNothing().when(backlogSyncService).getTokenAndSave(eq(tokenRequest), any(BacklogAuth.class));
 
         ResponseEntity<?> response = syncController.callback(code, state);
 
-        verify(authService, times(1)).initToken(eq(Integer.valueOf(state)), any(AccessToken.class));
-        verify(backlogSyncService, times(1)).getTokenAndSave(eq(tokenRequest), any(AccessToken.class));
+        verify(authService, times(1)).initToken(eq(state), any(BacklogAuth.class));
+        verify(backlogSyncService, times(1)).getTokenAndSave(eq(tokenRequest), any(BacklogAuth.class));
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
@@ -155,7 +155,7 @@ public class SyncControllerTest {
         when(backlog.getClientId()).thenReturn("clientId");
         when(backlog.getClientSecret()).thenReturn("clientSecret");
         when(backlog.getRedirectUri()).thenReturn("https://redirect.uri/");
-        doNothing().when(authService).initToken(eq(Integer.valueOf(state)), any(AccessToken.class));
+        doNothing().when(authService).initToken(eq(state), any(BacklogAuth.class));
         doThrow(new RuntimeException("Error")).when(backlogSyncService).getTokenAndSave(any(), any());
 
         ResponseEntity<?> response = syncController.callback(code, state);

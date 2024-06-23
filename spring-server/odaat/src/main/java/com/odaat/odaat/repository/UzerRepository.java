@@ -10,9 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.odaat.odaat.model.Uzer;
 
 @Repository
-public interface UzerRepository extends JpaRepository<Uzer, Integer> {
+public interface UzerRepository extends JpaRepository<Uzer, String> {
     @Modifying
     @Transactional
     @Query("UPDATE Uzer u SET u.isDeleted = TRUE, u.deletedAt = CURRENT_TIMESTAMP WHERE u.id = :id")
-    void softDelete(@Param("id") Integer id);
+    void softDelete(@Param("id") String id);
 }

@@ -25,6 +25,7 @@ import com.odaat.odaat.model.Category;
 import com.odaat.odaat.model.Project;
 import com.odaat.odaat.model.Uzer;
 
+/* Create mock objects for testing */
 public class MockUtil {
 
     public static <T> T mockInstance(Class<T> clazz) {
@@ -70,6 +71,6 @@ public class MockUtil {
         } else if (type.equals(Task.class) || type.equals(Project.class) || type.equals(Category.class) || type.equals(Uzer.class) || type.equals(TaskResponse.class) || type.equals(ProjectResponse.class) || type.equals(CategoryResponse.class) || type.equals(UzerResponse.class) || type.equals(TaskRequest.class) || type.equals(ProjectRequest.class) || type.equals(CategoryRequest.class) || type.equals(UzerNameUpdateRequest.class)  ) {
             return mockInstance(type);
         }
-        return null; // Return null for unsupported types
+        return null;
     }
 }

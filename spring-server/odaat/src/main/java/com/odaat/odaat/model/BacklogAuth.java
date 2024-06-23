@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class AccessToken {
+public class BacklogAuth {
 
     String userId;
     String token;

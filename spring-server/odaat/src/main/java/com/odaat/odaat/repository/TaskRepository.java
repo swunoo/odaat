@@ -17,27 +17,31 @@ import jakarta.transaction.Transactional;
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Integer> {
 
-    @Query("SELECT t FROM Task t WHERE t.project.id = :projectId")
+    @Query("SELECT t FROM Task t WHERE t.project.id = :projectId AND t.uzer.id = :userId")
     List<Task> findByProjectId(
-        @Param("projectId") Integer projectId
+        @Param("projectId") Integer projectId,
+        @Param("userId") String userId
     );
 
-    @Query("SELECT t FROM Task t WHERE t.startTime <= :dayEnd AND t.startTime >= :dayStart")
+    @Query("SELECT t FROM Task t WHERE t.startTime <= :dayEnd AND t.startTime >= :dayStart AND t.uzer.id = :userId")
     List<Task> findByDate(
         @Param("dayStart") LocalDateTime dayStart,
-        @Param("dayEnd") LocalDateTime dayEnd
+        @Param("dayEnd") LocalDateTime dayEnd,
+        @Param("userId") String userId
     );
 
-    @Query("SELECT t FROM Task t WHERE t.project.id = :projectId AND t.syncId = :syncId ORDER BY t.startTime DESC")
+    @Query("SELECT t FROM Task t WHERE t.project.id = :projectId AND t.syncId = :syncId AND t.uzer.id = :userId ORDER BY t.startTime DESC")
     List<Task> findByProjectIdAndSyncId(
         @Param("projectId") Integer projectId,
-        @Param("syncId") Integer syncId
+        @Param("syncId") Integer syncId,
+        @Param("userId") String userId
     );
 
-    @Query("SELECT SUM(t.durationHr) FROM Task t WHERE t.status = 'COMPLETED' AND t.project.id = :projectId AND t.syncId = :syncId")
+    @Query("SELECT SUM(t.durationHr) FROM Task t WHERE t.status = 'COMPLETED' AND t.project.id = :projectId AND t.syncId = :syncId AND t.uzer.id = :userId")
     Double getTotalHoursSpent(
         @Param("projectId") Integer projectId,
-        @Param("syncId") Integer syncId
+        @Param("syncId") Integer syncId,
+        @Param("userId") String userId
     );
 
     @Modifying
