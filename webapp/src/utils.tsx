@@ -1,22 +1,8 @@
 // number of miliseconds in a day
 export const MILLIS_A_DAY = 86400000; 
 
-export const numberInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    
-    if (
-        event.key !== null 
-        && !(event.key === '.' && !event.currentTarget.value.includes('.'))
-        && !['Backspace','Delete','ArrowLeft','ArrowRight'].includes(event.code)
-        && isNaN(Number(event.key))
-    ) {
-        event.preventDefault();
-    }
-
-    (event.target as HTMLInputElement).value += event.key
-};
-
+// Style of the menu buttons ("Edit", "Delete", "Cancel")
 export const menuBtnStyle = (option?: string) => {
-
     let hover = 'hover:bg-accent2';
     if(option === 'delete') hover = 'hover:bg-red-500 hover:text-white'
     else if(option === 'cancel') hover = 'hover:bg-gray hover:text-white'
@@ -33,6 +19,7 @@ export function getValue(id: string): string | null {
     return null;
 }
 
+// Given the ids of a date input and a time input, combine their values, use defaults when necessary, and return a Date
 export function combineDateAndTimeInput(dateId: string, timeId: string, fallback: Date): Date {
     let [date, time] = [getValue(dateId), getValue(timeId)]
 
@@ -48,12 +35,6 @@ export function combineDateAndTimeInput(dateId: string, timeId: string, fallback
     }
     
     return new Date(`${date}T${time}`);
-}
-
-// Cast it to a number, or return null
-export function numberOrNull(input: string){
-    if(input && input.length > 0) return (Number)(input)
-    return null
 }
 
 // Convert date to a formatted string
@@ -82,7 +63,7 @@ export function getTimeRange(date: Date, durationHr: number): string{
 // Generate a string formatted like the value of a date input
 export function getDateFormatted(date: Date): string {
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
   
     return `${year}-${month}-${day}`;

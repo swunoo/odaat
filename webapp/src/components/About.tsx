@@ -7,13 +7,15 @@ import tasks from '../assets/images/cover/tasks.png'
 import { Carousel, Footer } from "./common"
 import { USER_API } from "../conf"
 
+/*
+    About Page  "/"
+    - Shown when the user is unauthenticated.
+*/
 export function About() {
 
     const carouselImgs = [tasks, tasks_create, projects, projects_create, projects_sync];
 
-    const login = () => {
-        window.location.href = USER_API;
-    }
+    const login = () => window.location.href = USER_API;
 
     return (
         <div className="md:max-h-screen m-auto py-10 px-20">

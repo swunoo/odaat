@@ -120,6 +120,8 @@ class CategoryControllerTest {
     @Test
     void testDeleteCategory() throws Exception {
         doNothing().when(categoryService).deleteById(anyInt());
+        when(categoryService.countCategories("1")).thenReturn(2);
+        when(authService.getCurrentUserId()).thenReturn("1");
 
         mockMvc.perform(delete("/api/category/delete/1"))
                 .andExpect(status().isNoContent());

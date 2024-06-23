@@ -42,7 +42,6 @@ class TaskServiceTest {
     void testFindByProject() {
         Task task = MockUtil.mockInstance(Task.class);
         Integer projectId = task.getProject().getId();
-        when(authService.getCurrentUserId()).thenReturn("1");
         when(taskRepository.findByProjectId(projectId, "1")).thenReturn(List.of(task));
 
         List<Task> tasks = taskService.findAll(projectId, null, "1");
@@ -56,7 +55,6 @@ class TaskServiceTest {
         LocalDate date = task.getStartTime().toLocalDate();
         LocalDateTime start = date.atTime(LocalTime.MIN);
         LocalDateTime end = date.atTime(LocalTime.MAX);
-        when(authService.getCurrentUserId()).thenReturn("1");
         when(taskRepository.findByDate(start, end, "1")).thenReturn(List.of(task));
 
         List<Task> tasks = taskService.findAll(null, date, "1");

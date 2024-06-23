@@ -9,7 +9,13 @@ import { SvgChevronLeft, SvgChevronRight } from "./common";
 import { NewProjectModal } from "./Projects";
 import { TaskWrapper } from "./TaskWrapper";
 
-/* Tasks Page */
+/* 
+    # Tasks Page
+    Shown at: "/tasks"
+    Contains:
+        - Navbar
+        - TaskContainer 
+*/
 export default function Tasks(){
 
     // Whether to show the NewProject modal
@@ -39,7 +45,13 @@ export default function Tasks(){
     )
 }
 
-/* Container for the header and each Task */
+/* 
+    Container for the header and each Task
+    Used on the Tasks page
+    Contains:
+        -   Task header with date
+        -   TaskWrapper
+*/
 export function TaskContainer(
     {newProj, setShowNewProj}
     : {newProj?: ProjectData, setShowNewProj: (s: boolean)=>void}

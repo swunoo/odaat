@@ -1,3 +1,5 @@
+/* Config values and types */
+
 export const ROOT = 'http://localhost:9000/api'
 export const TASK_API = ROOT + '/task'
 export const PROJECT_API = ROOT + '/project'
@@ -11,7 +13,6 @@ export type Priority = 'LOWEST' | 'LOW' | 'MEDIUM' | 'HIGH' | 'HIGHEST';
 export type ProjectStatus = 'CREATED' | 'STARTED' | 'COMPLETED' | 'PAUSED' | 'STOPPED';
 
 export type TaskStatus = 'GENERATED' | 'PLANNED' | 'COMPLETED';
-
 
 export interface ProjectCategory {
     id: number,

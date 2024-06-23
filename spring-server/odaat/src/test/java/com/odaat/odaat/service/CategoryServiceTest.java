@@ -39,7 +39,7 @@ class CategoryServiceTest {
 
         List<Category> categories = categoryService.findAll("1");
         assertEquals(1, categories.size());
-        verify(categoryRepository, times(1)).findAll();
+        verify(categoryRepository, times(1)).findByUzerId("1");
     }
 
     @Test

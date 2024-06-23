@@ -4,9 +4,14 @@ import { useEffect, useState } from "react"
 import menuIcon from '../assets/images/menu.svg'
 import { PROJECT_API, ProjectData, TASK_API, TaskData, TaskRequest } from "../conf"
 import { combineDateAndTimeInput, formatTime, getTimeRange, getValue, menuBtnStyle } from "../utils"
-import { NewButton, NewTaskButton, VoidFunc } from "./common"
+import { PlusButton, NewTaskButton, VoidFunc } from "./common"
 import { useCookies } from "react-cookie"
 
+/*
+    Used by: Tasks, Projects
+    Contains:
+        - TaskBlock array for each block 
+ */
 export function TaskWrapper(
     { project, date, addProject, newProj }
         : { project?: ProjectData, date?: Date, addProject?: VoidFunc, newProj?: ProjectData }
@@ -128,7 +133,10 @@ export function TaskWrapper(
     )
 }
 
-/* Component of Each Task */
+/* 
+    Container of each Task
+    Elements have different styles based on whether they are shown on the Tasks page or the Projects page
+*/
 export function TaskBlock(
     { initData, projects, addProject, remover, taskSetter, isTaskPage }:
         { initData: TaskData, projects?: ProjectData[], addProject?: VoidFunc, remover: VoidFunc, taskSetter: (task: TaskData) => void, isTaskPage: boolean }) {
@@ -261,7 +269,7 @@ export function TaskBlock(
                                                 <option key={idx} value={proj.id}>{proj.name}</option>
                                             ))}
                                         </select>
-                                        {addProject && <NewButton label="New Project" clickHandler={addProject} />}
+                                        {addProject && <PlusButton label="New Project" clickHandler={addProject} />}
                                     </div>
                             }
 

@@ -1,7 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import Projects from "./components/Projects"
 import Tasks from "./components/Tasks"
-import { Homepapge } from "./Homepage"
 import { createContext, useEffect, useState } from "react"
 import { LoadingVeil } from "./components/common"
 import { About } from "./components/About"
@@ -15,7 +14,7 @@ export const SyncContext = createContext<SyncContextType | undefined>(undefined)
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const LoadingContext = createContext<LoadingContextType | undefined>(undefined);
 
-function App() {
+export default function App() {
 
   const appStyle = 'bg-primary min-h-screen'
 
@@ -23,6 +22,7 @@ function App() {
   const [ authenticated, setAuthenticated ] = useState<boolean>(false);
   const [ loading, setLoading ] = useState<boolean>(false);
 
+  // Check if the user is authenticated
   useEffect(() => {
     fetch(PUBLIC_API, {
         method: 'GET',
@@ -36,7 +36,8 @@ function App() {
         .catch(err => console.log(err))
 }, [])
 
-
+  // Show application pages and routes when authenticated.
+  // Show the About page when unauthenticated.
   return (
     <LoadingContext.Provider value={ { loading, setLoading } }>
       <AuthContext.Provider value={ { authenticated, setAuthenticated } }>
@@ -46,7 +47,6 @@ function App() {
           { authenticated ?
             <div className={appStyle}>
                 <Routes>
-                  <Route path="/home" element={<Homepapge />} />
                   <Route path="/tasks" element={<Tasks />} />
                   <Route path="/projects" element={<Projects />} />
                   <Route path="/" element={<Tasks />} />
@@ -61,5 +61,3 @@ function App() {
     </LoadingContext.Provider>
   )
 }
-
-export default App
