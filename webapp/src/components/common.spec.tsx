@@ -2,14 +2,14 @@ import { render, fireEvent } from '@testing-library/react';
 import {
   NewProjButton,
   NewTaskButton,
-  NewButton,
+  PlusButton,
   SvgChevronLeft,
   SvgChevronRight
 } from './common';
 
 describe('NewProjButton Component', () => {
   test('renders NewProjButton component', () => {
-    const onClick = jest.fn(); // mock function for clickHandler
+    const onClick = jest.fn();
 
     const { getByText } = render(<NewProjButton clickHandler={onClick} />);
 
@@ -23,7 +23,7 @@ describe('NewProjButton Component', () => {
 
 describe('NewTaskButton Component', () => {
   test('renders NewTaskButton component', () => {
-    const onClick = jest.fn(); // mock function for clickHandler
+    const onClick = jest.fn();
 
     const { getByText } = render(<NewTaskButton clickHandler={onClick} />);
 
@@ -37,9 +37,9 @@ describe('NewTaskButton Component', () => {
 
 describe('NewButton Component', () => {
   test('renders NewButton component', () => {
-    const onClick = jest.fn(); // mock function for clickHandler
+    const onClick = jest.fn();
 
-    const { getByText } = render(<NewButton label="New Project" clickHandler={onClick} />);
+    const { getByText } = render(<PlusButton label="New Project" clickHandler={onClick} />);
 
     const button = getByText('New Project');
     expect(button).toBeInTheDocument();
@@ -51,7 +51,7 @@ describe('NewButton Component', () => {
 
 describe('SvgChevronLeft Component', () => {
   test('renders SvgChevronLeft component', () => {
-    const onClick = jest.fn(); // mock function for clickHandler
+    const onClick = jest.fn();
 
     const { container } = render(<SvgChevronLeft clickHandler={onClick} />);
 
@@ -65,7 +65,7 @@ describe('SvgChevronLeft Component', () => {
 
 describe('SvgChevronRight Component', () => {
   test('renders SvgChevronRight component', () => {
-    const onClick = jest.fn(); // mock function for clickHandler
+    const onClick = jest.fn();
 
     const { container } = render(<SvgChevronRight clickHandler={onClick} />);
 

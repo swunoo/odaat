@@ -11,7 +11,14 @@ import { TaskWrapper } from "./TaskWrapper";
 import { useCookies } from "react-cookie";
 
 
-/* Projects Page */
+/*
+    # Projects Page
+    Shown at: "/projects"
+    Contains:
+        - Navbar
+        - Project header
+        - ProjectBlock array for each block 
+*/
 export default function Projects() {
 
     // Data of all projects
@@ -21,6 +28,7 @@ export default function Projects() {
     // Index of the currently-being-edited project
     const [editedProject, setEditedProject] = useState<number | null>(null)
 
+    // XSRF-TOKEN cookie
     const [cookies] = useCookies(['XSRF-TOKEN']);
 
     // Fetch all projects
@@ -74,20 +82,20 @@ export default function Projects() {
     // Re-render projects after CREATE/UPDATE
     const updateProjectData = (proj: ProjectData) => {
 
+        // Data to replace current projects
         const newProjects = [...projects]
 
+        // For UPDATE, that project data is edited
         if (editedProject !== null) {
-
             newProjects[editedProject] = proj
             setEditedProject(null)
 
+        // For CREATE, the new project data is added
         } else {
-
             newProjects.push(proj)
-
         }
 
-        // 3. Update the UI
+        // Update the UI
         setProjects(newProjects)
         setShowNewProj(false)
     }
@@ -124,7 +132,10 @@ export default function Projects() {
     )
 }
 
-/* Container of Each Project */
+/* 
+    Container of each Project
+    May contain TaskWrapper if Tasks are shown
+*/
 export function ProjectBlock(
     { data, editor, remover }:
         { data: ProjectData, editor: VoidFunc, remover: VoidFunc }
@@ -222,9 +233,6 @@ export function NewProjectModal(
         })
         newData.status = 'CREATED'
 
-        // Cast the duration into a double value
-        // newData['duration'] = numberOrNull(newData['duration'])
-
         const url = PROJECT_API + (data ? `/update/${data.id}` : '/add');
         const method = data ? 'PUT' : 'POST';
 
@@ -252,7 +260,7 @@ export function NewProjectModal(
             .catch(err => console.log(err))
     }
 
-    // Styles
+    // Common Styles
     const input = "col-span-3 px-2 py-1 border border-light"
     const label = "font-medium uppercase text-sm"
     const button = "rounded-lg text-white px-5 py-2 text-sm uppercase font-medium"

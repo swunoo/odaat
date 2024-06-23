@@ -118,6 +118,8 @@ class ProjectControllerTest {
     @Test
     void testDeleteProject() throws Exception {
         doNothing().when(projectService).deleteById(anyInt());
+        when(projectService.countProjects("1")).thenReturn(2);
+        when(authService.getCurrentUserId()).thenReturn("1");
 
         mockMvc.perform(delete("/api/project/delete/1"))
                 .andExpect(status().isNoContent());

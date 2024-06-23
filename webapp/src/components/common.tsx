@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import plusIcon from '../assets/images/plus.svg'
 
-/* Types */
+/* Common Types */
 export type VoidFunc = () => void;
 
-/* Components */
+/* Common Components */
 
+// Generic button
 export function Button(
     { label, clickHandler }:
         { label: string, clickHandler: VoidFunc }
@@ -18,6 +19,7 @@ export function Button(
     )
 }
 
+// Special button for "New Project"
 export function NewProjButton(
     { clickHandler }:
         { clickHandler: VoidFunc }
@@ -31,6 +33,7 @@ export function NewProjButton(
     )
 }
 
+// Special button for "New Task"
 export function NewTaskButton(
     { clickHandler }:
         { clickHandler: VoidFunc }
@@ -44,7 +47,8 @@ export function NewTaskButton(
     )
 }
 
-export function NewButton(
+// Special button without a border, and shown with a "+" sign.
+export function PlusButton(
     { label, clickHandler }:
         { label: string, clickHandler: VoidFunc }
 ) {
@@ -58,8 +62,10 @@ export function NewButton(
     )
 }
 
+// Common style for SvgChevronLeft and SvgChevronRight
 const svgBtnStyle = "h-fit bg-secondary fill-primary hover:bg-primary hover:fill-secondary rounded cursor-pointer"
 
+// Left-facing, clickable chevron
 export function SvgChevronLeft(
     { clickHandler }: { clickHandler: VoidFunc }
 ) {
@@ -70,6 +76,7 @@ export function SvgChevronLeft(
     )
 }
 
+// Right-facing, clickable chevron
 export function SvgChevronRight(
     { clickHandler }: { clickHandler: VoidFunc }
 ) {
@@ -80,6 +87,7 @@ export function SvgChevronRight(
     )
 }
 
+// Loading screen
 export function LoadingVeil() {
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50">
@@ -88,6 +96,7 @@ export function LoadingVeil() {
     )
 }
 
+// Image carousel
 export function Carousel({ images }: { images: string[] }) {
     const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -131,7 +140,8 @@ export function Carousel({ images }: { images: string[] }) {
     );
 }
 
-export function Footer(){
+// Footer with developer information
+export function Footer() {
     return (
         <footer className='absolute left-0 bottom-0 py-1 text-center text-sm w-full bg-primary'>
             swanoo © 2024

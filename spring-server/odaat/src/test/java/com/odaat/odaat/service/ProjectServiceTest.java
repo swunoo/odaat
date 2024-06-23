@@ -41,12 +41,11 @@ class ProjectServiceTest {
     @Test
     void testFindAll() {
         Project project = new Project();
-        when(authService.getCurrentUserId()).thenReturn("1");
-        when(projectRepository.findAll()).thenReturn(Collections.singletonList(project));
+        when(projectRepository.findByUzerId("1")).thenReturn(Collections.singletonList(project));
 
         List<Project> projects = projectService.findAll("1");
         assertEquals(1, projects.size());
-        verify(projectRepository, times(1)).findAll();
+        verify(projectRepository, times(1)).findByUzerId("1");
     }
 
     @Test
