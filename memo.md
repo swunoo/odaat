@@ -35,6 +35,9 @@ org.springframework.web.client.ResourceAccessException: I/O error on PATCH reque
 
 ### For Robustness and Scalability
 - Refactor the code <---
+    -   Refactor the code,
+    -   Run all tests again,
+    -   Write the documentation.
 
 ### For Maintainability
 - Expand unit tests <--- DONE
