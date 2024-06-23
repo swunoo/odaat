@@ -2,12 +2,8 @@ package com.odaat.odaat.dto.request;
 
 import java.time.LocalDateTime;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import org.springframework.validation.annotation.Validated;
 
 import com.odaat.odaat.model.enums.Priority;
 import com.odaat.odaat.model.enums.ProjectStatus;

@@ -31,7 +31,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import com.odaat.odaat.config.BacklogOAuth2Config;
-import com.odaat.odaat.model.AccessToken;
+import com.odaat.odaat.model.BacklogAuth;
 import com.odaat.odaat.utils.JsonUtil;
 
 @ExtendWith(MockitoExtension.class)
@@ -100,7 +100,7 @@ public class BacklogSyncServiceTest {
 
         BacklogSyncService mockSync = Mockito.spy(backlogSyncService);
 
-        AccessToken currentToken = new AccessToken();
+        BacklogAuth currentToken = new BacklogAuth();
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("grant_type", "client_credentials");
 
@@ -133,7 +133,7 @@ public class BacklogSyncServiceTest {
         tokenRequest.put("client_secret", "clientSecret");
         tokenRequest.put("refresh_token", "refreshToken");
 
-        AccessToken tokenObject = new AccessToken();
+        BacklogAuth tokenObject = new BacklogAuth();
         tokenObject.setRefreshToken("refreshToken");
         
         BacklogSyncService mockSync = Mockito.spy(backlogSyncService);
@@ -148,7 +148,7 @@ public class BacklogSyncServiceTest {
 
     @Test
     public void testSyncWithBacklog() throws Exception {
-        AccessToken tokenObject = new AccessToken();
+        BacklogAuth tokenObject = new BacklogAuth();
         tokenObject.setToken("accessToken");
         tokenObject.setUserId("userId");
 

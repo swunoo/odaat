@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import com.odaat.odaat.model.Uzer;
 import com.odaat.odaat.repository.UzerRepository;
 
+/*
+    Service layer for the "Uzer" entity.
+ */
 @Service
 public class UzerService {
 
@@ -19,7 +22,7 @@ public class UzerService {
         return uzerRepository.findAll();
     }
 
-    public Optional<Uzer> findById(Integer id) {
+    public Optional<Uzer> findById(String id) {
         return uzerRepository.findById(id);
     }
 
@@ -27,7 +30,8 @@ public class UzerService {
         return uzerRepository.save(uzer);
     }
 
-    public void deleteById(Integer id) {
+    public void deleteById(String id) {
         uzerRepository.softDelete(id);
     }
+
 }

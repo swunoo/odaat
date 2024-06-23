@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TaskRequest {
-
+    
     @NotNull
     @Min(1)
     private Integer projectId;
@@ -29,5 +29,4 @@ public class TaskRequest {
     @NotNull
     private LocalDateTime startTime;
     private Double durationHr;
-
 }

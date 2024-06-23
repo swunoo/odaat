@@ -1,6 +1,5 @@
 package com.odaat.odaat.service;
 
-import java.net.http.HttpClient;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
@@ -14,14 +13,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.odaat.odaat.config.BacklogOAuth2Config;
 import com.odaat.odaat.dto.BacklogIssue;
 import com.odaat.odaat.dto.ProjectIdAndName;
-import com.odaat.odaat.model.AccessToken;
+import com.odaat.odaat.model.BacklogAuth;
 import com.odaat.odaat.model.Task;
 import com.odaat.odaat.model.enums.Priority;
 import com.odaat.odaat.utils.JsonUtil;
@@ -45,9 +43,8 @@ public class BacklogSyncService {
     /*
      * Make a token request based on the request body, and save the response in currentToken.
      * Used in both fetching the first token, and refreshing expired tokens.
-     * TODO: Handle failed requests
      */
-    public void getTokenAndSave(Map<String, String> requestBody, AccessToken currentToken) throws Exception {
+    public void getTokenAndSave(Map<String, String> requestBody, BacklogAuth currentToken) throws Exception {
 
             // 1. Make token request
             Object tokenResponseObject = restTemplate.postForObject(backlog.getTokenUri(), requestBody, Object.class);
@@ -69,6 +66,9 @@ public class BacklogSyncService {
             currentToken.refreshData(accessToken, refreshToken, expiryTime);
     }
 
+    /* 
+        Use Backlog's API to get backlogUserId 
+    */
     public String getUserId(String token) throws Exception {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
@@ -87,9 +87,9 @@ public class BacklogSyncService {
     }
     
     /*
-     * Refresh existing token
+        Refresh an existing token
      */
-    public void refreshToken(AccessToken tokenObject) throws Exception {
+    public void refreshToken(BacklogAuth tokenObject) throws Exception {
 
         Map<String, String> tokenRequest = new HashMap<>();
         tokenRequest.put("grant_type", "refresh_token");
@@ -101,10 +101,11 @@ public class BacklogSyncService {
     }
 
     /*
+     * Update local database based on Backlog's data
      * 1. Fetch Project data from Backlog and update the local data
      * 2. Fetch Issue data from Backlog and update the local data
      */
-    public ResponseEntity<?> syncWithBacklog(AccessToken tokenObject) throws Exception {
+    public ResponseEntity<?> syncWithBacklog(BacklogAuth tokenObject) throws Exception {
 
         String token = tokenObject.getToken();
 
@@ -183,10 +184,16 @@ public class BacklogSyncService {
         return ResponseEntity.ok().body(Map.of("message", "success"));
     }
 
+    /*
+        UNDER DEVELOPMENT.
+        NOT AVAILABLE YET IN v1.0.
+
+        Update local tasks' data to Backlog's related issue.
+     */
     public void syncTaskToBacklog(Task task) throws Exception {
 
         // Return if either backlog or the task is unsynced.
-        AccessToken tokenObject = authService.getTokenObject();
+        BacklogAuth tokenObject = authService.getTokenObject();
         if (tokenObject == null || task.getSyncId() == null) return;
 
         // If the token has expired, it is refreshed.
@@ -205,15 +212,12 @@ public class BacklogSyncService {
         String url = backlog.getIssues() + "/" + task.getSyncId();
 
         try {
-            ResponseEntity<String> response = restTemplate.exchange(
+            restTemplate.exchange(
                     url,
                     HttpMethod.PATCH,
                     entity,
                     String.class);
 
-            System.out.println("Patched actualHours");
-            System.out.println(response.getBody());
-            
         } catch (Exception e) {
             e.printStackTrace();
         }

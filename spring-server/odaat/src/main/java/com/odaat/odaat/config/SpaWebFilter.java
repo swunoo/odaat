@@ -11,11 +11,14 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/*
+  Used to redirect routes, which are intended for the client, back to the client.
+ */
 public class SpaWebFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+            FilterChain filterChain) throws ServletException, IOException {
         String path = request.getRequestURI();
         Authentication user = SecurityContextHolder.getContext().getAuthentication();
         if (user != null && !path.startsWith("/api") && !path.contains(".") && path.matches("/(.*)")) {

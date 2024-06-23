@@ -32,6 +32,9 @@ class TaskServiceTest {
     @Mock
     private TaskRepository taskRepository;
 
+    @Mock
+    private AuthService authService;
+
     @InjectMocks
     private TaskService taskService;
 
@@ -39,11 +42,12 @@ class TaskServiceTest {
     void testFindByProject() {
         Task task = MockUtil.mockInstance(Task.class);
         Integer projectId = task.getProject().getId();
-        when(taskRepository.findByProjectId(projectId)).thenReturn(List.of(task));
+        when(authService.getCurrentUserId()).thenReturn("1");
+        when(taskRepository.findByProjectId(projectId, "1")).thenReturn(List.of(task));
 
         List<Task> tasks = taskService.findAll(projectId, null);
         assertEquals(1, tasks.size());
-        verify(taskRepository, times(1)).findByProjectId(projectId);
+        verify(taskRepository, times(1)).findByProjectId(projectId, "1");
     }
 
     @Test
@@ -52,11 +56,12 @@ class TaskServiceTest {
         LocalDate date = task.getStartTime().toLocalDate();
         LocalDateTime start = date.atTime(LocalTime.MIN);
         LocalDateTime end = date.atTime(LocalTime.MAX);
-        when(taskRepository.findByDate(start, end)).thenReturn(List.of(task));
+        when(authService.getCurrentUserId()).thenReturn("1");
+        when(taskRepository.findByDate(start, end, "1")).thenReturn(List.of(task));
 
         List<Task> tasks = taskService.findAll(null, date);
         assertEquals(1, tasks.size());
-        verify(taskRepository, times(1)).findByDate(start, end);
+        verify(taskRepository, times(1)).findByDate(start, end, "1");
     }
 
     @Test

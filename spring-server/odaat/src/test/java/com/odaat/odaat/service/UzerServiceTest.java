@@ -45,13 +45,13 @@ class UzerServiceTest {
     @Test
     void testFindById() {
         Uzer uzer = new Uzer();
-        uzer.setId(1);
-        when(uzerRepository.findById(anyInt())).thenReturn(Optional.of(uzer));
+        uzer.setId("1");
+        when(uzerRepository.findById(any())).thenReturn(Optional.of(uzer));
 
-        Optional<Uzer> foundUzer = uzerService.findById(1);
+        Optional<Uzer> foundUzer = uzerService.findById("1");
         assertTrue(foundUzer.isPresent());
-        assertEquals(1, foundUzer.get().getId());
-        verify(uzerRepository, times(1)).findById(anyInt());
+        assertEquals("1", foundUzer.get().getId());
+        verify(uzerRepository, times(1)).findById(any());
     }
 
     @Test
@@ -66,9 +66,9 @@ class UzerServiceTest {
 
     @Test
     void testDeleteById() {
-        doNothing().when(uzerRepository).softDelete(anyInt());
+        doNothing().when(uzerRepository).softDelete(any());
 
-        uzerService.deleteById(1);
-        verify(uzerRepository, times(1)).softDelete(anyInt());
+        uzerService.deleteById("1");
+        verify(uzerRepository, times(1)).softDelete(any());
     }
 }
