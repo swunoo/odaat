@@ -1,63 +1,156 @@
-# ODAAT - Personal Task Management Tool
+![Logo](./readme_images/demo/logo.png)
 
-![Logo](./webapp/src/assets/images/logo.png)
+---
+# Odaat Version 1.0.0 | 2024 June 23
+---
 
-<section>
-    <img style="height:18px;" src="./readme_images/scala.png" />
-    <span style="">&nbsp; Scala &nbsp; &nbsp; &nbsp; </span>
-    <img style="height:18px; " src="./readme_images/play.png" />
-    <span style="">&nbsp; Play &nbsp; &nbsp; &nbsp; </span>
-    <img style="height:18px; " src="./readme_images/js.png" />
-    <span style="">&nbsp; JavaScript &nbsp; &nbsp; &nbsp; </span>
-    <img style="height:18px; " src="./readme_images/ts.png" />
-    <span style="">&nbsp; TypeScript &nbsp; &nbsp; &nbsp; </span>
-    <img style="height:18px; " src="./readme_images/react.png" />
-    <span style="">&nbsp; React &nbsp; &nbsp; &nbsp; </span>
-    <img style="height:18px; " src="./readme_images/mysql.png" />
-    <span style="">&nbsp; MySQL &nbsp; &nbsp; &nbsp; </span>
-    <img style="height:18px; " src="./readme_images/docker.png" />
-    <span style="">&nbsp; Docker &nbsp; &nbsp; &nbsp; </span>
-</section>
+**[日本語]**
 
-## Features
+## 目次
+- 概要
+- 機能
+- 技術
+- デザイン
+- セットアップ
+- 追加開発
 
-### Tasks
-![Task Page](./readme_images/task.png)
-- Keep track of all tasks.
-- Oragnize tasks based on date and project.
-- View detailed tasks for each day.
+## 概要
+- 個人向けの管理アプリケーションで、**プロジェクト**、**タスク**、**日常のToDo** を整理できます。
+- **プロジェクト** は長期間の仕事や繰り返し行う活動です。プロフェッショナルや個人の業務を含みます。例えば、*"マーケティングキャンペーンの作成"*, *"アプリの開発"*, *"毎日の運動"* などがあります。
+- **タスク** はプロジェクトの完了に向けて一回の作業で行える小さな作業です。例えば、*"キービジュアルのデザイン"*, *"ユニットテストの作成"*, *"散歩に行く"* などがあります。
+- 持続的な改善の哲学から、このアプリケーションは **"Odaat"**、つまり **"一日一日"** と名付けられました。
 
-### Projects
-![Project Page](./readme_images/project.png)
-- Turn your long-term goals into doable chunks.
-- Create, update, and prioritize work.
-- Manage tasks based on different projects.
+## 機能
+- ユーザーはメールとパスワード、またはGoogleアカウントでログイン／サインアップ／ログアウトできます。
+![ログインページ](./readme_images/demo/login.png)
 
-### Progress
-![Progress Page](./readme_images/progress.png)
-- Update your progress with a single click.
-- Track completion dates and dues for each project.
-- Adjust daily tasks by moving them between dates.
+- ユーザーはプロジェクトを作成／更新／削除できます。
+![プロジェクトページ](./readme_images/demo/projects.png)
+![プロジェクトの作成](./readme_images/demo/projects_create.png)
+
+- ユーザーはタスクを作成／更新／削除できます。
+![タスクページ](./readme_images/demo/tasks.png)
+![タスクの作成](./readme_images/demo/tasks_create.png)
+
+- ユーザーはOAuth2を使用してBacklogのプロジェクトや課題をOdaatに同期させることができます。
+![同期](./readme_images/demo/projects_sync.png)
+
+## 技術
+- バックエンド: **Java** (Spring Boot, Spring Security, Spring Data)
+- フロントエンド: **TypeScript** (React)
+- UI: TailwindCSS
+- テスト: JUnit, Jest, Playwright
+- データベース: MySQL
+- その他: Docker, Flyway, auth0
+
+## セットアップ
+### 必要条件
+- JDK
+- Node
+- MySQL
+
+### 手順
+- `/spring-server/odaat/src/main/resources` に `application.properties` ファイルを作成します。
+- `/spring-server/odaat/src/main/resources/application.properties.example` のサンプルプロパティを追加します。
+- 必要な値を埋めます。
+- `./run-dev.sh` を実行します（もし 'permission denied' の場合は `chmod +x ./run-dev.sh` で権限を与えます）。
+- Webアプリケーションは `localhost:5173` でアクセスできます。
+
+### テスト
+- 単体テストや統合テストは `./run-test.sh` で実行できます（もし 'permission denied' の場合は `chmod +x ./run-dev.sh` で権限を与えます）。
+
+## 追加開発
+### フロントエンド
+- UIレスポンシブの改善。
+- 異なる `Date` フォーマットの対応。
+- さらにテ単体テストの追加。
+
+### バックエンド
+- 作成／更新リクエストのバリデーション。
+- APIのバージョニング。
+- さらにテ単体テストの追加。
+
+### 機能
+- ローカルデータをBacklogに同期する（例: タスクの完了が関連するBacklogの課題を更新する）。
+- プロジェクトの作成時に自動的にタスクを生成する。
+- 進捗状況の可視化。
+
+## その他の文書
+- 初期の概要 [[Brief (V1.0)]]
+- 初期の設計 [[設計書]]
+
+---
+
+**[ENG]**
+
+## Table of Contents
+- About
+- Functionalities
+- Technologies
+- Setup
+- Further Development
+
+## About
+- A personal management application that can be used to organize your work into **projects**, **tasks**, and **daily todos**.
+- "Projects" are long term work, or repetitive activities. They can include both professional and personal work. Some examples would be *"Create a Marketing Campaign"*, *"Build MyApp"*, or *"Excersise Daily"*.
+- "Tasks" are small chunks of work that can be done in one sitting towards the completion of a certain project. Some examples would be *"Design the Key Visual"*, *"Write Unit Tests"*, or *"Go for a Walk"*.
+- With the philosophy of consistently making incremental improvements, the application is named **"Odaat"**, or *"One Day at a Time"*.
+
+## Functionalities
+- User can login / signup / logout via with an email+password, or with a google account.
+![Login Page](./readme_images/demo/login.png)
+
+- User can create/update/delete projects.
+![Projects Page](./readme_images/demo/projects.png)
+![Create Project](./readme_images/demo/projects_create.png)
+
+- User can create/update/delete tasks.
+![Tasks Page](./readme_images/demo/tasks.png)
+![Create Tasks](./readme_images/demo/tasks_create.png)
+
+- User can synchronize projects and issues they have on Backlog with Odaat, via oauth2, to automatically generate projects and tasks.
+![Sync](./readme_images/demo/projects_sync.png)
+
+## Technologies
+- Backend:  **Java** (Spring Boot, Spring Security, Spring Data)
+- Frontend: **TypeScript** (React)
+- UI:       TailwindCSS
+- Testing:  JUnit, Jest, Playwright
+- Database: MySQL
+- Others:   Docker, Flyway, auth0
 
 ## Setup
-You can run the application by:
-1. Downloading this repository
-2. Executing either of the following options
+### Requirements
+- JDK
+- Node
+- MySQL
 
-#### Option 1: Using Docker
-1. Install [docker](https://docs.docker.com/engine/install/) and [docker compose](https://docs.docker.com/compose/install/) on your machine.
-2. Run `docker compose up -d`
-3. Go to `http://localhost:9090/`
+### Steps
+- Create an `application.properties` file under `/spring-server/odaat/src/main/resources`.
+- Populate the file with sample properties from `/spring-server/odaat/src/main/resources/application.properties.example`.
+- Fill in necessary values.
+- Run `./run-dev.sh` (if 'permission denied', give permissions with `chmod +x ./run-dev.sh`).
+- Web application can be accessed on `localhost:5173`.
 
-#### Option 2: Using Bash
-1. Make [MySQL](https://www.mysql.com/) available on your machine.
-2. Setup database and user credentials in accordance with [application configurations](https://github.com/swunoo/odaat/blob/main/server/odaat-server/conf/application.conf).
-3. Make the script executable by running `chmod +x run.sh`
-4. Run the script with `./run.sh`
-3. Go to `http://localhost:5173/`
+### Testing
+- Unit and integration tests can be executed with `./run-test.sh` (if 'permission denied', give permissions with `chmod +x ./run-dev.sh`).
 
-## Future Development
-The following features are to be added soon.
-- Cloud deployment with authentication
-- Daily/monthly report generation
-- Calendar view
+## Further Development
+### Frontend
+- Improve responsiveness.
+- Handle different `Date` formats.
+- Add more unit tests.
+
+### Backend
+- Validate create/update requests.
+- Version APIs.
+- Add more unit tests.
+
+### Features
+- Sync local data to Backlog (e.g. completing a Task can update the related issue on Backlog).
+- Generate tasks automatically when a Project is created.
+- Visualize progress.
+
+## Other Documents
+- Initial Brief [[Brief (V1.0)]]
+- Initial Design [[設計書]]
