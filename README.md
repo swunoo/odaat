@@ -39,7 +39,6 @@
 ![Create Tasks](./readme_images/demo/tasks_create.png)
 
 - User can synchronize projects and issues they have on Backlog with Odaat, via oauth2, to automatically generate projects and tasks.
-![Sync](./readme_images/demo/projects_sync.png)
 
 ## Technologies
 - Backend:  **Java** (Spring Boot, Spring Security, Spring Data)
