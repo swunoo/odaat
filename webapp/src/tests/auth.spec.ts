@@ -43,8 +43,8 @@ test.describe('OAuth2 Authentication', () => {
   test('Should logout successfully', async ({ page }) => {
     await page.goto('/');
     await page.click('text=Log In');
-
-    await page.fill('input[name="username"]', 'sample@sample.com');
+    const nameField = await page.locator('input[name="name"], input[name="username"]').first();
+    await nameField.fill('sample@sample.com');
     await page.fill('input[name="password"]', 'Sample123!');
     await page.click('button[type="submit"]');
 

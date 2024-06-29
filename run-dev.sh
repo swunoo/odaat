@@ -22,3 +22,7 @@ stop_apps() {
 
 # Stop applications when the program exits
 trap stop_apps SIGINT SIGTERM
+
+# Keep the terminal open
+wait $WEBAPP_PID
+wait $SERVER_PID
