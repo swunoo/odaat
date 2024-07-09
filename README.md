@@ -13,11 +13,8 @@
 - Further Development
 
 ## About
-- This project is built to show my development skills at the moment.
-- It is a full stack project, with TypeScript (React) for the frontend and Java (Spring) for the backend.
-- As I have a full time job and other responsibilities besides this, I chose the most familiar tech stack so that I could move fast and do more things.
-- It took around 80 hours of work, which I spent from 2024 June 7 to 2024 June 24.
-- Although there is still room for improvement, the application is functional, testable, and maintainable.
+- A full stack project, built with TypeScript (React) for the frontend and Java (Spring) for the backend.
+- There is still room for improvement, but the application is functional, testable, and maintainable.
 - If I had more time, I would work on the issues mentioned in the **Further Development** section.
 
 ## Application
@@ -27,7 +24,7 @@
 - With the philosophy of consistently making incremental improvements, the application is named **"Odaat"**, or *"One Day at a Time"*.
 
 ## Functionalities
-- User can login / signup / logout via with an email+password, or with a google account.
+- User can login / signup / logout with an email+password, or with a google account.
 ![Login Page](./readme_images/demo/login.png)
 
 - User can create/update/delete projects.
@@ -41,8 +38,8 @@
 - User can synchronize projects and issues they have on Backlog with Odaat, via oauth2, to automatically generate projects and tasks.
 
 ## Technologies
-- Backend:  **Java** (Spring Boot, Spring Security, Spring Data)
-- Frontend: **TypeScript** (React)
+- Backend:  Java (Spring Boot, Spring Security, Spring Data)
+- Frontend: TypeScript (React)
 - UI:       TailwindCSS
 - Testing:  JUnit, Jest, Playwright
 - Database: MySQL
