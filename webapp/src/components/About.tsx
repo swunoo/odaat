@@ -1,6 +1,5 @@
 import logo from '../assets/images/logo.png';
 import projects_create from '../assets/images/cover/projects_create.png'
-import projects_sync from '../assets/images/cover/projects_sync.png'
 import projects from '../assets/images/cover/projects.png'
 import tasks_create from '../assets/images/cover/tasks_create.png'
 import tasks from '../assets/images/cover/tasks.png'
@@ -13,7 +12,7 @@ import { USER_API } from "../conf"
 */
 export function About() {
 
-    const carouselImgs = [tasks, tasks_create, projects, projects_create, projects_sync];
+    const carouselImgs = [tasks, tasks_create, projects, projects_create];
 
     const login = () => window.location.href = USER_API;
 
